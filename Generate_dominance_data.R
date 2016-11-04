@@ -108,9 +108,6 @@ generate_interactions <- function(N.inds, N.obs, a, b) {
 
 }
 
-freq <- table(factor(c(winner,loser),levels=c(1:N.inds.values[p])))
-scores[  as.numeric(names(freq)[which(freq==0)])  ] <- NA
-
 
 elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
                        K=200,init.score=0,n.rands=1000,
@@ -172,7 +169,7 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
   }
   
   freq <- table(factor(c(winners,losers),levels=c(1:20)))
-  all.scores[as.numeric(names(freq)[which(freq==0)])] <- NA
+  all.scores[as.numeric(names(freq)[which(freq==0)]),] <- NA
   
   invisible(all.scores)	
 }
@@ -302,7 +299,8 @@ for (i in 1:length(bvalues)){
                                      n.inds=N.inds.values[p])
 
         spearman.cor<-cor(output$hierarchy$Rank,
-                          rank(-result.no.rand),method="spearman")
+                          rank(-result.no.rand),
+                          use="complete.obs",method="spearman")
         
 #         w<-extract.elo(x,standardize = FALSE) # extract elo from elo.seq
 # 
@@ -320,8 +318,8 @@ for (i in 1:length(bvalues)){
 #         #ranking Elo-rating
 #         z$Elo.ranked <- rank(-z$w)
 #         
-#         spearman.cor<-cor(z$rank,z$Elo.ranked,method="spearman")
-        #spearman.cor<-cor(result.no.rand,z$w,method="spearman")
+#         spearman.cor<-cor(z$rank,z$Elo.ranked,use="complete.obs",method="spearman")
+#         spearman.cor<-cor(result.no.rand,z$w,use="complete.obs",method="spearman")
         
         #adding values to db
         db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
@@ -461,7 +459,8 @@ for (j in 1:length(avalues)){
         
         z$Elo.ranked <- rank(-z$w)
         
-        spearman.original<-cor(z$rank,z$Elo.ranked,method="spearman")
+        spearman.original<-cor(z$rank,z$Elo.ranked,
+                               use="complete.obs",method="spearman")
         
         # generating david's score
         dav<-DS(creatematrix(x, drawmethod="0.5"))
@@ -470,7 +469,8 @@ for (j in 1:length(avalues)){
         
         dav$normDSrank <- rank(-dav$normDS)
         
-        Ndavid <- cor(dav$ID,dav$normDSrank,method="spearman")
+        Ndavid <- cor(dav$ID,dav$normDSrank,
+                      use="complete.obs",method="spearman")
         
         # generating elo-rating according to elo.scores() from this script
         result.no.rand <- elo.scores(winner,loser,n.rands=1,
@@ -480,7 +480,8 @@ for (j in 1:length(avalues)){
         ranks.no.rand <- rank(-result.no.rand)
         
         spearman.cor.no.rand<-cor(output$hierarchy$Rank,
-                                  ranks.no.rand,method="spearman")
+                                  ranks.no.rand,
+                                  use="complete.obs",method="spearman")
         
         # generating elo-rating according to elo.scores() from this script and
         # randomizing the order of the interactions 1000 times
@@ -488,11 +489,12 @@ for (j in 1:length(avalues)){
                              n.inds=N.inds.values[p])
         
         #mean.scores <- rowMeans(result)
-        ranks <- apply(-result,2,rank)
+        ranks <- apply(-result,2,function(x) rank(x, na.last="keep"))
         mean.ranks <- rowMeans(ranks)
         
         spearman.cor.rand<-cor(output$hierarchy$Rank,
-                               mean.ranks,method="spearman")
+                               mean.ranks,
+                               use="complete.obs",method="spearman")
         
         #elochoice() no randomization
         
@@ -509,7 +511,8 @@ for (j in 1:length(avalues)){
         
         z.eloc.1$Elo.ranked <- rank(-z.eloc.1$eloc.1)
         
-        elochoice.no.rand<-cor(z.eloc.1$rank,z.eloc.1$Elo.ranked,method="spearman")
+        elochoice.no.rand<-cor(z.eloc.1$rank,z.eloc.1$Elo.ranked,
+                               use="complete.obs",method="spearman")
         
         
         #elochoice() randomization
@@ -528,7 +531,8 @@ for (j in 1:length(avalues)){
         
         z.eloc.2$Elo.ranked <- rank(-z.eloc.2$eloc.2)
         
-        elochoice.rand<-cor(z.eloc.2$rank,z.eloc.2$Elo.ranked,method="spearman")
+        elochoice.rand<-cor(z.eloc.2$rank,z.eloc.2$Elo.ranked,
+                            use="complete.obs",method="spearman")
         
       
         db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
@@ -756,7 +760,8 @@ for (j in 1:length(avalues)){
         #       
         #       #result.no.rand <- merge(result.no.rand1,result.no.rand2)
         #       
-        #       elo.split<-cor(result.no.rand1,result.no.rand2,method="spearman")
+        #       elo.split<-cor(result.no.rand1,result.no.rand2,
+        #                      use="complete.obs",method="spearman")
         #       
         
         result.rand1 <- elo.scores(winner1,loser1,init.score=1000,
@@ -764,13 +769,14 @@ for (j in 1:length(avalues)){
         result.rand2 <- elo.scores(winner2,loser2,init.score=1000,
                                    n.inds=N.inds.values[p])
         
-        ranks.rand1 <- apply(result.rand1,2,rank)
+        ranks.rand1 <- apply(result.rand1,2,function(x) rank(x, na.last="keep"))
         mean.ranks.rand1 <- rowMeans(ranks.rand1)
         
-        ranks.rand2 <- apply(result.rand2,2,rank)
+        ranks.rand2 <- apply(result.rand2,2,function(x) rank(x, na.last="keep"))
         mean.ranks.rand2 <- rowMeans(ranks.rand2)
         
-        elo.rand.split<-cor(mean.ranks.rand1,mean.ranks.rand2,method="spearman")
+        elo.rand.split<-cor(mean.ranks.rand1,mean.ranks.rand2,
+                            use="complete.obs",method="spearman")
         
         
         #       x.1<-elo.seq(winner=as.factor(winner1),
@@ -797,7 +803,8 @@ for (j in 1:length(avalues)){
         #       dav$ID <- as.numeric(as.character(dav$ID))
         #       
         #           
-        #       Ndavid <- cor(dav$normDSrank.1,dav$normDSrank.2,method="spearman")
+        #       Ndavid <- cor(dav$normDSrank.1,dav$normDSrank.2,
+        #                     use="complete.obs",method="spearman")
         
         db.split<-rbind(db.split,c(N.inds.values[p],N.obs.values[o],
                                    avalues[j],avalues[j],
