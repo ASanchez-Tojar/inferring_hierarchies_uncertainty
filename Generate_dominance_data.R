@@ -108,7 +108,8 @@ generate_interactions <- function(N.inds, N.obs, a, b) {
 
 }
 
-
+freq <- table(factor(c(winner,loser),levels=c(1:N.inds.values[p])))
+scores[  as.numeric(names(freq)[which(freq==0)])  ] <- NA
 
 
 elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
@@ -169,6 +170,9 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
     
     
   }
+  
+  freq <- table(factor(c(winners,losers),levels=c(1:20)))
+  all.scores[as.numeric(names(freq)[which(freq==0)])] <- NA
   
   invisible(all.scores)	
 }
