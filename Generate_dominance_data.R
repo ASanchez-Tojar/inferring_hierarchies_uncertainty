@@ -337,6 +337,9 @@ names(db) <- c("Ninds","Nobs","alevel","blevel","spearman")
 
 proc.time() - ptm
 
+write.csv(db,
+          "elo_no_rand_parameter_space_100sim")
+
 
 
 ###############################################################################
