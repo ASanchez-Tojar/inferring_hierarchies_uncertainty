@@ -404,25 +404,25 @@ db <- data.frame(Ninds=integer(),
                  elo.original=numeric(),
                  elo.no.rand=numeric(),
                  elo.rand=numeric(),
-                 elochoice.no.rand=numeric(),
+                 #elochoice.no.rand=numeric(),
                  elochoice.rand=numeric(),
                  stringsAsFactors=FALSE)
 
 
-# avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 # N.inds.values <- c(50)
 # N.obs.values <- c(1,10,
 #                   20,
 #                   30,40,50)
 # #to play around
-avalues<-5
+#avalues<-5
 N.inds.values <- c(50)
-N.obs.values <- c(1,5,9,
-                  11,15,19,
-                  21,25,29,
-                  31,35,39,
-                  41,45,49)
-N.obs.values <- c(1,10,20,30,40,50)
+# N.obs.values <- c(1,5,9,
+#                   11,15,19,
+#                   21,25,29,
+#                   31,35,39,
+#                   41,45,49)
+N.obs.values <- c(1,2,3,4,5,6,7,8,9,10,15,20,30,40,50)
 
 
 for (j in 1:length(avalues)){
@@ -431,7 +431,7 @@ for (j in 1:length(avalues)){
     
     for (o in 1:length(N.obs.values)){
       
-      for (sim in 1:10){
+      for (sim in 1:100){
         
         output <- generate_interactions(N.inds.values[p],
                                         N.inds.values[p]*N.obs.values[o],
@@ -496,23 +496,23 @@ for (j in 1:length(avalues)){
                                mean.ranks,
                                use="complete.obs",method="spearman")
         
-        #elochoice() no randomization
-        
-        eloc.1<-ratings(elochoice(winner,loser,
-                                  kval=200,startvalue=1000,
-                                  normprob=TRUE,runs=1),
-                        drawplot=FALSE)
-        
-        z.eloc.1 <- data.frame(eloc.1,attributes(eloc.1),
-                                       row.names = as.character(seq(1,length(eloc.1),
-                                                             1)))
-               
-        z.eloc.1$rank <- as.numeric(as.character(z.eloc.1$names))
-        
-        z.eloc.1$Elo.ranked <- rank(-z.eloc.1$eloc.1)
-        
-        elochoice.no.rand<-cor(z.eloc.1$rank,z.eloc.1$Elo.ranked,
-                               use="complete.obs",method="spearman")
+#         #elochoice() no randomization
+#         
+#         eloc.1<-ratings(elochoice(winner,loser,
+#                                   kval=200,startvalue=1000,
+#                                   normprob=TRUE,runs=1),
+#                         drawplot=FALSE)
+#         
+#         z.eloc.1 <- data.frame(eloc.1,attributes(eloc.1),
+#                                        row.names = as.character(seq(1,length(eloc.1),
+#                                                              1)))
+#                
+#         z.eloc.1$rank <- as.numeric(as.character(z.eloc.1$names))
+#         
+#         z.eloc.1$Elo.ranked <- rank(-z.eloc.1$eloc.1)
+#         
+#         elochoice.no.rand<-cor(z.eloc.1$rank,z.eloc.1$Elo.ranked,
+#                                use="complete.obs",method="spearman")
         
         
         #elochoice() randomization
@@ -539,7 +539,8 @@ for (j in 1:length(avalues)){
                        avalues[j],avalues[j],
                        Ndavid,spearman.original,
                        spearman.cor.no.rand,spearman.cor.rand,
-                       elochoice.no.rand,elochoice.rand))
+                       #elochoice.no.rand,
+                       elochoice.rand))
         
       }
     }
@@ -548,13 +549,14 @@ for (j in 1:length(avalues)){
 
 names(db) <- c("Ninds","Nobs","alevel","blevel","Ndavid",
                "elo.original","elo.no.rand","elo.rand",
-               "elochoice.no.rand","elochoice.rand")
+               #"elochoice.no.rand",
+               "elochoice.rand")
 
 proc.time() - ptm
 
 
-# write.csv(db,
-#           "db_1-10intandsoon.csv",row.names=FALSE)
+write.csv(db,
+         "db_5_methods_100_simulations.csv",row.names=FALSE)
 
 
 for (p in 1:length(N.inds.values)){
@@ -855,6 +857,73 @@ for (p in 1:length(N.inds.values)){
 #            x.intersp=0.2,
 #            #horiz=TRUE,
 #            pch=rep(19,3))
+    
+  }
+  
+  par(mfrow=c(1,1))
+  
+}
+
+
+###############################################################################
+# Plotting estimated rank/2 ~ estimated rank/2: spearman correaltion for each method
+# Adding 95% CI intervals 
+###############################################################################
+db_split100sim <- read.table("db_split_elorand_100sim.csv",header=TRUE,sep=",")
+
+avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+N.inds.values <- c(50)
+N.obs.values <- c(1,10,
+                  20,
+                  30,40,50)
+
+for (p in 1:length(N.inds.values)){
+  
+  par(mfrow=c(3,2))
+  
+  db.2 <- db_split100sim[db_split100sim$Ninds==N.inds.values[p],]
+  
+  for (i in 1:length(avalues)){
+    
+    db.3 <- db.2[db.2$alevel==avalues[i],]
+    
+    db.4 <-summaryBy(elo.rand ~ Nobs, 
+                     data = db.3, 
+                     FUN = function(x) { c(m = mean(x),
+                                           q = quantile(x,probs=c(0.025,0.975))) })
+    
+    names(db.4) <- c("Nobs",
+                     "elo.rand.m","elo.rand.lower","elo.rand.upper")
+    
+    plot(db.4$elo.rand.m~db.4$Nobs,0.5,type="n",
+         ylab="spearman correlation",
+         xlab="number of interactions/individual",
+         ylim=c(-0.2,1))
+    
+    #adding points for the means and shadowed areas for the 95% CI
+    points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
+    polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+            c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
+            border=NA,col=rgb(0,0,1, 0.15))
+        
+    Nindtext <- paste("N.ind = ",N.inds.values[p])
+    atext <- paste("\na = ",avalues[i])
+    btext <- paste("b = ",avalues[i])
+    ttext <- paste0(Nindtext,atext,sep="\n")
+    ttext2 <- paste0(ttext,btext,sep="\n")
+    text(38,0.11,ttext2,adj = 0)
+    
+#     par(xpd=TRUE)
+#     legend(#10,0.70,
+#       "bottom",
+#       c("David's score","Elo original","Elo no rand",
+#         "Elo rand","elochoice.no.rand","elochoice.rand"),
+#       col=c("black","red","orange","blue","pink","green"),
+#       cex=1,bty='n',
+#       y.intersp=0.2,
+#       x.intersp=0.2,
+#       pch=rep(19,4),
+#       inset=c(0,0))
     
   }
   
