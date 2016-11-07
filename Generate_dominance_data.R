@@ -299,7 +299,7 @@ for (i in 1:length(bvalues)){
                                        n.inds=N.inds.values[p])
           
           spearman.cor<-cor(output$hierarchy$Rank,
-                            rank(-result.no.rand),
+                            rank(-result.no.rand,na.last="keep"),
                             use="complete.obs",method="spearman")
           
           #         w<-extract.elo(x,standardize = FALSE) # extract elo from elo.seq
@@ -316,7 +316,7 @@ for (i in 1:length(bvalues)){
           #         z$rank <- as.numeric(as.character(z$names))
           #         
           #         #ranking Elo-rating
-          #         z$Elo.ranked <- rank(-z$w)
+          #         z$Elo.ranked <- rank(-z$w,na.last="keep")
           #         
           #         spearman.cor<-cor(z$rank,z$Elo.ranked,use="complete.obs",method="spearman")
           #         spearman.cor<-cor(result.no.rand,z$w,use="complete.obs",method="spearman")
@@ -514,7 +514,7 @@ for (j in 1:length(avalues)){
 #                
 #         z.eloc.1$rank <- as.numeric(as.character(z.eloc.1$names))
 #         
-#         z.eloc.1$Elo.ranked <- rank(-z.eloc.1$eloc.1)
+#         z.eloc.1$Elo.ranked <- rank(-z.eloc.1$eloc.1,na.last="keep")
 #         
 #         elochoice.no.rand<-cor(z.eloc.1$rank,z.eloc.1$Elo.ranked,
 #                                use="complete.obs",method="spearman")
@@ -534,7 +534,7 @@ for (j in 1:length(avalues)){
         
         z.eloc.2$rank <- as.numeric(as.character(z.eloc.2$names))
         
-        z.eloc.2$Elo.ranked <- rank(-z.eloc.2$eloc.2)
+        z.eloc.2$Elo.ranked <- rank(-z.eloc.2$eloc.2,na.last="keep")
         
         elochoice.rand<-cor(z.eloc.2$rank,z.eloc.2$Elo.ranked,
                             use="complete.obs",method="spearman")
@@ -814,8 +814,8 @@ for (j in 1:length(avalues)){
         #       dav.1<-DS(creatematrix(x.1, drawmethod="0.5"))
         #       dav.2<-DS(creatematrix(x.2, drawmethod="0.5"))
         #       
-        #       dav.1$normDSrank.1 <- rank(dav.1$normDS)
-        #       dav.2$normDSrank.2 <- rank(dav.2$normDS)
+        #       dav.1$normDSrank.1 <- rank(dav.1$normDS,na.last="keep")
+        #       dav.2$normDSrank.2 <- rank(dav.2$normDS,na.last="keep")
         #       
         #       dav <- merge(dav.1,dav.2,by="ID")
         #             
