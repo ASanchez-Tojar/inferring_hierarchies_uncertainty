@@ -337,8 +337,8 @@ names(db) <- c("Ninds","Nobs","alevel","blevel","spearman")
 
 proc.time() - ptm
 
-write.csv(db,
-          "elo_no_rand_parameter_space_100sim")
+# write.csv(db,
+#           "elo_no_rand_parameter_space_100sim.csv",row.names=FALSE)
 
 
 
@@ -413,7 +413,7 @@ db <- data.frame(Ninds=integer(),
                  stringsAsFactors=FALSE)
 
 
-avalues <- c(0)#,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 # N.inds.values <- c(50)
 # N.obs.values <- c(1,10,
 #                   20,
@@ -427,7 +427,7 @@ N.inds.values <- c(50)
 #                   31,35,39,
 #                   41,45,49)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-N.obs.values <- c(1)
+#N.obs.values <- c(1)
 
 
 for (j in 1:length(avalues)){
@@ -436,7 +436,7 @@ for (j in 1:length(avalues)){
     
     for (o in 1:length(N.obs.values)){
       
-      for (sim in 1:20){
+      for (sim in 1:100){
         
         output <- generate_interactions(N.inds.values[p],
                                         N.inds.values[p]*N.obs.values[o],
