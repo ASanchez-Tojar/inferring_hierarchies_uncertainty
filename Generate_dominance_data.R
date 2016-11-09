@@ -413,21 +413,14 @@ db <- data.frame(Ninds=integer(),
                  stringsAsFactors=FALSE)
 
 
-avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
-# N.inds.values <- c(50)
-# N.obs.values <- c(1,10,
-#                   20,
-#                   30,40,50)
-# #to play around
-#avalues<-5
+# avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+
 N.inds.values <- c(50)
-# N.obs.values <- c(1,5,9,
-#                   11,15,19,
-#                   21,25,29,
-#                   31,35,39,
-#                   41,45,49)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-#N.obs.values <- c(1)
+
+#for steeper scenarios
+avalues <- c(5,10,20,10,20)
+bvalues <- c(0,5,10,10,20)
 
 
 for (j in 1:length(avalues)){
@@ -441,7 +434,9 @@ for (j in 1:length(avalues)){
         output <- generate_interactions(N.inds.values[p],
                                         N.inds.values[p]*N.obs.values[o],
                                         a=avalues[j],
-                                        b=avalues[j])
+                                        #b=avalues[j])
+                                        b=bvalues[j])
+        
         
         winner <- output$interactions$Winner
         loser <- output$interactions$Loser
@@ -560,8 +555,8 @@ names(db) <- c("Ninds","Nobs","alevel","blevel","Ndavid",
 proc.time() - ptm
 
 
-# write.csv(db,
-#          "db_5_methods_100_simulations.csv",row.names=FALSE)
+write.csv(db,
+         "db_5_methods_100_simulations_steep.csv",row.names=FALSE)
 
 
 for (p in 1:length(N.inds.values)){
@@ -663,7 +658,15 @@ for (p in 1:length(N.inds.values)){
     plot(db.4$elo.rand.m~db.4$Nobs,0.5,type="n",
          ylab="spearman correlation",
          xlab="number of interactions/individual",
+         #axes=FALSE,
+         xaxt="n",
+         yaxt="n",
          ylim=c(0,1))
+    
+    axis(1,at=c(1,4,7,10,15,20,30,40,50),
+         labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
+    
+    axis(2,at=seq(0,1,0.2),cex.axis=0.80,las=2)
         
     #adding points for the means and shadowed areas for the 95% CI
     points(db.4$Nobs,db.4$elo.original.m,type="b",col="red",pch=19)
@@ -701,17 +704,21 @@ for (p in 1:length(N.inds.values)){
     btext <- paste("b = ",avalues[i])
     ttext <- paste0(Nindtext,atext,sep="\n")
     ttext2 <- paste0(ttext,btext,sep="\n")
-    text(38,0.11,ttext2,adj = 0)
+    text(39,0.05,ttext2,adj = 0)
     
     par(xpd=TRUE)
     legend(10,0.75,
            #"bottomright",
-           c("David's score","Elo original","Elo no rand",
-             "Elo rand",
-             #"elochoice.no.rand",
-             "elochoice.rand"),
-           col=c("black","red","orange","blue",#"pink",
-                 "green"),
+           c("Elo-rating randomized",
+             "Elo-rating original",
+             "David's score",#,
+             "elochoice()",
+             "elo.seq()"),
+           col=c("blue",
+                "orange",
+                 "black",#,
+                 "green",
+                 "red"),
            cex=1,bty='n',
            y.intersp=0.2,
            x.intersp=0.2,
