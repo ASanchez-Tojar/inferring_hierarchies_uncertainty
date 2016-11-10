@@ -115,7 +115,6 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
   
   if(is.null(n.inds)){
     n.inds <- max(c(unique(winners),unique(losers)))	
-    #n.inds <- length(unique(c(winners,losers)))
   }
   
   T <- length(winners)
@@ -149,14 +148,8 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
       loser <- losers.perm[i]
       p<-1/(1+exp(-sigmoid.param*(scores[winner,i]-scores[loser,i]))) #prob that winner wins
       
-      if(scores[winner,i] >= scores[loser,i]){
-        scores[winner,i+1] <- scores[winner,i] + (1-p)*K[i]
-        scores[loser,i+1] <- scores[loser,i] - (1-p)*K[i]
-      }
-      else{
-        scores[winner,i+1] <- scores[winner,i] + p*K[i]
-        scores[loser,i+1] <- scores[loser,i] - p*K[i]
-      }
+      scores[winner,i+1] <- scores[winner,i] + (1-p)*K[i]
+      scores[loser,i+1] <- scores[loser,i] - (1-p)*K[i]
     }
     
     if(return.trajectories){
