@@ -37,82 +37,82 @@ rm(list=ls())
 
 
 calculate_winner <- function(rank1, rank2, a, b) {
-	
-	diff.rank <- abs(rank1 - rank2)
-	diff.rank.norm <- diff.rank/max(diff.rank)
-
-	p.win <- 0.5+0.5/(1+exp(-diff.rank.norm*a+b))
-
-	winner <- sample(c(1,2),1,prob=c(p.win,1-p.win))
-
-	if (winner == 1) {
-		if (rank1 < rank2) {
-			winner.loser <- c(1,2)
-		} else {
-			winner.loser <- c(2,1)
-		}
-	} else {
-		if (rank1 > rank2) {
-			winner.loser <- c(1,2)
-		} else {
-			winner.loser <- c(2,1)
-		}
-	}
-	return(winner.loser)
-
+  
+  diff.rank <- abs(rank1 - rank2)
+  diff.rank.norm <- diff.rank/max(diff.rank)
+  
+  p.win <- 0.5+0.5/(1+exp(-diff.rank.norm*a+b))
+  
+  winner <- sample(c(1,2),1,prob=c(p.win,1-p.win))
+  
+  if (winner == 1) {
+    if (rank1 < rank2) {
+      winner.loser <- c(1,2)
+    } else {
+      winner.loser <- c(2,1)
+    }
+  } else {
+    if (rank1 > rank2) {
+      winner.loser <- c(1,2)
+    } else {
+      winner.loser <- c(2,1)
+    }
+  }
+  return(winner.loser)
+  
 }
 
 
 
 plot_winner_prob <- function(diff.rank, a, b,coline) {
-
-	diff.rank.norm <- diff.rank/max(diff.rank)
   
-	lines(diff.rank, 0.5+0.5/(1+exp(-diff.rank.norm*a+b)),col=coline)
-
-	#plot(diff.rank, 0.5+0.5/(1+exp(-diff.rank.norm*a+b)),ylim=c(0,1), type='l',ylab="P of higher rank winning", xlab="Difference in rank")
-
+  diff.rank.norm <- diff.rank/max(diff.rank)
+  
+  lines(diff.rank, 0.5+0.5/(1+exp(-diff.rank.norm*a+b)),col=coline)
+  
+  #plot(diff.rank, 0.5+0.5/(1+exp(-diff.rank.norm*a+b)),ylim=c(0,1), type='l',ylab="P of higher rank winning", xlab="Difference in rank")
+  
 }
 
 
 
 select_interactants <- function(hierarchy) {
-
-	interactants <- sample(hierarchy$ID,2)
-
-	return(interactants)
-
+  
+  interactants <- sample(hierarchy$ID,2)
+  
+  return(interactants)
+  
 }
 
 
 
 generate_interactions <- function(N.inds, N.obs, a, b) {
-
-	hierarchy <- data.frame(ID=1:N.inds, Rank=1:N.inds)
-
-	interactions <- data.frame(Winner=rep(NA,N.obs), Loser=rep(NA,N.obs))
-
-	for (i in 1:N.obs) {
-	
-		ints <- select_interactants(hierarchy)
-		outcome <- calculate_winner(hierarchy$Rank[ints[1]],hierarchy$Rank[ints[2]],a,b)
-
-		interactions$Winner[i] <- hierarchy$ID[ints[outcome[1]]]
-		interactions$Loser[i] <- hierarchy$ID[ints[outcome[2]]]
-	
-	}
+  
+  hierarchy <- data.frame(ID=1:N.inds, Rank=1:N.inds)
+  
+  interactions <- data.frame(Winner=rep(NA,N.obs), Loser=rep(NA,N.obs))
+  
+  for (i in 1:N.obs) {
+    
+    ints <- select_interactants(hierarchy)
+    outcome <- calculate_winner(hierarchy$Rank[ints[1]],hierarchy$Rank[ints[2]],a,b)
+    
+    interactions$Winner[i] <- hierarchy$ID[ints[outcome[1]]]
+    interactions$Loser[i] <- hierarchy$ID[ints[outcome[2]]]
+    
+  }
   
   interactions$Date <- "2016-10-31"
   interactions$Date[1:5] <- "2016-10-30"
-
-	return(list(hierarchy=hierarchy,interactions=interactions))
-
+  
+  return(list(hierarchy=hierarchy,interactions=interactions))
+  
 }
 
 
 elo.scores.2 <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
-                       K=200,init.score=0,n.rands=1000,
-                       return.trajectories=FALSE){
+                         K=200,init.score=0,n.rands=1000,
+                         return.trajectories=FALSE){
   
   if(is.null(n.inds)){
     n.inds <- max(c(unique(winners),unique(losers)))	
@@ -247,7 +247,11 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
 # bvalues <- c(-5,0,5,10,15,20,25,30,35) #all values of b to be explored
 counter <- 75
 avalues <- seq(0,30,5)
-bvalues <- c(-5,0,5,10,15,20,25,30,35)
+bvalues <- seq(-5,35,5)
+
+a1 <- c("a","b","c","d","e","f","g","h","i")
+colours <- brewer.pal(7,"Set1")
+
 
 
 par(mfrow=c(3,3)) #multi-pannel 3 by 3 = 9 plots at once!
@@ -259,29 +263,55 @@ for (i in 1:length(bvalues)){
   
   plot(c(1,50),c(0,1),type="n",
        ylab="P of higher rank winning", xlab="Difference in rank")
-  btext <- paste("b = ",bvalues[i])
-  text(10,0.35,btext)
+  #btext <- paste("b = ",bvalues[i])
+  #text(10,0.35,btext)
   
   for (j in 1:length(avalues)){
-    coline <- paste0("grey",counter)
+    #coline <- paste0("grey",counter)
+    coline <- colours[j]
     plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
     #counter <- counter-5     
-    counter <- counter-10 
+    #counter <- counter-10 
   }
   #counter <- 95
-  counter <- 75
-  lines(c(1,50),c(0.5,0.5),col="red",lty=3) # line at randomness, i.e. P=0.5
-#   legend("bottomright",c("a = 0","a = 18","a = 36"),#custom made
-#          lty=c(1,1,1),col=c("grey95","grey50","grey0"),#custom made
-#          cex=.5,bty='n',
-#          y.intersp=0.2)
-  legend("bottomleft",c("a = 0","a = 15","a = 30"),
-         lty=c(1,1,1),col=c("grey75","grey45","grey15"),
-         cex=.75,bty='n',
-         x.intersp=0.1,
+  #counter <- 75
+  lines(c(0,52),c(0.5,0.5),col="red",lty=3,lwd=1.5) # line at randomness, i.e. P=0.5
+  #   legend("bottomright",c("a = 0","a = 18","a = 36"),#custom made
+  #          lty=c(1,1,1),col=c("grey95","grey50","grey0"),#custom made
+  #          cex=.5,bty='n',
+  #          y.intersp=0.2)
+  #   legend("bottomleft",c("a = 0","a = 15","a = 30"),
+  #          lty=c(1,1,1),col=c("grey75","grey45","grey15"),
+  #          cex=.75,bty='n',
+  #          x.intersp=0.1,
+  #          y.intersp=0.2,
+  #          inset=c(-0.2,-0.1),
+  #          seg.len=0.2)
+  
+  Nindtext <- paste("(",a1[i])
+  btext <- paste("\nb = ",bvalues[i])
+  text(46,0.02,Nindtext,adj = 0)
+  text(34,0.245,btext,adj = 0,cex=1.35)
+  
+  par(xpd=TRUE)
+  legend(-14,0.52,
+         c("a = 0","a = 5","a = 10","a = 15"),
+         col=colours[1:4],
+         cex=0.8,bty='n',
          y.intersp=0.2,
-         inset=c(-0.2,-0.1),
-         seg.len=0.2)
+         x.intersp=0.2,
+         pch=rep(19,4),
+         inset=c(0,0))
+  
+  legend(1,0.52,
+         c("a = 20","a = 25","a = 30"),
+         col=colours[5:7],
+         cex=0.8,bty='n',
+         y.intersp=0.2,
+         x.intersp=0.2,
+         pch=rep(19,4),
+         inset=c(0,0))
+  
 }
 
 par(mfrow=c(1,1))
@@ -460,11 +490,11 @@ db<-eloparameterspace
 avalues <- seq(0,30,5)
 bvalues <- seq(-5,20,5)
 N.inds.values <- c(50)
-N.obs.values <- c(1,5,7,10,
+N.obs.values <- c(1,4,7,10,
                   15,20,
                   30,40,50)
 
-aaa <- seq(1,length(avalues),1)
+a <- c("a","b","c","d","e","f")
 
 
 for (p in 1:length(N.inds.values)){
@@ -532,73 +562,81 @@ for (p in 1:length(N.inds.values)){
          yaxt="n",
          ylim=c(-1,1))
     
-    axis(1,at=c(1,5,7,10,15,20,30,40,50),
-         labels=as.character(c(1,5,7,10,15,20,30,40,50)),cex.axis=0.80)
+    axis(1,at=c(1,4,7,10,15,20,30,40,50),
+         labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
     
     axis(2,at=seq(-1,1,0.2),cex.axis=0.80,las=2)
     
     #adding points for the means and shadowed areas for the 95% CI
-   
-    points(db.4.1$Nobs,db.4.1$spearman,type="b",col="grey75",pch=19)
+    
+    #colours <- c("#ffffb2","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#b10026")
+    colours <- brewer.pal(7,"Set1")
+    
+    points(db.4.1$Nobs-0.18,db.4.1$spearman,type="b",col=colours[1],pch=19)
     polygon(c(db.4.1$Nobs,rev(db.4.1$Nobs)),
             c(db.4.1$lower,rev(db.4.1$upper)),
-            border=NA,col=rgb(191/255,191/255,191/255,0.15))
+            border=NA,col=rgb(250/255,128/255,114/255,0.15))
+    #border=NA,col=rgb(191/255,191/255,191/255,0.15))
     
-    points(db.4.2$Nobs,db.4.2$spearman,type="b",col="grey65",pch=19)
+    points(db.4.2$Nobs-0.12,db.4.2$spearman,type="b",col=colours[2],pch=19)
     polygon(c(db.4.2$Nobs,rev(db.4.2$Nobs)),
             c(db.4.2$lower,rev(db.4.2$upper)),
-            border=NA,col=rgb(166/255,166/255,166/255,0.15))
+            border=NA,col=rgb(141/255,182/255,205/255,0.15))
+    #border=NA,col=rgb(166/255,166/255,166/255,0.15))
     
-    points(db.4.3$Nobs,db.4.3$spearman,type="b",col="grey55",pch=19)
+    points(db.4.3$Nobs-0.06,db.4.3$spearman,type="b",col=colours[3],pch=19)
     polygon(c(db.4.3$Nobs,rev(db.4.3$Nobs)),
             c(db.4.3$lower,rev(db.4.3$upper)),
-            border=NA,col=rgb(140/255,140/255,140/255,0.15))
+            border=NA,col=rgb(188/255,238/255,104/255,0.15))
+    #border=NA,col=rgb(140/255,140/255,140/255,0.15))
     
-    points(db.4.4$Nobs,db.4.4$spearman,type="b",col="grey45",pch=19)
+    points(db.4.4$Nobs,db.4.4$spearman,type="b",col=colours[4],pch=19)
     polygon(c(db.4.4$Nobs,rev(db.4.4$Nobs)),
             c(db.4.4$lower,rev(db.4.4$upper)),
-            border=NA,col=rgb(115/255,115/255,115/255,0.15))
+            border=NA,col=rgb(154/255,50/255,205/255,0.15))
+    #border=NA,col=rgb(115/255,115/255,115/255,0.15))
     
-    points(db.4.5$Nobs,db.4.5$spearman,type="b",col="grey35",pch=19)
+    points(db.4.5$Nobs+0.06,db.4.5$spearman,type="b",col=colours[5],pch=19)
     polygon(c(db.4.5$Nobs,rev(db.4.5$Nobs)),
             c(db.4.5$lower,rev(db.4.5$upper)),
-            border=NA,col=rgb(89/255,89/255,89/255,0.15))
+            border=NA,col=rgb(244/255,164/255,96/255,0.15))
+    #border=NA,col=rgb(89/255,89/255,89/255,0.15))
     
-    points(db.4.6$Nobs,db.4.6$spearman,type="b",col="grey25",pch=19)
+    points(db.4.6$Nobs+0.12,db.4.6$spearman,type="b",col=colours[6],pch=19)
     polygon(c(db.4.6$Nobs,rev(db.4.6$Nobs)),
             c(db.4.6$lower,rev(db.4.6$upper)),
-            border=NA,col=rgb(64/255,64/255,64/255,0.15))
+            border=NA,col=rgb(255/255,228/255,181/255,0.15))
+    #border=NA,col=rgb(64/255,64/255,64/255,0.15))
     
-    points(db.4.7$Nobs,db.4.7$spearman,type="b",col="grey15",pch=19)
+    points(db.4.7$Nobs+0.18,db.4.7$spearman,type="b",col=colours[7],pch=19)
     polygon(c(db.4.7$Nobs,rev(db.4.7$Nobs)),
             c(db.4.7$lower,rev(db.4.7$upper)),
-            border=NA,col=rgb(38/255,38/255,38/255,0.15))
+            border=NA,col=rgb(139/255,69/255,19/255,0.15))
+    #border=NA,col=rgb(38/255,38/255,38/255,0.15))
     
     
-
-    Nindtext <- paste("N.ind = ",N.inds.values[p])
+    
+    Nindtext <- paste("(",a[i])
     btext <- paste("\nb = ",bvalues[i])
-    ttext <- paste0(Nindtext,btext,sep="\n")
-    text(39,-0.8,ttext,adj = 0)
+    #ttext <- paste0(Nindtext,btext,sep="\n")
+    #text(39,-0.8,ttext,adj = 0)
+    text(48,-0.95,Nindtext,adj = 0)
+    text(35,-0.5,btext,adj = 0,cex=1.35)
     
     par(xpd=TRUE)
-    legend(#10,0.75,
-           "bottomright",
-           c("Elo-rating randomized",
-             "Elo-rating original",
-             "David's score"),
-           #"elochoice()",
-           #"elo.seq()"),
-           #"Elo original 2",
-           #"Elo randomized 2"),
-           col=c("blue",
-                 "orange",
-                 "black"),
-           #"green",
-           #"red"),
-           #"pink",
-           #"black"),
-           cex=1,bty='n',
+    legend(-3,0.05,
+           c("a = 0","a = 5","a = 10","a = 15"),
+           col=colours[1:4],
+           cex=0.8,bty='n',
+           y.intersp=0.2,
+           x.intersp=0.2,
+           pch=rep(19,4),
+           inset=c(0,0))
+    
+    legend(7,0.05,
+           c("a = 20","a = 25","a = 30"),
+           col=colours[5:7],
+           cex=0.8,bty='n',
            y.intersp=0.2,
            x.intersp=0.2,
            pch=rep(19,4),
@@ -655,7 +693,7 @@ for (j in 1:length(avalues)){
                                         N.inds.values[p]*N.obs.values[o],
                                         a=avalues[j],
                                         b=avalues[j])
-                                        #b=bvalues[j])
+        #b=bvalues[j])
         
         
         winner <- output$interactions$Winner
@@ -682,15 +720,15 @@ for (j in 1:length(avalues)){
         spearman.original<-cor(z$rank,z$Elo.ranked,
                                use="complete.obs",method="spearman")
         
-#         # generating david's score
-#         dav<-DS(creatematrix(x, drawmethod="0.5"))
-#         
-#         dav$ID <- as.numeric(as.character(dav$ID))
-#         
-#         dav$normDSrank <- rank(-dav$normDS,na.last="keep")
-#         
-#         Ndavid <- cor(dav$ID,dav$normDSrank,
-#                       use="complete.obs",method="spearman")
+        #         # generating david's score
+        #         dav<-DS(creatematrix(x, drawmethod="0.5"))
+        #         
+        #         dav$ID <- as.numeric(as.character(dav$ID))
+        #         
+        #         dav$normDSrank <- rank(-dav$normDS,na.last="keep")
+        #         
+        #         Ndavid <- cor(dav$ID,dav$normDSrank,
+        #                       use="complete.obs",method="spearman")
         
         # generating elo-rating according to elo.scores() from this script
         result.no.rand <- elo.scores(winner,loser,n.rands=1,
@@ -716,60 +754,60 @@ for (j in 1:length(avalues)){
                                mean.ranks,
                                use="complete.obs",method="spearman")
         
-#         #elochoice() no randomization
-#         
-#         eloc.1<-ratings(elochoice(winner,loser,
-#                                   kval=200,startvalue=1000,
-#                                   normprob=TRUE,runs=1),
-#                         drawplot=FALSE)
-#         
-#         z.eloc.1 <- data.frame(eloc.1,attributes(eloc.1),
-#                                        row.names = as.character(seq(1,length(eloc.1),
-#                                                              1)))
-#                
-#         z.eloc.1$rank <- as.numeric(as.character(z.eloc.1$names))
-#         
-#         z.eloc.1$Elo.ranked <- rank(-z.eloc.1$eloc.1,na.last="keep")
-#         
-#         elochoice.no.rand<-cor(z.eloc.1$rank,z.eloc.1$Elo.ranked,
-#                                use="complete.obs",method="spearman")
+        #         #elochoice() no randomization
+        #         
+        #         eloc.1<-ratings(elochoice(winner,loser,
+        #                                   kval=200,startvalue=1000,
+        #                                   normprob=TRUE,runs=1),
+        #                         drawplot=FALSE)
+        #         
+        #         z.eloc.1 <- data.frame(eloc.1,attributes(eloc.1),
+        #                                        row.names = as.character(seq(1,length(eloc.1),
+        #                                                              1)))
+        #                
+        #         z.eloc.1$rank <- as.numeric(as.character(z.eloc.1$names))
+        #         
+        #         z.eloc.1$Elo.ranked <- rank(-z.eloc.1$eloc.1,na.last="keep")
+        #         
+        #         elochoice.no.rand<-cor(z.eloc.1$rank,z.eloc.1$Elo.ranked,
+        #                                use="complete.obs",method="spearman")
         
         
-#         #elochoice() randomization
-#         
-#         eloc.2<-ratings(elochoice(winner,loser,
-#                                   kval=200,startvalue=1000,
-#                                   normprob=TRUE,runs=1000),
-#                         drawplot=FALSE)
-#         
-#         
-#         z.eloc.2 <- data.frame(eloc.2,attributes(eloc.2),
-#                                        row.names = as.character(seq(1,length(eloc.2),
-#                                                                     1)))
-#         
-#         z.eloc.2$rank <- as.numeric(as.character(z.eloc.2$names))
-#         
-#         z.eloc.2$Elo.ranked <- rank(-z.eloc.2$eloc.2,na.last="keep")
-#         
-#         elochoice.rand<-cor(z.eloc.2$rank,z.eloc.2$Elo.ranked,
-#                             use="complete.obs",method="spearman")
-
+        #         #elochoice() randomization
+        #         
+        #         eloc.2<-ratings(elochoice(winner,loser,
+        #                                   kval=200,startvalue=1000,
+        #                                   normprob=TRUE,runs=1000),
+        #                         drawplot=FALSE)
+        #         
+        #         
+        #         z.eloc.2 <- data.frame(eloc.2,attributes(eloc.2),
+        #                                        row.names = as.character(seq(1,length(eloc.2),
+        #                                                                     1)))
+        #         
+        #         z.eloc.2$rank <- as.numeric(as.character(z.eloc.2$names))
+        #         
+        #         z.eloc.2$Elo.ranked <- rank(-z.eloc.2$eloc.2,na.last="keep")
+        #         
+        #         elochoice.rand<-cor(z.eloc.2$rank,z.eloc.2$Elo.ranked,
+        #                             use="complete.obs",method="spearman")
+        
         # generating elo-rating according to elo.scores.2() from this script
         result.no.rand.2 <- elo.scores.2(winner,loser,n.rands=1,
-                                     init.score=1000,
-                                     n.inds=N.inds.values[p])
+                                         init.score=1000,
+                                         n.inds=N.inds.values[p])
         
         ranks.no.rand.2 <- rank(-result.no.rand.2,na.last="keep")
         
         spearman.cor.no.rand.2<-cor(output$hierarchy$Rank,
                                     ranks.no.rand.2,
                                     use="complete.obs",method="spearman")
-
-
+        
+        
         # generating elo-rating according to elo.scores.2() from this script and
         # randomizing the order of the interactions 1000 times
         result.2 <- elo.scores.2(winner,loser,init.score=1000,
-                             n.inds=N.inds.values[p])
+                                 n.inds=N.inds.values[p])
         
         #mean.scores <- rowMeans(result)
         ranks.2 <- apply(-result.2,2,function(x) rank(x, na.last="keep"))
@@ -778,8 +816,8 @@ for (j in 1:length(avalues)){
         spearman.cor.rand.2<-cor(output$hierarchy$Rank,
                                  mean.ranks.2,
                                  use="complete.obs",method="spearman")
-
-
+        
+        
         db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
                        avalues[j],
                        avalues[j],
@@ -844,18 +882,18 @@ for (p in 1:length(N.inds.values)){
     legend("bottom",c("Ndavid","Elo.original","Elo.no.rand",
                       "Elo.rand","elochoice.no.rand","elochoice.rand"),
            col=c("black","red","orange","blue","pink","green"),
-             cex=1,bty='n',
-             y.intersp=0.2,
-             x.intersp=0.2,
-             pch=rep(19,4))
-#       legend("bottom",c("elo.seq()","our_elo_estimate"),
-#            col=c("red","orange"),
-#            cex=1,bty='n',
-#            y.intersp=1,
-#            x.intersp=0.2,
-#            #horiz=TRUE,
-#            pch=rep(19,2))
-        
+           cex=1,bty='n',
+           y.intersp=0.2,
+           x.intersp=0.2,
+           pch=rep(19,4))
+    #       legend("bottom",c("elo.seq()","our_elo_estimate"),
+    #            col=c("red","orange"),
+    #            cex=1,bty='n',
+    #            y.intersp=1,
+    #            x.intersp=0.2,
+    #            #horiz=TRUE,
+    #            pch=rep(19,2))
+    
   }
   
   par(mfrow=c(1,1))
@@ -904,8 +942,8 @@ for (p in 1:length(N.inds.values)){
                        elo.rand + 
                        #elochoice.no.rand +
                        elochoice.rand
-                       #elo.no.rand.2 +
-                       #elo.rand.2
+                     #elo.no.rand.2 +
+                     #elo.rand.2
                      ~ Nobs, 
                      data = db.3, 
                      FUN = function(x) { c(m = mean(x),
@@ -918,8 +956,8 @@ for (p in 1:length(N.inds.values)){
                      "elo.rand.m","elo.rand.lower","elo.rand.upper",
                      #"elochoice.no.rand.m","elochoice.no.rand.lower","elochoice.no.rand.upper",
                      "elochoice.rand.m","elochoice.rand.lower","elochoice.rand.upper")
-                     #"elo.no.rand.2.m","elo.no.rand.2.lower","elo.no.rand.2.upper",
-                     #"elo.rand.2.m","elo.rand.2.lower","elo.rand.2.upper")
+    #"elo.no.rand.2.m","elo.no.rand.2.lower","elo.no.rand.2.upper",
+    #"elo.rand.2.m","elo.rand.2.lower","elo.rand.2.upper")
     
     plot(db.4$elo.rand.m~db.4$Nobs,0.5,type="n",
          ylab="spearman correlation",
@@ -933,47 +971,47 @@ for (p in 1:length(N.inds.values)){
          labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
     
     axis(2,at=seq(0,1,0.2),cex.axis=0.80,las=2)
-        
-#     #adding points for the means and shadowed areas for the 95% CI
-#     points(db.4$Nobs,db.4$elo.original.m,type="b",col="red",pch=19)
-#     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-#             c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
-#             border=NA,col=rgb(1,0,0, 0.15))
+    
+    #     #adding points for the means and shadowed areas for the 95% CI
+    #     points(db.4$Nobs,db.4$elo.original.m,type="b",col="red",pch=19)
+    #     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+    #             c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
+    #             border=NA,col=rgb(1,0,0, 0.15))
     
     points(db.4$Nobs,db.4$elo.no.rand.m,type="b",col="orange",pch=19)
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
             c(db.4$elo.no.rand.lower,rev(db.4$elo.no.rand.upper)),
             border=NA,col=rgb(1,165/255,0,0.15))
-   
+    
     points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-           c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
-           border=NA,col=rgb(120/255,120/255,120/255,0.15))
+            c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
+            border=NA,col=rgb(120/255,120/255,120/255,0.15))
     
     points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
             c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
             border=NA,col=rgb(0,0,1, 0.15))
     
-#     points(db.4$Nobs+0.05,db.4$elochoice.no.rand.m,type="b",col="pink",pch=19)
-#     polygon(c(db.4$Nobs+0.05,rev(db.4$Nobs+0.05)),
-#             c(db.4$elochoice.no.rand.lower,rev(db.4$elochoice.no.rand.upper)),
-#             border=NA,col=rgb(238/255,130/255,238/255, 0.15))
-
-#     points(db.4$Nobs,db.4$elochoice.rand.m,type="b",col="green",pch=19)
-#     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-#             c(db.4$elochoice.rand.lower,rev(db.4$elochoice.rand.upper)),
-#             border=NA,col=rgb(0,1,0, 0.15))
-
-#     points(db.4$Nobs,db.4$elo.no.rand.2.m,type="b",col="pink",pch=19)
-#     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-#             c(db.4$elo.no.rand.2.lower,rev(db.4$elo.no.rand.2.upper)),
-#             border=NA,col=rgb(238/255,130/255,238/255, 0.15))
-# 
-#     points(db.4$Nobs,db.4$elo.rand.2.m,type="b",col="black",pch=19)
-#     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-#             c(db.4$elo.no.rand.2.lower,rev(db.4$elo.no.rand.2.upper)),
-#             border=NA,col=rgb(120/255,120/255,120/255,0.15))
+    #     points(db.4$Nobs+0.05,db.4$elochoice.no.rand.m,type="b",col="pink",pch=19)
+    #     polygon(c(db.4$Nobs+0.05,rev(db.4$Nobs+0.05)),
+    #             c(db.4$elochoice.no.rand.lower,rev(db.4$elochoice.no.rand.upper)),
+    #             border=NA,col=rgb(238/255,130/255,238/255, 0.15))
+    
+    #     points(db.4$Nobs,db.4$elochoice.rand.m,type="b",col="green",pch=19)
+    #     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+    #             c(db.4$elochoice.rand.lower,rev(db.4$elochoice.rand.upper)),
+    #             border=NA,col=rgb(0,1,0, 0.15))
+    
+    #     points(db.4$Nobs,db.4$elo.no.rand.2.m,type="b",col="pink",pch=19)
+    #     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+    #             c(db.4$elo.no.rand.2.lower,rev(db.4$elo.no.rand.2.upper)),
+    #             border=NA,col=rgb(238/255,130/255,238/255, 0.15))
+    # 
+    #     points(db.4$Nobs,db.4$elo.rand.2.m,type="b",col="black",pch=19)
+    #     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+    #             c(db.4$elo.no.rand.2.lower,rev(db.4$elo.no.rand.2.upper)),
+    #             border=NA,col=rgb(120/255,120/255,120/255,0.15))
     
     Nindtext <- paste("N.ind = ",N.inds.values[p])
     atext <- paste("\na = ",avalues[i])
@@ -988,17 +1026,17 @@ for (p in 1:length(N.inds.values)){
            c("Elo-rating randomized",
              "Elo-rating original",
              "David's score"),
-             #"elochoice()",
-             #"elo.seq()"),
-             #"Elo original 2",
-             #"Elo randomized 2"),
+           #"elochoice()",
+           #"elo.seq()"),
+           #"Elo original 2",
+           #"Elo randomized 2"),
            col=c("blue",
                  "orange",
                  "black"),
-                 #"green",
-                 #"red"),
-                 #"pink",
-                 #"black"),
+           #"green",
+           #"red"),
+           #"pink",
+           #"black"),
            cex=1,bty='n',
            y.intersp=0.2,
            x.intersp=0.2,
@@ -1031,7 +1069,7 @@ db.split <- data.frame(Ninds=integer(),
 # bvalues <- c(-5,0,5,10,15,20,25,30,35)
 avalues <- c(0,5,10,15,20)
 N.inds.values <- c(50)
-N.obs.values <- c(1,2,3,4,5,6,7,8,9,10,20,30,40,50)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
 for (j in 1:length(avalues)){
@@ -1075,10 +1113,14 @@ for (j in 1:length(avalues)){
         result.rand2 <- elo.scores(winner2,loser2,init.score=1000,
                                    n.inds=N.inds.values[p])
         
-        ranks.rand1 <- apply(result.rand1,2,function(x) rank(x, na.last="keep"))
+        ranks.rand1 <- apply(result.rand1,2,
+                             function(x) rank(x, na.last="keep"))
+        
         mean.ranks.rand1 <- rowMeans(ranks.rand1)
         
-        ranks.rand2 <- apply(result.rand2,2,function(x) rank(x, na.last="keep"))
+        ranks.rand2 <- apply(result.rand2,2,
+                             function(x) rank(x, na.last="keep"))
+        
         mean.ranks.rand2 <- rowMeans(ranks.rand2)
         
         elo.rand.split<-cor(mean.ranks.rand1,mean.ranks.rand2,
@@ -1129,7 +1171,6 @@ names(db.split) <- c("Ninds","Nobs","alevel","blevel",
 
 proc.time() - ptm
 
-
 write.csv(db.split,
           "db_split_elorand_100sim.csv",row.names=FALSE)
 
@@ -1157,14 +1198,14 @@ for (p in 1:length(N.inds.values)){
     ttext <- paste0(Nindtext,atext,sep="\n")
     text(45,-0.2,ttext)
     
-#     par(xpd=TRUE)
-#     legend("bottomright",c("Ndavid","Elo","Elo.rand"),
-#            col=c("black","orange","blue"),
-#            cex=1,bty='n',
-#            y.intersp=0.2,
-#            x.intersp=0.2,
-#            #horiz=TRUE,
-#            pch=rep(19,3))
+    #     par(xpd=TRUE)
+    #     legend("bottomright",c("Ndavid","Elo","Elo.rand"),
+    #            col=c("black","orange","blue"),
+    #            cex=1,bty='n',
+    #            y.intersp=0.2,
+    #            x.intersp=0.2,
+    #            #horiz=TRUE,
+    #            pch=rep(19,3))
     
   }
   
@@ -1213,7 +1254,7 @@ for (p in 1:length(N.inds.values)){
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
             c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
             border=NA,col=rgb(0,0,1, 0.15))
-        
+    
     Nindtext <- paste("N.ind = ",N.inds.values[p])
     atext <- paste("\na = ",avalues[i])
     btext <- paste("b = ",avalues[i])
@@ -1221,17 +1262,17 @@ for (p in 1:length(N.inds.values)){
     ttext2 <- paste0(ttext,btext,sep="\n")
     text(38,0.11,ttext2,adj = 0)
     
-#     par(xpd=TRUE)
-#     legend(#10,0.70,
-#       "bottom",
-#       c("David's score","Elo original","Elo no rand",
-#         "Elo rand","elochoice.no.rand","elochoice.rand"),
-#       col=c("black","red","orange","blue","pink","green"),
-#       cex=1,bty='n',
-#       y.intersp=0.2,
-#       x.intersp=0.2,
-#       pch=rep(19,4),
-#       inset=c(0,0))
+    #     par(xpd=TRUE)
+    #     legend(#10,0.70,
+    #       "bottom",
+    #       c("David's score","Elo original","Elo no rand",
+    #         "Elo rand","elochoice.no.rand","elochoice.rand"),
+    #       col=c("black","red","orange","blue","pink","green"),
+    #       cex=1,bty='n',
+    #       y.intersp=0.2,
+    #       x.intersp=0.2,
+    #       pch=rep(19,4),
+    #       inset=c(0,0))
     
   }
   
