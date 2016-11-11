@@ -1072,12 +1072,6 @@ N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
-# #for every person that wants to 
-# is.even <- function(x) x %% 2 == 0
-# is.odd <- function(x) x %% 2 != 0
-
-
-
 for (j in 1:length(avalues)){
   
   for (p in 1:length(N.inds.values)){
@@ -1086,22 +1080,27 @@ for (j in 1:length(avalues)){
       
       for (numsim in 1:100){
         
-        
-        output1 <- generate_interactions(N.inds.values[p],
-                                         (N.inds.values[p])*(N.obs.values[o]/2),
+        output <- generate_interactions(N.inds.values[p],
+                                         (N.inds.values[p])*(N.obs.values[o]),
                                          a=avalues[j],
                                          b=avalues[j])
-        output2 <- generate_interactions(N.inds.values[p],
-                                         (N.inds.values[p])*(N.obs.values[o]/2),
-                                         a=avalues[j],
-                                         b=avalues[j])
+#         output2 <- generate_interactions(N.inds.values[p],
+#                                          (N.inds.values[p])*(N.obs.values[o]/2),
+#                                          a=avalues[j],
+#                                          b=avalues[j])
         
-        winner1 <- output1$interactions$Winner
-        loser1 <- output1$interactions$Loser
-        winner2 <- output2$interactions$Winner
-        loser2 <- output2$interactions$Loser
-        date1 <- output1$interactions$Date
-        date2 <- output2$interactions$Date
+        odd <- seq(1,length(output$interactions$Winner),2)
+        even <- seq(2,length(output$interactions$Winner),2)
+        
+        output1 <- output$interactions[odd,]
+        output2 <- output$interactions[even,]
+        
+        winner1 <- output1$Winner
+        loser1 <- output1$Loser
+        winner2 <- output2$Winner
+        loser2 <- output2$Loser
+        date1 <- output1$Date
+        date2 <- output2$Date
         
         #       result.no.rand1 <- elo.scores(winner1,loser1,n.rands=1)
         #       #result.no.rand1 <- as.data.table(cbind(result.no.rand1,c(1:nrow(result.no.rand1))))
