@@ -24,6 +24,7 @@ library(EloRating)
 library(EloChoice)
 library(doBy)
 library(plyr)
+library(RColorBrewer)
 
 
 # Clear memory and get to know where you are
@@ -246,11 +247,7 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
 # bvalues <- c(-5,0,5,10,15,20,25,30,35) #all values of b to be explored
 counter <- 75
 avalues <- seq(0,30,5)
-bvalues <- seq(-5,35,5)
-
-a1 <- c("a","b","c","d","e","f","g","h","i")
-colours <- brewer.pal(7,"Set1")
-
+bvalues <- c(-5,0,5,10,15,20,25,30,35)
 
 
 par(mfrow=c(3,3)) #multi-pannel 3 by 3 = 9 plots at once!
@@ -262,55 +259,29 @@ for (i in 1:length(bvalues)){
   
   plot(c(1,50),c(0,1),type="n",
        ylab="P of higher rank winning", xlab="Difference in rank")
-  #btext <- paste("b = ",bvalues[i])
-  #text(10,0.35,btext)
+  btext <- paste("b = ",bvalues[i])
+  text(10,0.35,btext)
   
   for (j in 1:length(avalues)){
-    #coline <- paste0("grey",counter)
-    coline <- colours[j]
+    coline <- paste0("grey",counter)
     plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
     #counter <- counter-5     
-    #counter <- counter-10 
+    counter <- counter-10 
   }
   #counter <- 95
-  #counter <- 75
-  lines(c(0,52),c(0.5,0.5),col="red",lty=3,lwd=1.5) # line at randomness, i.e. P=0.5
+  counter <- 75
+  lines(c(1,50),c(0.5,0.5),col="red",lty=3) # line at randomness, i.e. P=0.5
 #   legend("bottomright",c("a = 0","a = 18","a = 36"),#custom made
 #          lty=c(1,1,1),col=c("grey95","grey50","grey0"),#custom made
 #          cex=.5,bty='n',
 #          y.intersp=0.2)
-#   legend("bottomleft",c("a = 0","a = 15","a = 30"),
-#          lty=c(1,1,1),col=c("grey75","grey45","grey15"),
-#          cex=.75,bty='n',
-#          x.intersp=0.1,
-#          y.intersp=0.2,
-#          inset=c(-0.2,-0.1),
-#          seg.len=0.2)
-  
-  Nindtext <- paste("(",a1[i])
-  btext <- paste("\nb = ",bvalues[i])
-  text(46,0.02,Nindtext,adj = 0)
-  text(34,0.245,btext,adj = 0,cex=1.35)
-  
-  par(xpd=TRUE)
-  legend(-14,0.52,
-         c("a = 0","a = 5","a = 10","a = 15"),
-         col=colours[1:4],
-         cex=0.8,bty='n',
+  legend("bottomleft",c("a = 0","a = 15","a = 30"),
+         lty=c(1,1,1),col=c("grey75","grey45","grey15"),
+         cex=.75,bty='n',
+         x.intersp=0.1,
          y.intersp=0.2,
-         x.intersp=0.2,
-         pch=rep(19,4),
-         inset=c(0,0))
-  
-  legend(1,0.52,
-         c("a = 20","a = 25","a = 30"),
-         col=colours[5:7],
-         cex=0.8,bty='n',
-         y.intersp=0.2,
-         x.intersp=0.2,
-         pch=rep(19,4),
-         inset=c(0,0))
-
+         inset=c(-0.2,-0.1),
+         seg.len=0.2)
 }
 
 par(mfrow=c(1,1))
@@ -489,11 +460,11 @@ db<-eloparameterspace
 avalues <- seq(0,30,5)
 bvalues <- seq(-5,20,5)
 N.inds.values <- c(50)
-N.obs.values <- c(1,4,7,10,
+N.obs.values <- c(1,5,7,10,
                   15,20,
                   30,40,50)
 
-a <- c("a","b","c","d","e","f")
+aaa <- seq(1,length(avalues),1)
 
 
 for (p in 1:length(N.inds.values)){
@@ -561,81 +532,73 @@ for (p in 1:length(N.inds.values)){
          yaxt="n",
          ylim=c(-1,1))
     
-    axis(1,at=c(1,4,7,10,15,20,30,40,50),
-         labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
+    axis(1,at=c(1,5,7,10,15,20,30,40,50),
+         labels=as.character(c(1,5,7,10,15,20,30,40,50)),cex.axis=0.80)
     
     axis(2,at=seq(-1,1,0.2),cex.axis=0.80,las=2)
     
     #adding points for the means and shadowed areas for the 95% CI
-    
-    #colours <- c("#ffffb2","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#b10026")
-    colours <- brewer.pal(7,"Set1")
-    
-    points(db.4.1$Nobs-0.18,db.4.1$spearman,type="b",col=colours[1],pch=19)
+   
+    points(db.4.1$Nobs,db.4.1$spearman,type="b",col="grey75",pch=19)
     polygon(c(db.4.1$Nobs,rev(db.4.1$Nobs)),
             c(db.4.1$lower,rev(db.4.1$upper)),
-            border=NA,col=rgb(250/255,128/255,114/255,0.15))
-            #border=NA,col=rgb(191/255,191/255,191/255,0.15))
+            border=NA,col=rgb(191/255,191/255,191/255,0.15))
     
-    points(db.4.2$Nobs-0.12,db.4.2$spearman,type="b",col=colours[2],pch=19)
+    points(db.4.2$Nobs,db.4.2$spearman,type="b",col="grey65",pch=19)
     polygon(c(db.4.2$Nobs,rev(db.4.2$Nobs)),
             c(db.4.2$lower,rev(db.4.2$upper)),
-            border=NA,col=rgb(141/255,182/255,205/255,0.15))
-            #border=NA,col=rgb(166/255,166/255,166/255,0.15))
+            border=NA,col=rgb(166/255,166/255,166/255,0.15))
     
-    points(db.4.3$Nobs-0.06,db.4.3$spearman,type="b",col=colours[3],pch=19)
+    points(db.4.3$Nobs,db.4.3$spearman,type="b",col="grey55",pch=19)
     polygon(c(db.4.3$Nobs,rev(db.4.3$Nobs)),
             c(db.4.3$lower,rev(db.4.3$upper)),
-            border=NA,col=rgb(188/255,238/255,104/255,0.15))
-            #border=NA,col=rgb(140/255,140/255,140/255,0.15))
+            border=NA,col=rgb(140/255,140/255,140/255,0.15))
     
-    points(db.4.4$Nobs,db.4.4$spearman,type="b",col=colours[4],pch=19)
+    points(db.4.4$Nobs,db.4.4$spearman,type="b",col="grey45",pch=19)
     polygon(c(db.4.4$Nobs,rev(db.4.4$Nobs)),
             c(db.4.4$lower,rev(db.4.4$upper)),
-            border=NA,col=rgb(154/255,50/255,205/255,0.15))
-            #border=NA,col=rgb(115/255,115/255,115/255,0.15))
+            border=NA,col=rgb(115/255,115/255,115/255,0.15))
     
-    points(db.4.5$Nobs+0.06,db.4.5$spearman,type="b",col=colours[5],pch=19)
+    points(db.4.5$Nobs,db.4.5$spearman,type="b",col="grey35",pch=19)
     polygon(c(db.4.5$Nobs,rev(db.4.5$Nobs)),
             c(db.4.5$lower,rev(db.4.5$upper)),
-            border=NA,col=rgb(244/255,164/255,96/255,0.15))
-            #border=NA,col=rgb(89/255,89/255,89/255,0.15))
+            border=NA,col=rgb(89/255,89/255,89/255,0.15))
     
-    points(db.4.6$Nobs+0.12,db.4.6$spearman,type="b",col=colours[6],pch=19)
+    points(db.4.6$Nobs,db.4.6$spearman,type="b",col="grey25",pch=19)
     polygon(c(db.4.6$Nobs,rev(db.4.6$Nobs)),
             c(db.4.6$lower,rev(db.4.6$upper)),
-            border=NA,col=rgb(255/255,228/255,181/255,0.15))
-            #border=NA,col=rgb(64/255,64/255,64/255,0.15))
+            border=NA,col=rgb(64/255,64/255,64/255,0.15))
     
-    points(db.4.7$Nobs+0.18,db.4.7$spearman,type="b",col=colours[7],pch=19)
+    points(db.4.7$Nobs,db.4.7$spearman,type="b",col="grey15",pch=19)
     polygon(c(db.4.7$Nobs,rev(db.4.7$Nobs)),
             c(db.4.7$lower,rev(db.4.7$upper)),
-            border=NA,col=rgb(139/255,69/255,19/255,0.15))
-            #border=NA,col=rgb(38/255,38/255,38/255,0.15))
+            border=NA,col=rgb(38/255,38/255,38/255,0.15))
     
     
 
-    Nindtext <- paste("(",a[i])
+    Nindtext <- paste("N.ind = ",N.inds.values[p])
     btext <- paste("\nb = ",bvalues[i])
-    #ttext <- paste0(Nindtext,btext,sep="\n")
-    #text(39,-0.8,ttext,adj = 0)
-    text(48,-0.95,Nindtext,adj = 0)
-    text(35,-0.5,btext,adj = 0,cex=1.35)
+    ttext <- paste0(Nindtext,btext,sep="\n")
+    text(39,-0.8,ttext,adj = 0)
     
     par(xpd=TRUE)
-    legend(-3,0.05,
-           c("a = 0","a = 5","a = 10","a = 15"),
-           col=colours[1:4],
-           cex=0.8,bty='n',
-           y.intersp=0.2,
-           x.intersp=0.2,
-           pch=rep(19,4),
-           inset=c(0,0))
-    
-    legend(7,0.05,
-           c("a = 20","a = 25","a = 30"),
-           col=colours[5:7],
-           cex=0.8,bty='n',
+    legend(#10,0.75,
+           "bottomright",
+           c("Elo-rating randomized",
+             "Elo-rating original",
+             "David's score"),
+           #"elochoice()",
+           #"elo.seq()"),
+           #"Elo original 2",
+           #"Elo randomized 2"),
+           col=c("blue",
+                 "orange",
+                 "black"),
+           #"green",
+           #"red"),
+           #"pink",
+           #"black"),
+           cex=1,bty='n',
            y.intersp=0.2,
            x.intersp=0.2,
            pch=rep(19,4),
@@ -1068,7 +1031,7 @@ db.split <- data.frame(Ninds=integer(),
 # bvalues <- c(-5,0,5,10,15,20,25,30,35)
 avalues <- c(0,5,10,15,20)
 N.inds.values <- c(50)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+N.obs.values <- c(1,2,3,4,5,6,7,8,9,10,20,30,40,50)
 
 
 for (j in 1:length(avalues)){
@@ -1112,14 +1075,10 @@ for (j in 1:length(avalues)){
         result.rand2 <- elo.scores(winner2,loser2,init.score=1000,
                                    n.inds=N.inds.values[p])
         
-        ranks.rand1 <- apply(result.rand1,2,
-                             function(x) rank(x, na.last="keep"))
-        
+        ranks.rand1 <- apply(result.rand1,2,function(x) rank(x, na.last="keep"))
         mean.ranks.rand1 <- rowMeans(ranks.rand1)
         
-        ranks.rand2 <- apply(result.rand2,2,
-                             function(x) rank(x, na.last="keep"))
-        
+        ranks.rand2 <- apply(result.rand2,2,function(x) rank(x, na.last="keep"))
         mean.ranks.rand2 <- rowMeans(ranks.rand2)
         
         elo.rand.split<-cor(mean.ranks.rand1,mean.ranks.rand2,
@@ -1169,6 +1128,10 @@ names(db.split) <- c("Ninds","Nobs","alevel","blevel",
                      "elo.rand")
 
 proc.time() - ptm
+
+
+write.csv(db.split,
+          "db_split_elorand_100sim.csv",row.names=FALSE)
 
 
 
