@@ -1072,6 +1072,12 @@ N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
+# #for every person that wants to 
+# is.even <- function(x) x %% 2 == 0
+# is.odd <- function(x) x %% 2 != 0
+
+
+
 for (j in 1:length(avalues)){
   
   for (p in 1:length(N.inds.values)){
