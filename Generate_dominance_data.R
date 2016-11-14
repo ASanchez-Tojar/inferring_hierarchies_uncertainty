@@ -1067,9 +1067,13 @@ db.split <- data.frame(Ninds=integer(),
 
 # avalues <- seq(0,36,2)
 # bvalues <- c(-5,0,5,10,15,20,25,30,35)
-avalues <- c(0,5,10,15,20)
+#avalues <- c(0,5,10,15,20)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+
+#steeper hierarchies
+avalues <- c(5,10,20,10,20)
+bvalues <- c(0,5,10,10,20)
 
 
 for (j in 1:length(avalues)){
@@ -1080,10 +1084,11 @@ for (j in 1:length(avalues)){
       
       for (numsim in 1:100){
         
-        output <- generate_interactions(N.inds.values[p],
-                                         (N.inds.values[p])*(N.obs.values[o]),
-                                         a=avalues[j],
-                                         b=avalues[j])
+        output <- generate_interactions(N.inds.values[p],  
+                                        (N.inds.values[p])*(N.obs.values[o]),
+                                        a=avalues[j],
+                                        b=bvalues[j])
+                                        #b=avalues[j])
 #         output2 <- generate_interactions(N.inds.values[p],
 #                                          (N.inds.values[p])*(N.obs.values[o]/2),
 #                                          a=avalues[j],
@@ -1113,56 +1118,57 @@ for (j in 1:length(avalues)){
         #                      use="complete.obs",method="spearman")
         #       
         
-        # result.rand1 <- elo.scores(winner1,loser1,init.score=1000,
-        #                            n.inds=N.inds.values[p])
-        # result.rand2 <- elo.scores(winner2,loser2,init.score=1000,
-        #                            n.inds=N.inds.values[p])
-        # 
-        # ranks.rand1 <- apply(result.rand1,2,
-        #                      function(x) rank(x, na.last="keep"))
-        # 
-        # mean.ranks.rand1 <- rowMeans(ranks.rand1)
-        # 
-        # ranks.rand2 <- apply(result.rand2,2,
-        #                      function(x) rank(x, na.last="keep"))
-        # 
-        # mean.ranks.rand2 <- rowMeans(ranks.rand2)
-        # 
-        # elo.rand.split<-cor(mean.ranks.rand1,mean.ranks.rand2,
-        #                     use="complete.obs",method="spearman")
-        # 
+        result.rand1 <- elo.scores(winner1,loser1,init.score=1000,
+                                   n.inds=N.inds.values[p])
+        result.rand2 <- elo.scores(winner2,loser2,init.score=1000,
+                                   n.inds=N.inds.values[p])
         
-              x.1<-elo.seq(winner=as.factor(winner1),
-                           loser=as.factor(loser1),
-                           Date=date1,
-                           k=200,
-                           progressbar=FALSE)
-
-              x.2<-elo.seq(winner=as.factor(winner2),
-                           loser=as.factor(loser2),
-                           Date=date2,
-                           k=200,
-                           progressbar=FALSE)
-
-
-              dav.1<-DS(creatematrix(x.1, drawmethod="0.5"))
-              dav.2<-DS(creatematrix(x.2, drawmethod="0.5"))
-
-              dav.1$normDSrank.1 <- rank(dav.1$normDS,na.last="keep")
-              dav.2$normDSrank.2 <- rank(dav.2$normDS,na.last="keep")
-
-              dav <- merge(dav.1,dav.2,by="ID")
-
-              dav$ID <- as.numeric(as.character(dav$ID))
-
-
-              Ndavid <- cor(dav$normDSrank.1,dav$normDSrank.2,
+        ranks.rand1 <- apply(result.rand1,2,
+                             function(x) rank(x, na.last="keep"))
+        
+        mean.ranks.rand1 <- rowMeans(ranks.rand1)
+        
+        ranks.rand2 <- apply(result.rand2,2,
+                             function(x) rank(x, na.last="keep"))
+        
+        mean.ranks.rand2 <- rowMeans(ranks.rand2)
+        
+        elo.rand.split<-cor(mean.ranks.rand1,mean.ranks.rand2,
                             use="complete.obs",method="spearman")
+        
+        
+#               x.1<-elo.seq(winner=as.factor(winner1),
+#                            loser=as.factor(loser1),
+#                            Date=date1,
+#                            k=200,
+#                            progressbar=FALSE)
+# 
+#               x.2<-elo.seq(winner=as.factor(winner2),
+#                            loser=as.factor(loser2),
+#                            Date=date2,
+#                            k=200,
+#                            progressbar=FALSE)
+# 
+# 
+#               dav.1<-DS(creatematrix(x.1, drawmethod="0.5"))
+#               dav.2<-DS(creatematrix(x.2, drawmethod="0.5"))
+# 
+#               dav.1$normDSrank.1 <- rank(dav.1$normDS,na.last="keep")
+#               dav.2$normDSrank.2 <- rank(dav.2$normDS,na.last="keep")
+# 
+#               dav <- merge(dav.1,dav.2,by="ID")
+# 
+#               dav$ID <- as.numeric(as.character(dav$ID))
+# 
+# 
+#               Ndavid <- cor(dav$normDSrank.1,dav$normDSrank.2,
+#                             use="complete.obs",method="spearman")
 
         db.split<-rbind(db.split,c(N.inds.values[p],N.obs.values[o],
-                                   avalues[j],avalues[j],
-                                   Ndavid))#,elo.split,
-                                   #elo.rand.split))
+                                   avalues[j],#avalues[j],
+                                   bvalues[j],
+                                   #Ndavid))#,elo.split,
+                                   elo.rand.split))
         
         
       }
@@ -1171,13 +1177,13 @@ for (j in 1:length(avalues)){
 }
 
 names(db.split) <- c("Ninds","Nobs","alevel","blevel",
-                     "Ndavid")#,"elo",
-                     #"elo.rand")
+                     #"Ndavid")#,"elo",
+                     "elo.rand")
 
 proc.time() - ptm
 
-# write.csv(db.split,
-#           "db_split_Davids_100sim.csv",row.names=FALSE)
+write.csv(db.split,
+          "db_split_elorand_100sim_steeper.csv",row.names=FALSE)
 
 
 
