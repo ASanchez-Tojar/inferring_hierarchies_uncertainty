@@ -1229,6 +1229,8 @@ avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating 
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
+a1 <- c("a","b","c","d","e")
+
 for (p in 1:length(N.inds.values)){
   
   par(mfrow=c(3,2))
@@ -1272,7 +1274,9 @@ for (p in 1:length(N.inds.values)){
     #ttext <- paste0(Nindtext,atext,sep="\n")
     #ttext2 <- paste0(ttext,btext,sep="\n")
     text3 <- paste0(atext,btext,sep='\n')
-    text(38,0.11,text3,adj = 0)
+    text(21,-0.20,text3,adj = 0,cex=1.35)
+    Nindtext <- paste("(",a1[i])
+    text(48,-0.36,Nindtext,adj = 0)
     
   }
   
@@ -1292,6 +1296,8 @@ db_split100sim <- read.table("db_split_Davids_100sim.csv",header=TRUE,sep=",")
 avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+
+a1 <- c("a","b","c","d","e")
 
 for (p in 1:length(N.inds.values)){
   
@@ -1336,7 +1342,9 @@ for (p in 1:length(N.inds.values)){
     #ttext <- paste0(Nindtext,atext,sep="\n")
     #ttext2 <- paste0(ttext,btext,sep="\n")
     text3 <- paste0(atext,btext,sep='\n')
-    text(38,0.11,text3,adj = 0)
+    text(21,-0.20,text3,adj = 0,cex=1.35)
+    Nindtext <- paste("(",a1[i])
+    text(48,-0.36,Nindtext,adj = 0)
     
   }
   
