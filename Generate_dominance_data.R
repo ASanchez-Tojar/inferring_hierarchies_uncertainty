@@ -1113,56 +1113,56 @@ for (j in 1:length(avalues)){
         #                      use="complete.obs",method="spearman")
         #       
         
-        result.rand1 <- elo.scores(winner1,loser1,init.score=1000,
-                                   n.inds=N.inds.values[p])
-        result.rand2 <- elo.scores(winner2,loser2,init.score=1000,
-                                   n.inds=N.inds.values[p])
-        
-        ranks.rand1 <- apply(result.rand1,2,
-                             function(x) rank(x, na.last="keep"))
-        
-        mean.ranks.rand1 <- rowMeans(ranks.rand1)
-        
-        ranks.rand2 <- apply(result.rand2,2,
-                             function(x) rank(x, na.last="keep"))
-        
-        mean.ranks.rand2 <- rowMeans(ranks.rand2)
-        
-        elo.rand.split<-cor(mean.ranks.rand1,mean.ranks.rand2,
-                            use="complete.obs",method="spearman")
-        
-        
-        #       x.1<-elo.seq(winner=as.factor(winner1),
-        #                    loser=as.factor(loser1), 
-        #                    Date=date1,
-        #                    k=200,
-        #                    progressbar=FALSE)
-        #       
-        #       x.2<-elo.seq(winner=as.factor(winner2),
-        #                    loser=as.factor(loser2), 
-        #                    Date=date2,
-        #                    k=200,
-        #                    progressbar=FALSE)
-        #                  
-        #       
-        #       dav.1<-DS(creatematrix(x.1, drawmethod="0.5"))
-        #       dav.2<-DS(creatematrix(x.2, drawmethod="0.5"))
-        #       
-        #       dav.1$normDSrank.1 <- rank(dav.1$normDS,na.last="keep")
-        #       dav.2$normDSrank.2 <- rank(dav.2$normDS,na.last="keep")
-        #       
-        #       dav <- merge(dav.1,dav.2,by="ID")
-        #             
-        #       dav$ID <- as.numeric(as.character(dav$ID))
-        #       
-        #           
-        #       Ndavid <- cor(dav$normDSrank.1,dav$normDSrank.2,
+        # result.rand1 <- elo.scores(winner1,loser1,init.score=1000,
+        #                            n.inds=N.inds.values[p])
+        # result.rand2 <- elo.scores(winner2,loser2,init.score=1000,
+        #                            n.inds=N.inds.values[p])
+        # 
+        # ranks.rand1 <- apply(result.rand1,2,
+        #                      function(x) rank(x, na.last="keep"))
+        # 
+        # mean.ranks.rand1 <- rowMeans(ranks.rand1)
+        # 
+        # ranks.rand2 <- apply(result.rand2,2,
+        #                      function(x) rank(x, na.last="keep"))
+        # 
+        # mean.ranks.rand2 <- rowMeans(ranks.rand2)
+        # 
+        # elo.rand.split<-cor(mean.ranks.rand1,mean.ranks.rand2,
         #                     use="complete.obs",method="spearman")
+        # 
         
+              x.1<-elo.seq(winner=as.factor(winner1),
+                           loser=as.factor(loser1),
+                           Date=date1,
+                           k=200,
+                           progressbar=FALSE)
+
+              x.2<-elo.seq(winner=as.factor(winner2),
+                           loser=as.factor(loser2),
+                           Date=date2,
+                           k=200,
+                           progressbar=FALSE)
+
+
+              dav.1<-DS(creatematrix(x.1, drawmethod="0.5"))
+              dav.2<-DS(creatematrix(x.2, drawmethod="0.5"))
+
+              dav.1$normDSrank.1 <- rank(dav.1$normDS,na.last="keep")
+              dav.2$normDSrank.2 <- rank(dav.2$normDS,na.last="keep")
+
+              dav <- merge(dav.1,dav.2,by="ID")
+
+              dav$ID <- as.numeric(as.character(dav$ID))
+
+
+              Ndavid <- cor(dav$normDSrank.1,dav$normDSrank.2,
+                            use="complete.obs",method="spearman")
+
         db.split<-rbind(db.split,c(N.inds.values[p],N.obs.values[o],
                                    avalues[j],avalues[j],
-                                   #Ndavid,elo.split,
-                                   elo.rand.split))
+                                   Ndavid))#,elo.split,
+                                   #elo.rand.split))
         
         
       }
@@ -1171,13 +1171,13 @@ for (j in 1:length(avalues)){
 }
 
 names(db.split) <- c("Ninds","Nobs","alevel","blevel",
-                     #"Ndavid","elo",
-                     "elo.rand")
+                     "Ndavid")#,"elo",
+                     #"elo.rand")
 
 proc.time() - ptm
 
-write.csv(db.split,
-          "db_split_elorand_100sim.csv",row.names=FALSE)
+# write.csv(db.split,
+#           "db_split_Davids_100sim.csv",row.names=FALSE)
 
 
 
@@ -1227,9 +1227,7 @@ db_split100sim <- read.table("db_split_elorand_100sim.csv",header=TRUE,sep=",")
 
 avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 N.inds.values <- c(50)
-N.obs.values <- c(1,10,
-                  20,
-                  30,40,50)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 for (p in 1:length(N.inds.values)){
   
@@ -1252,32 +1250,93 @@ for (p in 1:length(N.inds.values)){
     plot(db.4$elo.rand.m~db.4$Nobs,0.5,type="n",
          ylab="spearman correlation",
          xlab="number of interactions/individual",
-         ylim=c(-0.2,1))
+         xaxt="n",
+         yaxt="n",
+         ylim=c(-0.4,1))
     
+    axis(1,at=c(1,4,7,10,15,20,30,40,50),
+         labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
+    
+    axis(2,at=seq(-0.4,1,0.2),cex.axis=0.80,las=2)
+    
+
     #adding points for the means and shadowed areas for the 95% CI
     points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
             c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
             border=NA,col=rgb(0,0,1, 0.15))
     
-    Nindtext <- paste("N.ind = ",N.inds.values[p])
+    #Nindtext <- paste("N.ind = ",N.inds.values[p])
     atext <- paste("\na = ",avalues[i])
-    btext <- paste("b = ",avalues[i])
-    ttext <- paste0(Nindtext,atext,sep="\n")
-    ttext2 <- paste0(ttext,btext,sep="\n")
-    text(38,0.11,ttext2,adj = 0)
+    btext <- paste("\nb = ",avalues[i])
+    #ttext <- paste0(Nindtext,atext,sep="\n")
+    #ttext2 <- paste0(ttext,btext,sep="\n")
+    text3 <- paste0(atext,btext,sep='\n')
+    text(38,0.11,text3,adj = 0)
     
-    #     par(xpd=TRUE)
-    #     legend(#10,0.70,
-    #       "bottom",
-    #       c("David's score","Elo original","Elo no rand",
-    #         "Elo rand","elochoice.no.rand","elochoice.rand"),
-    #       col=c("black","red","orange","blue","pink","green"),
-    #       cex=1,bty='n',
-    #       y.intersp=0.2,
-    #       x.intersp=0.2,
-    #       pch=rep(19,4),
-    #       inset=c(0,0))
+  }
+  
+  par(mfrow=c(1,1))
+  
+}
+
+
+
+
+###############################################################################
+# Plotting estimated rank/2 ~ estimated rank/2: spearman correaltion for each method
+# Adding 95% CI intervals 
+###############################################################################
+db_split100sim <- read.table("db_split_Davids_100sim.csv",header=TRUE,sep=",")
+
+avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+N.inds.values <- c(50)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+
+for (p in 1:length(N.inds.values)){
+  
+  par(mfrow=c(3,2))
+  
+  db.2 <- db_split100sim[db_split100sim$Ninds==N.inds.values[p],]
+  
+  for (i in 1:length(avalues)){
+    
+    db.3 <- db.2[db.2$alevel==avalues[i],]
+    
+    db.4 <-summaryBy(Ndavid ~ Nobs, 
+                     data = db.3, 
+                     FUN = function(x) { c(m = mean(x),
+                                           q = quantile(x,probs=c(0.025,0.975))) })
+    
+    names(db.4) <- c("Nobs",
+                     "Ndavid.m","Ndavid.lower","Ndavid.upper")
+    
+    plot(db.4$Ndavid.m~db.4$Nobs,0.5,type="n",
+         ylab="spearman correlation",
+         xlab="number of interactions/individual",
+         xaxt="n",
+         yaxt="n",
+         ylim=c(-0.4,1))
+    
+    axis(1,at=c(1,4,7,10,15,20,30,40,50),
+         labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
+    
+    axis(2,at=seq(-0.4,1,0.2),cex.axis=0.80,las=2)
+    
+    
+    #adding points for the means and shadowed areas for the 95% CI
+    points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
+    polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+            c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
+            border=NA,col=rgb(120/255,120/255,120/255,0.15))
+    
+    #Nindtext <- paste("N.ind = ",N.inds.values[p])
+    atext <- paste("\na = ",avalues[i])
+    btext <- paste("\nb = ",avalues[i])
+    #ttext <- paste0(Nindtext,atext,sep="\n")
+    #ttext2 <- paste0(ttext,btext,sep="\n")
+    text3 <- paste0(atext,btext,sep='\n')
+    text(38,0.11,text3,adj = 0)
     
   }
   
