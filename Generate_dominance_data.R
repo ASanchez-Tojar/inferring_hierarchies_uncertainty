@@ -25,7 +25,8 @@ library(EloChoice)
 library(doBy)
 library(plyr)
 library(RColorBrewer)
-
+library(rptR)
+library(reshape)
 
 # Clear memory and get to know where you are
 rm(list=ls())
@@ -1369,3 +1370,87 @@ for (p in 1:length(N.inds.values)){
   par(mfrow=c(1,1))
   
 }
+
+
+###############################################################################
+# SECTION 3b: Repeatability
+###############################################################################
+
+ptm <- proc.time()
+
+db <- data.frame(Ninds=integer(),
+                 Nobs=integer(),
+                 alevel=integer(),
+                 blevel=integer(),
+                 rep=numeric(),
+                 pvalue=numeric(),
+                 stringsAsFactors=FALSE)
+
+
+# avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+
+N.inds.values <- c(50)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+
+#for steeper scenarios
+avalues <- c(5,10,20,10,20)
+bvalues <- c(0,5,10,10,20)
+
+
+for (j in 1:length(avalues)){
+  
+  for (p in 1:length(N.inds.values)){
+    
+    for (o in 1:length(N.obs.values)){
+      
+      for (sim in 1:100){
+        
+        output <- generate_interactions(N.inds.values[p],
+                                        N.inds.values[p]*N.obs.values[o],
+                                        a=avalues[j],
+                                        b=bvalues[j])
+        #b=bvalues[j])
+        
+        
+        winner <- output$interactions$Winner
+        loser <- output$interactions$Loser
+        date <- output$interactions$Date
+        
+
+        # generating elo-rating according to elo.scores() from this script and
+        # randomizing the order of the interactions 1000 times
+        result <- elo.scores(winner,loser,init.score=1000,
+                             n.inds=N.inds.values[p])
+        
+              
+        #mean.scores <- rowMeans(result)
+        ranks <- as.data.frame(apply(-result,2,
+                                     function(x) rank(x, na.last="keep")))
+        
+        ranks$id <- as.numeric(rownames(ranks))
+        
+        ranks2 <- ranks[!(is.na(ranks$V1)),]
+        
+        ranks3 <- melt(ranks2, id=(c("id")))
+        
+        rep <- rpt.aov(ranks3$value,ranks3$id, 
+                       npermut=0, CI=0.95)
+              
+        db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
+                       avalues[j],
+                       bvalues[j],
+                       rep$R[[1]],
+                       rep$P[[1]]))
+        
+      }
+    }
+  }
+}
+
+names(db) <- c("Ninds","Nobs","alevel","blevel","rep","pvalue")
+
+proc.time() - ptm
+
+
+# write.csv(db,
+#          "db_5_methods_100_simulations_steep.csv",row.names=FALSE)
