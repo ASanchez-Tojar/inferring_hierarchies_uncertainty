@@ -1452,5 +1452,5 @@ names(db) <- c("Ninds","Nobs","alevel","blevel","rep","pvalue")
 proc.time() - ptm
 
 
-# write.csv(db,
-#          "db_5_methods_100_simulations_steep.csv",row.names=FALSE)
+write.csv(db,
+         "db_repeatabilityANOVA_100_simulations_steep.csv",row.names=FALSE)
