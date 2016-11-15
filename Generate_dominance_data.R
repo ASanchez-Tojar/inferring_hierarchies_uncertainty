@@ -1229,11 +1229,20 @@ for (p in 1:length(N.inds.values)){
 # Plotting estimated rank/2 ~ estimated rank/2: spearman correaltion for each method
 # Adding 95% CI intervals 
 ###############################################################################
-db_split100sim <- read.table("db_split_elorand_100sim.csv",header=TRUE,sep=",")
+# db_split100sim <- read.table("db_split_elorand_100sim.csv",header=TRUE,sep=",")
+# 
+# avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+# N.inds.values <- c(50)
+# N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
-avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+db_split100sim <- read.table("db_split_elorand_100sim_steeper.csv",header=TRUE,sep=",")
+
+#avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+
+avalues <- c(5,10,20,10,20)
+bvalues <- c(0,5,10,10,20)
 
 a1 <- c("a","b","c","d","e")
 
@@ -1245,7 +1254,9 @@ for (p in 1:length(N.inds.values)){
   
   for (i in 1:length(avalues)){
     
-    db.3 <- db.2[db.2$alevel==avalues[i],]
+    db.3 <- db.2[db.2$alevel==avalues[i]
+                 & db.2$blevel==bvalues[i]
+                 ,]
     
     db.4 <-summaryBy(elo.rand ~ Nobs, 
                      data = db.3, 
@@ -1276,7 +1287,8 @@ for (p in 1:length(N.inds.values)){
     
     #Nindtext <- paste("N.ind = ",N.inds.values[p])
     atext <- paste("\na = ",avalues[i])
-    btext <- paste("\nb = ",avalues[i])
+    #btext <- paste("\nb = ",avalues[i])
+    btext <- paste("\nb = ",bvalues[i])
     #ttext <- paste0(Nindtext,atext,sep="\n")
     #ttext2 <- paste0(ttext,btext,sep="\n")
     text3 <- paste0(atext,btext,sep='\n')
