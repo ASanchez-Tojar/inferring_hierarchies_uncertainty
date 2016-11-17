@@ -111,64 +111,6 @@ generate_interactions <- function(N.inds, N.obs, a, b) {
 }
 
 
-elo.scores.2 <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
-                         K=200,init.score=0,n.rands=1000,
-                         return.trajectories=FALSE){
-  
-  if(is.null(n.inds)){
-    n.inds <- max(c(unique(winners),unique(losers)))	
-  }
-  
-  T <- length(winners)
-  
-  if(return.trajectories){
-    all.scores <- array(0,c(n.inds,T+1,n.rands))
-  } else{
-    all.scores <- array(0,c(n.inds,n.rands))
-  }
-  
-  if (length(K) == 1) {
-    K <- rep(K,T)
-  }
-  
-  for(r in 1:n.rands){
-    if (n.rands == 1) {
-      ord <- 1:T
-    } else {
-      ord <- sample(1:T,T,replace=F)
-    }
-    winners.perm <- winners[ord]
-    losers.perm <- losers[ord]
-    scores<-array(NA,c(n.inds,T+1))
-    scores[,1]<-init.score
-    
-    for(i in 1:T){
-      
-      scores[,i+1] <- scores[,i]
-      
-      winner <- winners.perm[i]
-      loser <- losers.perm[i]
-      p<-1/(1+exp(-sigmoid.param*(scores[winner,i]-scores[loser,i]))) #prob that winner wins
-      
-      scores[winner,i+1] <- scores[winner,i] + (1-p)*K[i]
-      scores[loser,i+1] <- scores[loser,i] - (1-p)*K[i]
-    }
-    
-    if(return.trajectories){
-      all.scores[,,r]<-scores
-    } else{
-      all.scores[,r]<-scores[,T+1]
-    }
-    
-    
-  }
-  
-  freq <- table(factor(c(winners,losers),levels=c(1:n.inds)))
-  all.scores[as.numeric(names(freq)[which(freq==0)]),] <- NA
-  
-  invisible(all.scores)	
-}
-
 elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
                        K=200,init.score=0,n.rands=1000,
                        return.trajectories=FALSE){
@@ -1419,17 +1361,17 @@ for (j in 1:length(avalues)){
 
         # generating elo-rating according to elo.scores() from this script and
         # randomizing the order of the interactions 1000 times
-        result <- elo.scores(winner,loser,init.score=1000,
-                             n.inds=N.inds.values[p])
+        result <- as.data.frame(elo.scores(winner,loser,init.score=1000,
+                                           n.inds=N.inds.values[p]))
         
               
-        #mean.scores <- rowMeans(result)
-        ranks <- as.data.frame(apply(-result,2,
-                                     function(x) rank(x, na.last="keep")))
+        # #mean.scores <- rowMeans(result)
+        # ranks <- as.data.frame(apply(-result,2,
+        #                              function(x) rank(x, na.last="keep")))
         
-        ranks$id <- as.numeric(rownames(ranks))
+        result$id <- as.numeric(rownames(result))
         
-        ranks2 <- ranks[!(is.na(ranks$V1)),]
+        ranks2 <- result[!(is.na(result$V1)),]
         
         ranks3 <- melt(ranks2, id=(c("id")))
         
@@ -1452,5 +1394,75 @@ names(db) <- c("Ninds","Nobs","alevel","blevel","rep","pvalue")
 proc.time() - ptm
 
 
-write.csv(db,
-         "db_repeatabilityANOVA_100_simulations_steep.csv",row.names=FALSE)
+# write.csv(db,
+#          "db_repeatabilityANOVA_100_simulations_steep.csv",row.names=FALSE)
+
+
+
+
+###############################################################################
+# Plotting repeatability and adding 95% CI intervals 
+###############################################################################
+db_rep <- read.table("db_repeatabilityANOVA_100_simulations_steep.csv",header=TRUE,sep=",")
+
+avalues <- c(5,10,20,10,20)
+bvalues <- c(0,5,10,10,20)
+N.inds.values <- c(50)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+
+a1 <- c("a","b","c","d","e")
+
+for (p in 1:length(N.inds.values)){
+  
+  par(mfrow=c(3,2))
+  
+  db.2 <- db_rep[db_rep$Ninds==N.inds.values[p],]
+  
+  for (i in 1:length(avalues)){
+    
+    db.3 <- db.2[db.2$alevel==avalues[i]
+                 & db.2$blevel==bvalues[i]
+                 ,]
+    
+    db.4 <-summaryBy(rep ~ Nobs, 
+                     data = db.3, 
+                     FUN = function(x) { c(m = mean(x),
+                                           q = quantile(x,probs=c(0.025,0.975))) })
+    
+    names(db.4) <- c("Nobs",
+                     "rep.m","lower","upper")
+    
+    plot(db.4$rep.m~db.4$Nobs,0.5,type="n",
+         ylab="Elo-rating repeatability",
+         xlab="number of interactions/individual",
+         xaxt="n",
+         yaxt="n",
+         ylim=c(0.7,1))
+    
+    axis(1,at=c(1,4,7,10,15,20,30,40,50),
+         labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
+    
+    axis(2,at=seq(0.7,1,0.1),cex.axis=0.80,las=2)
+    
+    
+    #adding points for the means and shadowed areas for the 95% CI
+    points(db.4$Nobs,db.4$rep.m,type="b",col="blue",pch=19)
+    polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+            c(db.4$lower,rev(db.4$upper)),
+            border=NA,col=rgb(0,0,1, 0.15))
+    
+    #Nindtext <- paste("N.ind = ",N.inds.values[p])
+    atext <- paste("\na = ",avalues[i])
+    btext <- paste("\nb = ",bvalues[i])
+    #ttext <- paste0(Nindtext,atext,sep="\n")
+    #ttext2 <- paste0(ttext,btext,sep="\n")
+    text3 <- paste0(atext,btext,sep='\n')
+    text(21,0.75,text3,adj = 0,cex=1.35)
+    Nindtext <- paste("(",a1[i])
+    text(48,0.71,Nindtext,adj = 0)
+    
+  }
+  
+  par(mfrow=c(1,1))
+  
+}
