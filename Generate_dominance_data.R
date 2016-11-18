@@ -603,14 +603,14 @@ db <- data.frame(Ninds=integer(),
                  Nobs=integer(),
                  alevel=integer(),
                  blevel=integer(),
-                 #Ndavid=numeric(),
+                 Ndavid=numeric(),
                  elo.original=numeric(),
                  elo.no.rand=numeric(),
                  elo.rand=numeric(),
                  #elochoice.no.rand=numeric(),
-                 #elochoice.rand=numeric(),
-                 elo.no.rand.2=numeric(),
-                 elo.rand.2=numeric(),
+                 elochoice.rand=numeric(),
+                 #elo.no.rand.2=numeric(),
+                 #elo.rand.2=numeric(),
                  stringsAsFactors=FALSE)
 
 
@@ -620,8 +620,10 @@ N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 #for steeper scenarios
-avalues <- c(5)#,10,20,10,20)
+#avalues <- c(5)#,10,20,10,20)
 #bvalues <- c(0,5,10,10,20)
+avalues <- c(0)
+bvalues <- c(5)
 
 
 for (j in 1:length(avalues)){
@@ -630,12 +632,12 @@ for (j in 1:length(avalues)){
     
     for (o in 1:length(N.obs.values)){
       
-      for (sim in 1:5){
+      for (sim in 1:100){
         
         output <- generate_interactions(N.inds.values[p],
                                         N.inds.values[p]*N.obs.values[o],
                                         a=avalues[j],
-                                        b=avalues[j])
+                                        b=bvalues[j])
         #b=bvalues[j])
         
         
@@ -663,15 +665,15 @@ for (j in 1:length(avalues)){
         spearman.original<-cor(z$rank,z$Elo.ranked,
                                use="complete.obs",method="spearman")
         
-        #         # generating david's score
-        #         dav<-DS(creatematrix(x, drawmethod="0.5"))
-        #         
-        #         dav$ID <- as.numeric(as.character(dav$ID))
-        #         
-        #         dav$normDSrank <- rank(-dav$normDS,na.last="keep")
-        #         
-        #         Ndavid <- cor(dav$ID,dav$normDSrank,
-        #                       use="complete.obs",method="spearman")
+                # generating david's score
+                dav<-DS(creatematrix(x, drawmethod="0.5"))
+                
+                dav$ID <- as.numeric(as.character(dav$ID))
+                
+                dav$normDSrank <- rank(-dav$normDS,na.last="keep")
+                
+                Ndavid <- cor(dav$ID,dav$normDSrank,
+                              use="complete.obs",method="spearman")
         
         # generating elo-rating according to elo.scores() from this script
         result.no.rand <- elo.scores(winner,loser,n.rands=1,
@@ -716,62 +718,63 @@ for (j in 1:length(avalues)){
         #                                use="complete.obs",method="spearman")
         
         
-        #         #elochoice() randomization
-        #         
-        #         eloc.2<-ratings(elochoice(winner,loser,
-        #                                   kval=200,startvalue=1000,
-        #                                   normprob=TRUE,runs=1000),
-        #                         drawplot=FALSE)
-        #         
-        #         
-        #         z.eloc.2 <- data.frame(eloc.2,attributes(eloc.2),
-        #                                        row.names = as.character(seq(1,length(eloc.2),
-        #                                                                     1)))
-        #         
-        #         z.eloc.2$rank <- as.numeric(as.character(z.eloc.2$names))
-        #         
-        #         z.eloc.2$Elo.ranked <- rank(-z.eloc.2$eloc.2,na.last="keep")
-        #         
-        #         elochoice.rand<-cor(z.eloc.2$rank,z.eloc.2$Elo.ranked,
-        #                             use="complete.obs",method="spearman")
-        
-        # generating elo-rating according to elo.scores.2() from this script
-        result.no.rand.2 <- elo.scores.2(winner,loser,n.rands=1,
-                                         init.score=1000,
-                                         n.inds=N.inds.values[p])
-        
-        ranks.no.rand.2 <- rank(-result.no.rand.2,na.last="keep")
-        
-        spearman.cor.no.rand.2<-cor(output$hierarchy$Rank,
-                                    ranks.no.rand.2,
+                #elochoice() randomization
+                
+                eloc.2<-ratings(elochoice(winner,loser,
+                                          kval=200,startvalue=1000,
+                                          normprob=TRUE,runs=1000),
+                                drawplot=FALSE)
+                
+                
+                z.eloc.2 <- data.frame(eloc.2,attributes(eloc.2),
+                                               row.names = as.character(seq(1,length(eloc.2),
+                                                                            1)))
+                
+                z.eloc.2$rank <- as.numeric(as.character(z.eloc.2$names))
+                
+                z.eloc.2$Elo.ranked <- rank(-z.eloc.2$eloc.2,na.last="keep")
+                
+                elochoice.rand<-cor(z.eloc.2$rank,z.eloc.2$Elo.ranked,
                                     use="complete.obs",method="spearman")
         
-        
-        # generating elo-rating according to elo.scores.2() from this script and
-        # randomizing the order of the interactions 1000 times
-        result.2 <- elo.scores.2(winner,loser,init.score=1000,
-                                 n.inds=N.inds.values[p])
-        
-        #mean.scores <- rowMeans(result)
-        ranks.2 <- apply(-result.2,2,function(x) rank(x, na.last="keep"))
-        mean.ranks.2 <- rowMeans(ranks.2)
-        
-        spearman.cor.rand.2<-cor(output$hierarchy$Rank,
-                                 mean.ranks.2,
-                                 use="complete.obs",method="spearman")
+#         # generating elo-rating according to elo.scores.2() from this script
+#         result.no.rand.2 <- elo.scores.2(winner,loser,n.rands=1,
+#                                          init.score=1000,
+#                                          n.inds=N.inds.values[p])
+#         
+#         ranks.no.rand.2 <- rank(-result.no.rand.2,na.last="keep")
+#         
+#         spearman.cor.no.rand.2<-cor(output$hierarchy$Rank,
+#                                     ranks.no.rand.2,
+#                                     use="complete.obs",method="spearman")
+#         
+#         
+#         # generating elo-rating according to elo.scores.2() from this script and
+#         # randomizing the order of the interactions 1000 times
+#         result.2 <- elo.scores.2(winner,loser,init.score=1000,
+#                                  n.inds=N.inds.values[p])
+#         
+#         #mean.scores <- rowMeans(result)
+#         ranks.2 <- apply(-result.2,2,function(x) rank(x, na.last="keep"))
+#         mean.ranks.2 <- rowMeans(ranks.2)
+#         
+#         spearman.cor.rand.2<-cor(output$hierarchy$Rank,
+#                                  mean.ranks.2,
+#                                  use="complete.obs",method="spearman")
         
         
         db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
                        avalues[j],
-                       avalues[j],
-                       #bvalues[j],
-                       #Ndavid,
+                       #avalues[j],
+                       bvalues[j],
+                       Ndavid,
                        spearman.original,
-                       spearman.cor.no.rand,spearman.cor.rand,
+                       spearman.cor.no.rand,
+                       spearman.cor.rand,
                        #elochoice.no.rand,
-                       #elochoice.rand,
-                       spearman.cor.no.rand.2,
-                       spearman.cor.rand.2))
+                       elochoice.rand)#,
+                       #spearman.cor.no.rand.2,
+                       #spearman.cor.rand.2))
         
       }
     }
@@ -779,18 +782,18 @@ for (j in 1:length(avalues)){
 }
 
 names(db) <- c("Ninds","Nobs","alevel","blevel",
-               #"Ndavid",
+               "Ndavid",
                "elo.original","elo.no.rand","elo.rand",
                #"elochoice.no.rand",
-               #"elochoice.rand",
-               "elo.no.rand.2",
-               "elo.rand.2")
+               "elochoice.rand")#,
+               #"elo.no.rand.2",
+               #"elo.rand.2")
 
 proc.time() - ptm
 
 
-# write.csv(db,
-#          "db_5_methods_100_simulations_steep.csv",row.names=FALSE)
+write.csv(db,
+        "db_5_methods_100_simulations_Flat.csv",row.names=FALSE)
 
 
 for (p in 1:length(N.inds.values)){
