@@ -188,7 +188,7 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
 # counter <- 95 # I use counter to create a grey scale
 # avalues <- seq(0,36,2) #all values of a to be explored
 # bvalues <- c(-5,0,5,10,15,20,25,30,35) #all values of b to be explored
-counter <- 75
+# counter <- 75
 avalues <- seq(0,30,5)
 bvalues <- seq(-5,35,5)
 
@@ -196,6 +196,9 @@ a1 <- c("a","b","c","d","e","f","g","h","i")
 colours <- brewer.pal(7,"Set1")
 
 
+tiff("plots/Figure1_Figure1_Exploring_parameter_space.tiff", 
+     height=29.7, width=21,
+     units='cm', compression="lzw", res=600)
 
 par(mfrow=c(3,3)) #multi-pannel 3 by 3 = 9 plots at once!
 
@@ -237,27 +240,31 @@ for (i in 1:length(bvalues)){
   text(34,0.245,btext,adj = 0,cex=1.35)
   
   par(xpd=TRUE)
-  legend(-14,0.52,
+  legend(0,0.2,
+         #-14,0.52,
          c("a = 0","a = 5","a = 10","a = 15"),
          col=colours[1:4],
          cex=0.8,bty='n',
-         y.intersp=0.2,
-         x.intersp=0.2,
+         #y.intersp=0.2,
+         #x.intersp=0.2,
          pch=rep(19,4),
          inset=c(0,0))
   
-  legend(1,0.52,
+  legend(12,0.2,
+         #1,0.52,
          c("a = 20","a = 25","a = 30"),
          col=colours[5:7],
          cex=0.8,bty='n',
-         y.intersp=0.2,
-         x.intersp=0.2,
+         #y.intersp=0.2,
+         #x.intersp=0.2,
          pch=rep(19,4),
          inset=c(0,0))
   
 }
 
 par(mfrow=c(1,1))
+
+dev.off()
 
 
 ###############################################################################
@@ -439,6 +446,10 @@ N.obs.values <- c(1,4,7,10,
 
 a <- c("a","b","c","d","e","f")
 
+tiff("plots/Figure2_Exploring_eloscores_100sim.tiff", 
+     height=29.7, width=21,
+     units='cm', compression="lzw", res=600)
+
 
 for (p in 1:length(N.inds.values)){
   
@@ -558,7 +569,6 @@ for (p in 1:length(N.inds.values)){
     #border=NA,col=rgb(38/255,38/255,38/255,0.15))
     
     
-    
     Nindtext <- paste("(",a[i])
     btext <- paste("\nb = ",bvalues[i])
     #ttext <- paste0(Nindtext,btext,sep="\n")
@@ -567,21 +577,21 @@ for (p in 1:length(N.inds.values)){
     text(35,-0.5,btext,adj = 0,cex=1.35)
     
     par(xpd=TRUE)
-    legend(-3,0.05,
+    legend(0,-0.6,
            c("a = 0","a = 5","a = 10","a = 15"),
            col=colours[1:4],
            cex=0.8,bty='n',
-           y.intersp=0.2,
-           x.intersp=0.2,
+           #y.intersp=0.2,
+           #x.intersp=0.2,
            pch=rep(19,4),
            inset=c(0,0))
     
-    legend(7,0.05,
+    legend(8,-0.6,
            c("a = 20","a = 25","a = 30"),
            col=colours[5:7],
            cex=0.8,bty='n',
-           y.intersp=0.2,
-           x.intersp=0.2,
+           #y.intersp=0.2,
+           #x.intersp=0.2,
            pch=rep(19,4),
            inset=c(0,0))
     
@@ -591,6 +601,7 @@ for (p in 1:length(N.inds.values)){
   
 }
 
+dev.off()
 
 
 ###############################################################################
@@ -792,8 +803,8 @@ names(db) <- c("Ninds","Nobs","alevel","blevel",
 proc.time() - ptm
 
 
-write.csv(db,
-        "db_5_methods_100_simulations_Flat.csv",row.names=FALSE)
+# write.csv(db,
+#         "db_5_methods_100_simulations_Flat.csv",row.names=FALSE)
 
 
 for (p in 1:length(N.inds.values)){
@@ -853,7 +864,7 @@ for (p in 1:length(N.inds.values)){
 ###############################################################################
 # db100sim <- read.table("db_100_simulations.csv",header=TRUE,sep=",")
 # db5meth100sim <- read.table("db_5_methods_100_simulations.csv",header=TRUE,sep=",")
-db5meth100sim.steep <- read.table("db_5_methods_100_simulations_steep.csv",header=TRUE,sep=",")
+db5meth100sim.steep <- read.table("db_5_methods_100_simulations_steep_2.csv",header=TRUE,sep=",")
 
 # avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 # N.inds.values <- c(50)
@@ -864,11 +875,17 @@ db5meth100sim.steep <- read.table("db_5_methods_100_simulations_steep.csv",heade
 # db <- db5meth100sim
 db <- db5meth100sim.steep
 # avalues <- c(0,5,10,15,20)
-avalues <- c(5,10,20,10,20)
-bvalues <- c(0,5,10,10,20)
+avalues <- c(5,10,20,10,20,0)
+bvalues <- c(0,5,10,10,20,5)
 N.inds.values <- c(50)
 # N.obs.values <- c(1,2,3,4,5,6,7,8,9,10,15,20,30,40,50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+
+a <- c("a","b","c","d","e","f")
+
+tiff("plots/Figure3_Comparison_5methods_100sim_FULL.tiff", 
+     height=29.7, width=21,
+     units='cm', compression="lzw", res=600)
 
 
 for (p in 1:length(N.inds.values)){
@@ -911,12 +928,12 @@ for (p in 1:length(N.inds.values)){
          #axes=FALSE,
          xaxt="n",
          yaxt="n",
-         ylim=c(0,1))
+         ylim=c(-0.6,1))
     
     axis(1,at=c(1,4,7,10,15,20,30,40,50),
          labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
     
-    axis(2,at=seq(0,1,0.2),cex.axis=0.80,las=2)
+    axis(2,at=round(seq(-0.6,1,0.2),1),cex.axis=0.80,las=2)
     
     #     #adding points for the means and shadowed areas for the 95% CI
     #     points(db.4$Nobs,db.4$elo.original.m,type="b",col="red",pch=19)
@@ -959,15 +976,24 @@ for (p in 1:length(N.inds.values)){
     #             c(db.4$elo.no.rand.2.lower,rev(db.4$elo.no.rand.2.upper)),
     #             border=NA,col=rgb(120/255,120/255,120/255,0.15))
     
-    Nindtext <- paste("N.ind = ",N.inds.values[p])
+    lines(c(0,51),c(0.8,0.8),col="red",lty=3,lwd=1.5)
+    
+    Nindtext <- paste("(",a[i])
     atext <- paste("\na = ",avalues[i])
-    btext <- paste("b = ",bvalues[i])
-    ttext <- paste0(Nindtext,atext,sep="\n")
-    ttext2 <- paste0(ttext,btext,sep="\n")
-    text(39,0.05,ttext2,adj = 0)
+    btext <- paste("\nb = ",bvalues[i])
+    ttext <- paste0(atext,btext,sep="\n")
+    #text(39,-0.8,ttext,adj = 0)
+    text(48,-0.55,Nindtext,adj = 0)
+    text(35,-0.45,ttext,adj = 0,cex=1.35)
+    
+#     
+#     btext <- paste("b = ",bvalues[i])
+#     ttext <- paste0(Nindtext,atext,sep="\n")
+#     ttext2 <- paste0(ttext,btext,sep="\n")
+#     text(39,0.05,ttext2,adj = 0)
     
     par(xpd=TRUE)
-    legend(10,0.75,
+    legend(0,-0.3,
            #"bottomright",
            c("Elo-rating randomized",
              "Elo-rating original",
@@ -984,9 +1010,9 @@ for (p in 1:length(N.inds.values)){
            #"pink",
            #"black"),
            cex=1,bty='n',
-           y.intersp=0.2,
-           x.intersp=0.2,
-           pch=rep(19,4),
+           #y.intersp=0.2,
+           #x.intersp=0.2,
+           pch=rep(19,3),
            inset=c(0,0))
     
   }
@@ -995,7 +1021,7 @@ for (p in 1:length(N.inds.values)){
   
 }
 
-
+dev.off()
 
 ###############################################################################
 # SECTION 3
@@ -1130,8 +1156,8 @@ names(db.split) <- c("Ninds","Nobs","alevel","blevel",
 
 proc.time() - ptm
 
-write.csv(db.split,
-          "db_split_elorand_100sim_Flat.csv",row.names=FALSE)
+# write.csv(db.split,
+#           "db_split_elorand_100sim_Flat.csv",row.names=FALSE)
 
 
 
@@ -1183,16 +1209,21 @@ for (p in 1:length(N.inds.values)){
 # N.inds.values <- c(50)
 # N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
-db_split100sim <- read.table("db_split_elorand_100sim_steeper.csv",header=TRUE,sep=",")
+db_split100sim <- read.table("db_split_elorand_100sim_steeper_2.csv",header=TRUE,sep=",")
 
 #avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
-avalues <- c(5,10,20,10,20)
-bvalues <- c(0,5,10,10,20)
+avalues <- c(5,10,20,10,20,0)
+bvalues <- c(0,5,10,10,20,5)
 
-a1 <- c("a","b","c","d","e")
+a1 <- c("a","b","c","d","e","f")
+
+tiff("plots/Figure5_Checking_robustness_by_splitting_data_elorand_FULL.tiff", 
+     height=29.7, width=21,
+     units='cm', compression="lzw", res=600)
+
 
 for (p in 1:length(N.inds.values)){
   
@@ -1219,12 +1250,12 @@ for (p in 1:length(N.inds.values)){
          xlab="number of interactions/individual",
          xaxt="n",
          yaxt="n",
-         ylim=c(-0.4,1))
+         ylim=c(-0.6,1))
     
     axis(1,at=c(1,4,7,10,15,20,30,40,50),
          labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
     
-    axis(2,at=seq(-0.4,1,0.2),cex.axis=0.80,las=2)
+    axis(2,at=round(seq(-0.6,1,0.2),1),cex.axis=0.80,las=2)
     
 
     #adding points for the means and shadowed areas for the 95% CI
@@ -1233,6 +1264,8 @@ for (p in 1:length(N.inds.values)){
             c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
             border=NA,col=rgb(0,0,1, 0.15))
     
+    lines(c(0,51),c(0.5,0.5),col="red",lty=3,lwd=1.5)
+    
     #Nindtext <- paste("N.ind = ",N.inds.values[p])
     atext <- paste("\na = ",avalues[i])
     #btext <- paste("\nb = ",avalues[i])
@@ -1240,9 +1273,9 @@ for (p in 1:length(N.inds.values)){
     #ttext <- paste0(Nindtext,atext,sep="\n")
     #ttext2 <- paste0(ttext,btext,sep="\n")
     text3 <- paste0(atext,btext,sep='\n')
-    text(21,-0.20,text3,adj = 0,cex=1.35)
+    text(35,-0.5,text3,adj = 0,cex=1.35)
     Nindtext <- paste("(",a1[i])
-    text(48,-0.36,Nindtext,adj = 0)
+    text(48,-0.56,Nindtext,adj = 0)
     
   }
   
@@ -1250,7 +1283,7 @@ for (p in 1:length(N.inds.values)){
   
 }
 
-
+dev.off()
 
 
 ###############################################################################
@@ -1293,7 +1326,7 @@ for (p in 1:length(N.inds.values)){
     axis(1,at=c(1,4,7,10,15,20,30,40,50),
          labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
     
-    axis(2,at=seq(-0.4,1,0.2),cex.axis=0.80,las=2)
+    axis(2,at=round(seq(-0.4,1,0.2),1),cex.axis=0.80,las=2)
     
     
     #adding points for the means and shadowed areas for the 95% CI
@@ -1400,8 +1433,8 @@ names(db) <- c("Ninds","Nobs","alevel","blevel","rep","pvalue")
 proc.time() - ptm
 
 
-write.csv(db,
-         "db_repeatabilityANOVA_100_simulations_Flat.csv",row.names=FALSE)
+# write.csv(db,
+#          "db_repeatabilityANOVA_100_simulations_Flat.csv",row.names=FALSE)
 
 
 
@@ -1409,14 +1442,18 @@ write.csv(db,
 ###############################################################################
 # Plotting repeatability and adding 95% CI intervals 
 ###############################################################################
-db_rep <- read.table("db_repeatabilityANOVA_100_simulations_steep.csv",header=TRUE,sep=",")
+db_rep <- read.table("db_repeatabilityANOVA_100_simulations_steep_2.csv",header=TRUE,sep=",")
 
-avalues <- c(5,10,20,10,20)
-bvalues <- c(0,5,10,10,20)
+avalues <- c(5,10,20,10,20,0)
+bvalues <- c(0,5,10,10,20,5)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
-a1 <- c("a","b","c","d","e")
+a1 <- c("a","b","c","d","e","f")
+
+tiff("plots/Figure4_RepeatabilityANOVA_elorand_FULL.tiff", 
+     height=29.7, width=21,
+     units='cm', compression="lzw", res=600)
 
 for (p in 1:length(N.inds.values)){
   
@@ -1443,12 +1480,12 @@ for (p in 1:length(N.inds.values)){
          xlab="number of interactions/individual",
          xaxt="n",
          yaxt="n",
-         ylim=c(0.7,1))
+         ylim=c(0.2,1))
     
     axis(1,at=c(1,4,7,10,15,20,30,40,50),
          labels=as.character(c(1,4,7,10,15,20,30,40,50)),cex.axis=0.80)
     
-    axis(2,at=seq(0.7,1,0.1),cex.axis=0.80,las=2)
+    axis(2,at=seq(0.2,1,0.2),cex.axis=0.80,las=2)
     
     
     #adding points for the means and shadowed areas for the 95% CI
@@ -1457,18 +1494,22 @@ for (p in 1:length(N.inds.values)){
             c(db.4$lower,rev(db.4$upper)),
             border=NA,col=rgb(0,0,1, 0.15))
     
+    lines(c(0,51),c(0.8,0.8),col="red",lty=3,lwd=1.5)
+    
     #Nindtext <- paste("N.ind = ",N.inds.values[p])
     atext <- paste("\na = ",avalues[i])
     btext <- paste("\nb = ",bvalues[i])
     #ttext <- paste0(Nindtext,atext,sep="\n")
     #ttext2 <- paste0(ttext,btext,sep="\n")
     text3 <- paste0(atext,btext,sep='\n')
-    text(21,0.75,text3,adj = 0,cex=1.35)
+    text(35,0.3,text3,adj = 0,cex=1.35)
     Nindtext <- paste("(",a1[i])
-    text(48,0.71,Nindtext,adj = 0)
+    text(48,0.23,Nindtext,adj = 0)
     
   }
   
   par(mfrow=c(1,1))
   
 }
+
+dev.off()
