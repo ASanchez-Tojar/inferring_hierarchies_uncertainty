@@ -772,7 +772,7 @@ for (j in 1:length(avalues)){
                        spearman.cor.no.rand,
                        spearman.cor.rand,
                        #elochoice.no.rand,
-                       elochoice.rand)#,
+                       elochoice.rand))#,
                        #spearman.cor.no.rand.2,
                        #spearman.cor.rand.2))
         
@@ -1018,8 +1018,10 @@ N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 #steeper hierarchies
-avalues <- c(5,10,20,10,20)
-bvalues <- c(0,5,10,10,20)
+# avalues <- c(5,10,20,10,20)
+# bvalues <- c(0,5,10,10,20)
+avalues <- c(0)
+bvalues <- c(5)
 
 
 for (j in 1:length(avalues)){
@@ -1129,7 +1131,7 @@ names(db.split) <- c("Ninds","Nobs","alevel","blevel",
 proc.time() - ptm
 
 write.csv(db.split,
-          "db_split_elorand_100sim_steeper.csv",row.names=FALSE)
+          "db_split_elorand_100sim_Flat.csv",row.names=FALSE)
 
 
 
@@ -1338,8 +1340,10 @@ N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 #for steeper scenarios
-avalues <- c(5,10,20,10,20)
-bvalues <- c(0,5,10,10,20)
+# avalues <- c(5,10,20,10,20)
+# bvalues <- c(0,5,10,10,20)
+avalues <- c(0)
+bvalues <- c(5)
 
 
 for (j in 1:length(avalues)){
@@ -1354,7 +1358,6 @@ for (j in 1:length(avalues)){
                                         N.inds.values[p]*N.obs.values[o],
                                         a=avalues[j],
                                         b=bvalues[j])
-        #b=bvalues[j])
         
         
         winner <- output$interactions$Winner
@@ -1397,8 +1400,8 @@ names(db) <- c("Ninds","Nobs","alevel","blevel","rep","pvalue")
 proc.time() - ptm
 
 
-# write.csv(db,
-#          "db_repeatabilityANOVA_100_simulations_steep.csv",row.names=FALSE)
+write.csv(db,
+         "db_repeatabilityANOVA_100_simulations_Flat.csv",row.names=FALSE)
 
 
 
