@@ -1449,6 +1449,9 @@ bvalues <- c(0,5,10,10,20,5)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
+avalues <- c(0)
+bvalues <- c(5)
+
 a1 <- c("a","b","c","d","e","f")
 
 tiff("plots/Figure4_RepeatabilityANOVA_elorand_FULL.tiff", 
