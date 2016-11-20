@@ -378,15 +378,12 @@ dev.off()
 
 ptm <- proc.time()
 
-avalues <- seq(0)#,30,5)
-bvalues <- seq(-5)#,20,5)
+avalues <- seq(0,30,5)
+bvalues <- seq(-5,20,5)
 N.inds.values <- c(50)
-N.obs.values <- c(1,4,7,10,
-                  15,20)#,
-                  #30,40,50)
-# N.obs.values <- c(1,2,3,4,5,6,7,8,9,10,
-#                   11,12,13,14,15,16,17,18,19,20,
-#                   30,40,50)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+# avalues<-c(15,5)
+# bvalues<-c(0,3,6,0,3,6)
 
 # #for quick checkings
 # avalues<-5
@@ -415,12 +412,14 @@ for (i in 1:length(bvalues)){
       
       for (o in 1:length(N.obs.values)){
         
-        for (simnum in 1:5){
+        for (simnum in 1:100){
           
           output <- generate_interactions(N.inds.values[p],
                                           N.inds.values[p]*N.obs.values[o],
                                           a=avalues[j],
-                                          b=bvalues[i])
+                                          b=bvalues[i],
+                                          pois=FALSE,
+                                          biased=FALSE)
           
           winner <- output$interactions$Winner
           loser <- output$interactions$Loser
@@ -433,10 +432,11 @@ for (i in 1:length(bvalues)){
           #                    progressbar=FALSE,
           #                    k=200)
           
-          result.no.rand <- elo.scores(winner,
+          result.no.rand <- elo_scores(winner,
                                        loser,
                                        randomise=FALSE, # estimated only once
                                        init.score=1000,
+                                       identities=c(1:N.inds.values[p]),
                                        n.inds=N.inds.values[p])
           
           spearman.cor<-cor(output$hierarchy$Rank,
