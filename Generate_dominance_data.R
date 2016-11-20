@@ -130,70 +130,70 @@ generate_interactions <- function(N.inds, N.obs, a, b, pois=TRUE, biased=TRUE) {
 }
 
 
-elo.scores_old <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
-                       K=200,init.score=0,n.rands=1000,
-                       return.trajectories=FALSE){
-  
-  if(is.null(n.inds)){
-    n.inds <- max(c(unique(winners),unique(losers)))  
-    #n.inds <- length(unique(c(winners,losers)))
-  }
-  
-  T <- length(winners)
-  
-  if(return.trajectories){
-    all.scores <- array(0,c(n.inds,T+1,n.rands))
-  } else{
-    all.scores <- array(0,c(n.inds,n.rands))
-  }
-  
-  if (length(K) == 1) {
-    K <- rep(K,T)
-  }
-  
-  for(r in 1:n.rands){
-    if (n.rands == 1) {
-      ord <- 1:T
-    } else {
-      ord <- sample(1:T,T,replace=F)
-    }
-    winners.perm <- winners[ord]
-    losers.perm <- losers[ord]
-    scores<-array(NA,c(n.inds,T+1))
-    scores[,1]<-init.score
-    
-    for(i in 1:T){
-      
-      scores[,i+1] <- scores[,i]
-      
-      winner <- winners.perm[i]
-      loser <- losers.perm[i]
-      p<-1/(1+exp(-sigmoid.param*(scores[winner,i]-scores[loser,i]))) #prob that winner wins
-      
-      if(scores[winner,i] >= scores[loser,i]){
-        scores[winner,i+1] <- scores[winner,i] + (1-p)*K[i]
-        scores[loser,i+1] <- scores[loser,i] - (1-p)*K[i]
-      }
-      else{
-        scores[winner,i+1] <- scores[winner,i] + p*K[i]
-        scores[loser,i+1] <- scores[loser,i] - p*K[i]
-      }
-    }
-    
-    if(return.trajectories){
-      all.scores[,,r]<-scores
-    } else{
-      all.scores[,r]<-scores[,T+1]
-    }
-    
-    
-  }
-  
-  freq <- table(factor(c(winners,losers),levels=c(1:n.inds)))
-  all.scores[as.numeric(names(freq)[which(freq==0)]),] <- NA
-  
-  invisible(all.scores)	
-}
+# elo.scores_old <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
+#                        K=200,init.score=0,n.rands=1000,
+#                        return.trajectories=FALSE){
+#   
+#   if(is.null(n.inds)){
+#     n.inds <- max(c(unique(winners),unique(losers)))  
+#     #n.inds <- length(unique(c(winners,losers)))
+#   }
+#   
+#   T <- length(winners)
+#   
+#   if(return.trajectories){
+#     all.scores <- array(0,c(n.inds,T+1,n.rands))
+#   } else{
+#     all.scores <- array(0,c(n.inds,n.rands))
+#   }
+#   
+#   if (length(K) == 1) {
+#     K <- rep(K,T)
+#   }
+#   
+#   for(r in 1:n.rands){
+#     if (n.rands == 1) {
+#       ord <- 1:T
+#     } else {
+#       ord <- sample(1:T,T,replace=F)
+#     }
+#     winners.perm <- winners[ord]
+#     losers.perm <- losers[ord]
+#     scores<-array(NA,c(n.inds,T+1))
+#     scores[,1]<-init.score
+#     
+#     for(i in 1:T){
+#       
+#       scores[,i+1] <- scores[,i]
+#       
+#       winner <- winners.perm[i]
+#       loser <- losers.perm[i]
+#       p<-1/(1+exp(-sigmoid.param*(scores[winner,i]-scores[loser,i]))) #prob that winner wins
+#       
+#       if(scores[winner,i] >= scores[loser,i]){
+#         scores[winner,i+1] <- scores[winner,i] + (1-p)*K[i]
+#         scores[loser,i+1] <- scores[loser,i] - (1-p)*K[i]
+#       }
+#       else{
+#         scores[winner,i+1] <- scores[winner,i] + p*K[i]
+#         scores[loser,i+1] <- scores[loser,i] - p*K[i]
+#       }
+#     }
+#     
+#     if(return.trajectories){
+#       all.scores[,,r]<-scores
+#     } else{
+#       all.scores[,r]<-scores[,T+1]
+#     }
+#     
+#     
+#   }
+#   
+#   freq <- table(factor(c(winners,losers),levels=c(1:n.inds)))
+#   all.scores[as.numeric(names(freq)[which(freq==0)]),] <- NA
+#   
+#   invisible(all.scores)	
+# }
 
 
 elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
