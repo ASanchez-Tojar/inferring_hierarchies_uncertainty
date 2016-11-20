@@ -360,12 +360,12 @@ dev.off()
 
 ptm <- proc.time()
 
-avalues <- seq(0,30,5)
-bvalues <- seq(-5,20,5)
+avalues <- seq(0)#,30,5)
+bvalues <- seq(-5)#,20,5)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,
-                  15,20,
-                  30,40,50)
+                  15,20)#,
+                  #30,40,50)
 # N.obs.values <- c(1,2,3,4,5,6,7,8,9,10,
 #                   11,12,13,14,15,16,17,18,19,20,
 #                   30,40,50)
@@ -397,7 +397,7 @@ for (i in 1:length(bvalues)){
       
       for (o in 1:length(N.obs.values)){
         
-        for (simnum in 1:100){
+        for (simnum in 1:5){
           
           output <- generate_interactions(N.inds.values[p],
                                           N.inds.values[p]*N.obs.values[o],
@@ -406,7 +406,7 @@ for (i in 1:length(bvalues)){
           
           winner <- output$interactions$Winner
           loser <- output$interactions$Loser
-          date <- output$interactions$Date
+          #date <- output$interactions$Date
           hierarchy <- output$hierarchy
           
           #         x<-elo.seq(winner=as.factor(winner),
@@ -417,7 +417,7 @@ for (i in 1:length(bvalues)){
           
           result.no.rand <- elo.scores(winner,
                                        loser,
-                                       n.rands=1, # estimated only once
+                                       randomise=FALSE, # estimated only once
                                        init.score=1000,
                                        n.inds=N.inds.values[p])
           
@@ -465,55 +465,55 @@ proc.time() - ptm
 
 
 
-###############################################################################
-# Plotting Elo-rating ~ real rank: spearman correlation
-###############################################################################
-
-for (p in 1:length(N.inds.values)){
-  
-  par(mfrow=c(3,2))
-  
-  db.2 <- db[db$Ninds==N.inds.values[p],]
-  
-  for (i in 1:length(bvalues)){
-    
-    db.3 <- db.2[db.2$blevel==bvalues[i],]
-    
-    palette(c("black","red","green3","blue","cyan","magenta","gray50"))
-    
-    plot(db.3$spearman~jitter(db.3$Nobs,0.6),col=as.factor(db.3$alevel),
-         ylab="spearman correlation", xlab="number of interactions/individual",
-         ylim=c(-0.6,1), pch=19)
-    
-    Nindtext <- paste("N.ind = ",N.inds.values[p])
-    btext <- paste("\nb = ",bvalues[i])
-    ttext <- paste0(Nindtext,btext,sep="\n")
-    text(45,0.6,ttext)
-    
-    text(1,-0.55,"a:")
-    
-    par(xpd=TRUE)
-    
-    legend(-3.2,0.25,as.character(avalues),
-           col=1:length(avalues),
-           cex=0.95,bty='n',
-           #y.intersp=0,
-           x.intersp=0.1,
-           horiz=TRUE,
-           xjust=0,
-           #yjust=0,
-           inset=c(0,0),
-           pch=rep(19,6),
-           text.width=rep(0,7))
-    
-    lines(c(-1,52),c(-0.4,-0.4),col="black")
-    
-  }
-  
-  palette("default")
-  par(mfrow=c(1,1))
-  
-}
+# ###############################################################################
+# # Plotting Elo-rating ~ real rank: spearman correlation
+# ###############################################################################
+# 
+# for (p in 1:length(N.inds.values)){
+#   
+#   par(mfrow=c(3,2))
+#   
+#   db.2 <- db[db$Ninds==N.inds.values[p],]
+#   
+#   for (i in 1:length(bvalues)){
+#     
+#     db.3 <- db.2[db.2$blevel==bvalues[i],]
+#     
+#     palette(c("black","red","green3","blue","cyan","magenta","gray50"))
+#     
+#     plot(db.3$spearman~jitter(db.3$Nobs,0.6),col=as.factor(db.3$alevel),
+#          ylab="spearman correlation", xlab="number of interactions/individual",
+#          ylim=c(-0.6,1), pch=19)
+#     
+#     Nindtext <- paste("N.ind = ",N.inds.values[p])
+#     btext <- paste("\nb = ",bvalues[i])
+#     ttext <- paste0(Nindtext,btext,sep="\n")
+#     text(45,0.6,ttext)
+#     
+#     text(1,-0.55,"a:")
+#     
+#     par(xpd=TRUE)
+#     
+#     legend(-3.2,0.25,as.character(avalues),
+#            col=1:length(avalues),
+#            cex=0.95,bty='n',
+#            #y.intersp=0,
+#            x.intersp=0.1,
+#            horiz=TRUE,
+#            xjust=0,
+#            #yjust=0,
+#            inset=c(0,0),
+#            pch=rep(19,6),
+#            text.width=rep(0,7))
+#     
+#     lines(c(-1,52),c(-0.4,-0.4),col="black")
+#     
+#   }
+#   
+#   palette("default")
+#   par(mfrow=c(1,1))
+#   
+# }
 
 
 
