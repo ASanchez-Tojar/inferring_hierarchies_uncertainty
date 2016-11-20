@@ -198,7 +198,7 @@ generate_interactions <- function(N.inds, N.obs, a, b, pois=TRUE, biased=TRUE) {
 
 elo_scores <- function(winners,losers,n.inds=NULL,identities=NULL,sigmoid.param=1/100,
                        K=200,init.score=0,randomise=FALSE,n.rands=1000,
-                       return.trajectories=FALSE){
+                       return.as.ranks=FALSE, return.trajectories=FALSE){
   
   if (is.null(identities)) {
     identities <- unique(c(winners,losers))  
@@ -212,6 +212,9 @@ elo_scores <- function(winners,losers,n.inds=NULL,identities=NULL,sigmoid.param=
     n.rands <- 1
   }
   
+  if (sum(c(winners,losers) %in% identities) < length(c(winners,losers))) {
+    stop("Not all winners and/or losers are contained in identities")
+  }
   
   T <- length(winners)
   
@@ -268,6 +271,12 @@ elo_scores <- function(winners,losers,n.inds=NULL,identities=NULL,sigmoid.param=
   
   freq <- table(factor(c(winners,losers),levels=identities))
   all.scores[which(identities %in% names(freq)[which(freq==0)]),] <- NA
+  
+  if (return.as.ranks==TRUE) {
+    all.ranks <- apply(all.scores,2,function(x) { rank(-x) })
+    all.ranks[is.na(all.scores)] <- NA
+    all.scores <- all.ranks
+  }
   
   invisible(all.scores)	
 }
