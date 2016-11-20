@@ -37,10 +37,11 @@ rm(list=ls())
 ###############################################################################
 
 
-calculate_winner <- function(rank1, rank2, a, b) {
+calculate_winner <- function(rank1, rank2, a, b, max.diff.rank) {
   
   diff.rank <- abs(rank1 - rank2)
-  diff.rank.norm <- diff.rank/max(diff.rank)
+  #diff.rank.norm <- diff.rank/max(diff.rank)
+  diff.rank.norm <- diff.rank/max.diff.rank
   
   p.win <- 0.5+0.5/(1+exp(-diff.rank.norm*a+b))
   
@@ -77,34 +78,52 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 
 
 
-select_interactants <- function(hierarchy) {
+select_interactants <- function(hierarchy,biased,ids=NULL) {
   
-  interactants <- sample(hierarchy$ID,2)
-  
+  if (biased == FALSE) {
+    interactants <- sample(hierarchy$ID,2,prob=hierarchy$Prob)
+  } else {
+    rank.diffs <- unique(ids$Rank.diff)
+    rank.diff.to.pick <- sample(rank.diffs,1,prob=(1-rank.diffs/(max(rank.diffs)+1)))
+    ids <- ids[which(ids$Rank.diff==rank.diff.to.pick),]
+    int.row <- sample(1:nrow(ids),1,prob=(ids$Prob1+ids$Prob2))
+    interactants <- c(ids$ID1[int.row],ids$ID2[int.row])
+  }
   return(interactants)
   
 }
 
 
-
-generate_interactions <- function(N.inds, N.obs, a, b) {
+generate_interactions <- function(N.inds, N.obs, a, b, pois=TRUE, biased=TRUE) {
   
-  hierarchy <- data.frame(ID=1:N.inds, Rank=1:N.inds)
+  hierarchy <- data.frame(ID=1:N.inds, Rank=(1:N.inds), Prob=1/N.inds)
   
   interactions <- data.frame(Winner=rep(NA,N.obs), Loser=rep(NA,N.obs))
   
+  if (pois==TRUE) {
+    x <- rgamma(N.inds,0.5)
+    hierarchy$Prob <- x/sum(x)
+  }
+  
+  if (biased==TRUE) {
+    ids <- expand.grid(ID1=hierarchy$ID,ID2=hierarchy$ID)
+    ids <- ids[which(ids[,1] != ids[,2]),]
+    ids$Rank1 <- hierarchy$Rank[match(ids$ID1,hierarchy$ID)]
+    ids$Rank2 <- hierarchy$Rank[match(ids$ID2,hierarchy$ID)]
+    ids$Prob1 <- hierarchy$Prob[match(ids$ID1,hierarchy$ID)]
+    ids$Prob2 <- hierarchy$Prob[match(ids$ID2,hierarchy$ID)]
+    ids$Rank.diff <- abs(ids$Rank1-ids$Rank2)
+  }
+  
   for (i in 1:N.obs) {
     
-    ints <- select_interactants(hierarchy)
-    outcome <- calculate_winner(hierarchy$Rank[ints[1]],hierarchy$Rank[ints[2]],a,b)
+    ints <- select_interactants(hierarchy, biased, ids)
+    outcome <- calculate_winner(hierarchy$Rank[ints[1]],hierarchy$Rank[ints[2]],a,b,max(hierarchy$Rank)-min(hierarchy$Rank))
     
     interactions$Winner[i] <- hierarchy$ID[ints[outcome[1]]]
     interactions$Loser[i] <- hierarchy$ID[ints[outcome[2]]]
     
   }
-  
-  interactions$Date <- "2016-10-31"
-  interactions$Date[1:5] <- "2016-10-30"
   
   return(list(hierarchy=hierarchy,interactions=interactions))
   
