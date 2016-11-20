@@ -196,16 +196,22 @@ generate_interactions <- function(N.inds, N.obs, a, b, pois=TRUE, biased=TRUE) {
 # }
 
 
-elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
-                       K=200,init.score=0,randomise=FALSE,
-                       n.rands=1000,return.trajectories=FALSE){
+elo_scores <- function(winners,losers,n.inds=NULL,identities=NULL,sigmoid.param=1/100,
+                       K=200,init.score=0,randomise=FALSE,n.rands=1000,
+                       return.trajectories=FALSE){
+  
+  if (is.null(identities)) {
+    identities <- unique(c(winners,losers))  
+  }
+  
   if(is.null(n.inds)){
-    n.inds <- max(c(unique(winners),unique(losers)))	
+    n.inds <- length(identities)
   }
   
   if (randomise==FALSE) {
     n.rands <- 1
   }
+  
   
   T <- length(winners)
   
@@ -214,6 +220,8 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
   } else{
     all.scores <- array(init.score,c(n.inds,n.rands))
   }
+  
+  rownames(all.scores) <- identities
   
   if (length(K) == 1) {
     K <- rep(K,T)
@@ -234,8 +242,9 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
       
       scores[,i+1] <- scores[,i]
       
-      winner <- winners.perm[i]
-      loser <- losers.perm[i]
+      winner <- which(identities == winners.perm[i])
+      loser <- which(identities == losers.perm[i])
+      
       p<-1/(1+exp(-sigmoid.param*(scores[winner,i]-scores[loser,i]))) #prob that winner wins
       
       if(scores[winner,i] >= scores[loser,i]){
@@ -246,7 +255,6 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
         scores[winner,i+1] <- scores[winner,i] + p*K[i]
         scores[loser,i+1] <- scores[loser,i] - p*K[i]
       }
-      
     }
     
     if(return.trajectories){
@@ -255,10 +263,11 @@ elo.scores <- function(winners,losers,n.inds=NULL,sigmoid.param=1/100,
       all.scores[,r]<-scores[,T+1]
     }
     
+    
   }
   
-  freq <- table(factor(c(winners,losers),levels=c(1:n.inds)))
-  all.scores[as.numeric(names(freq)[which(freq==0)]),] <- NA
+  freq <- table(factor(c(winners,losers),levels=identities))
+  all.scores[which(identities %in% names(freq)[which(freq==0)]),] <- NA
   
   invisible(all.scores)	
 }
