@@ -479,7 +479,7 @@ names(db) <- c("Ninds","Nobs","alevel","blevel","spearman")
 proc.time() - ptm
 
 # write.csv(db,
-#           "elo_no_rand_parameter_space_100sim.csv",row.names=FALSE)
+#           "elo_no_rand_parameter_space_100sim_fixed.csv",row.names=FALSE)
 
 
 
@@ -539,9 +539,18 @@ proc.time() - ptm
 # Plotting Elo-rating ~ real rank: spearman correlation - 95%CI
 ###############################################################################
 
-eloparameterspace <- read.table("elo_no_rand_parameter_space_100sim.csv",header=TRUE,sep=",")
+#eloparameterspace <- read.table("elo_no_rand_parameter_space_100sim.csv",header=TRUE,sep=",")
+#eloparameterspace <- read.table("elo_no_rand_parameter_space_100sim_fixed.csv",header=TRUE,sep=",")
+eloparameterspace <- 
+  read.table("databases_package/Fig2_elo_no_rand_parameter_space_100sim_fixed_biases.csv",header=TRUE,sep=",")
 
-db<-eloparameterspace
+
+
+#db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
+#db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,]
+#db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==1,]
+db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==1,]
+
 avalues <- seq(0,30,5)
 bvalues <- seq(-5,20,5)
 N.inds.values <- c(50)
@@ -551,7 +560,7 @@ N.obs.values <- c(1,4,7,10,
 
 a <- c("a","b","c","d","e","f")
 
-tiff("plots/Figure2_Exploring_eloscores_100sim.tiff", 
+tiff("plots/Figure2_Exploring_eloscores_100sim_package_11.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -675,6 +684,7 @@ for (p in 1:length(N.inds.values)){
     
     
     Nindtext <- paste("(",a[i])
+    Nindtext <- paste(Nindtext,")")
     btext <- paste("\nb = ",bvalues[i])
     #ttext <- paste0(Nindtext,btext,sep="\n")
     #text(39,-0.8,ttext,adj = 0)
@@ -1309,30 +1319,42 @@ for (p in 1:length(N.inds.values)){
 # Adding 95% CI intervals 
 ###############################################################################
 # db_split100sim <- read.table("db_split_elorand_100sim.csv",header=TRUE,sep=",")
-# 
+
 # avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 # N.inds.values <- c(50)
 # N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
-db_split100sim <- read.table("db_split_elorand_100sim_steeper_2.csv",header=TRUE,sep=",")
+#db_split100sim <- read.table("db_split_elorand_100sim_steeper_2.csv",header=TRUE,sep=",")
 
 #avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
-avalues <- c(5,10,20,10,20,0)
-bvalues <- c(0,5,10,10,20,5)
+# avalues <- c(5,10,20,10,20,0)
+# bvalues <- c(0,5,10,10,20,5)
 
-a1 <- c("a","b","c","d","e","f")
+db_split100sim0 <- 
+  read.table("databases_package/Fig5_db_split_elorand_100sim_fixed_biases.csv",header=TRUE,sep=",")
 
-tiff("plots/Figure5_Checking_robustness_by_splitting_data_elorand_FULL.tiff", 
+#db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
+#db_split100sim<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
+#db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==1,]
+db_split100sim<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==1,]
+
+avalues <- c(10,15,30,15,10,5,30,15,0)
+bvalues <- c(-5,0,5,5,5,5,10,10,5)
+
+#a1 <- c("a","b","c","d","e","f")
+a1 <- c("a","b","c","d","e","f","g","h","i")
+
+tiff("plots/Figure5_Checking_robustness_by_splitting_data_elorand_package_11.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
 
 for (p in 1:length(N.inds.values)){
   
-  par(mfrow=c(3,2))
+  par(mfrow=c(3,3))
   
   db.2 <- db_split100sim[db_split100sim$Ninds==N.inds.values[p],]
   
@@ -1342,7 +1364,7 @@ for (p in 1:length(N.inds.values)){
                  & db.2$blevel==bvalues[i]
                  ,]
     
-    db.4 <-summaryBy(elo.rand ~ Nobs, 
+    db.4 <-summaryBy(elo.rand.split ~ Nobs, 
                      data = db.3, 
                      FUN = function(x) { c(m = mean(x),
                                            q = quantile(x,probs=c(0.025,0.975))) })
@@ -1395,9 +1417,19 @@ dev.off()
 # Plotting estimated rank/2 ~ estimated rank/2: spearman correaltion for each method
 # Adding 95% CI intervals 
 ###############################################################################
-db_split100sim <- read.table("db_split_Davids_100sim.csv",header=TRUE,sep=",")
+#db_split100sim <- read.table("db_split_Davids_100sim.csv",header=TRUE,sep=",")
+db_split100sim0 <- 
+  read.table("databases_package/Fig5_db_split_elorand_100sim_fixed_biases.csv",header=TRUE,sep=",")
 
-avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
+#db_split100sim<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
+#db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==1,]
+#db_split100sim<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==1,]
+
+
+#avalues <- c(0,5,10,15,20)# bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
+avalues <- c(10,15,30,15,10,5,30,15,0)
+bvalues <- c(-5,0,5,5,5,5,10,10,5)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
@@ -1411,7 +1443,7 @@ for (p in 1:length(N.inds.values)){
   
   for (i in 1:length(avalues)){
     
-    db.3 <- db.2[db.2$alevel==avalues[i],]
+    db.3 <- db.2[db.2$alevel==avalues[i] & db.2$blevel==bvalues[i],]
     
     db.4 <-summaryBy(Ndavid ~ Nobs, 
                      data = db.3, 
