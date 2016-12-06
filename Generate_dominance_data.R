@@ -1341,20 +1341,20 @@ db_split100sim0 <-
 #db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==1,]
 db_split100sim<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==1,]
 
-avalues <- c(10,15,30,15,10,5,30,15,0)
-bvalues <- c(-5,0,5,5,5,5,10,10,5)
+avalues <- c(30,15,10,5,0)
+bvalues <- c(5,5,5,5,5)
 
 #a1 <- c("a","b","c","d","e","f")
-a1 <- c("a","b","c","d","e","f","g","h","i")
+a1 <- c("a","b","c","d","e")
 
-tiff("plots/Figure5_Checking_robustness_by_splitting_data_elorand_package_11.tiff", 
+tiff("plots/Figure5_Checking_robustness_by_splitting_data_elorand_package_03poissondominantbias.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
 
 for (p in 1:length(N.inds.values)){
   
-  par(mfrow=c(3,3))
+  par(mfrow=c(3,2))
   
   db.2 <- db_split100sim[db_split100sim$Ninds==N.inds.values[p],]
   
@@ -1391,7 +1391,7 @@ for (p in 1:length(N.inds.values)){
             c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
             border=NA,col=rgb(0,0,1, 0.15))
     
-    lines(c(0,51),c(0.5,0.5),col="red",lty=3,lwd=1.5)
+    lines(c(0,51),c(0.4,0.4),col="red",lty=3,lwd=1.5)
     
     #Nindtext <- paste("N.ind = ",N.inds.values[p])
     atext <- paste("\na = ",avalues[i])
