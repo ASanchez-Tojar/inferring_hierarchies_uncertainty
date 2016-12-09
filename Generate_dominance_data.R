@@ -1334,18 +1334,18 @@ N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 # bvalues <- c(0,5,10,10,20,5)
 
 db_split100sim0 <- 
-  read.table("databases_package/Fig5_db_split_elorand_100sim_fixed_biases.csv",header=TRUE,sep=",")
+  read.table("databases_package/Fig5_db_split_elorand_100sim_fixed_biases_full.csv",header=TRUE,sep=",")
 
 #db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
 #db_split100sim<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
 #db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==1,]
 db_split100sim<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==1,]
 
-avalues <- c(30,15,10,5,0)
-bvalues <- c(5,5,5,5,5)
+avalues <- c(10,15,30,15,10,5,0)
+bvalues <- c(-5,0,5,5,5,5,5)
 
 #a1 <- c("a","b","c","d","e","f")
-a1 <- c("a","b","c","d","e")
+a1 <- c("a","b","c","d","e","f","g")
 
 tiff("plots/Figure5_Checking_robustness_by_splitting_data_elorand_package_03poissondominantbias.tiff", 
      height=29.7, width=21,
@@ -1354,7 +1354,7 @@ tiff("plots/Figure5_Checking_robustness_by_splitting_data_elorand_package_03pois
 
 for (p in 1:length(N.inds.values)){
   
-  par(mfrow=c(3,2))
+  par(mfrow=c(3,3))
   
   db.2 <- db_split100sim[db_split100sim$Ninds==N.inds.values[p],]
   
