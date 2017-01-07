@@ -979,7 +979,10 @@ for (p in 1:length(N.inds.values)){
 ###############################################################################
 # db100sim <- read.table("db_100_simulations.csv",header=TRUE,sep=",")
 # db5meth100sim <- read.table("db_5_methods_100_simulations.csv",header=TRUE,sep=",")
-db5meth100sim.steep <- read.table("db_5_methods_100_simulations_steep_2.csv",header=TRUE,sep=",")
+#db5meth100sim.steep <- read.table("db_5_methods_100_simulations_steep_2.csv",header=TRUE,sep=",")
+db5meth100sim.steep <- read.table("databases_package/Fig3_db_methods_100sim_fixed_biases.csv",
+                                  header=TRUE,sep=",")
+
 
 # avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 # N.inds.values <- c(50)
@@ -990,38 +993,45 @@ db5meth100sim.steep <- read.table("db_5_methods_100_simulations_steep_2.csv",hea
 # db <- db5meth100sim
 db <- db5meth100sim.steep
 # avalues <- c(0,5,10,15,20)
-avalues <- c(5,10,20,10,20,0)
-bvalues <- c(0,5,10,10,20,5)
-N.inds.values <- c(50)
+# avalues <- c(5,10,20,10,20,0)
+# bvalues <- c(0,5,10,10,20,5)
+# N.inds.values <- c(50)
 # N.obs.values <- c(1,2,3,4,5,6,7,8,9,10,15,20,30,40,50)
+avalues <- c(10,15,30,15,10,5,0)
+bvalues <- c(-5,0,5,5,5,5,5)
+N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+poiss <- c(FALSE,FALSE,TRUE,TRUE)
+dombias <- c(FALSE,TRUE,FALSE,TRUE)
 
-a <- c("a","b","c","d","e","f")
+#db<-db[db$poiss==0 & db$dombias==0,]
+#db<-db[db$poiss==1 & db$dombias==0,]
+#db<-db[db$poiss==0 & db$dombias==1,]
+db<-db[db$poiss==1 & db$dombias==1,]
 
-tiff("plots/Figure3_Comparison_5methods_100sim_FULL.tiff", 
+a <- c("a","b","c","d","e","f","g")
+
+
+tiff("plots/Figure3_Comparison_5methods_100sim_package_03poissondominantbias.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
 
 for (p in 1:length(N.inds.values)){
   
-  par(mfrow=c(3,2))
+  par(mfrow=c(3,3))
   
   db.2 <- db[db$Ninds==N.inds.values[p] & (db$Nobs %in% N.obs.values),]
   
   for (i in 1:length(avalues)){
     
-    #db.3 <- db.2[db.2$alevel==avalues[i],]
     db.3 <- db.2[db.2$alevel==avalues[i] & db.2$blevel==bvalues[i],]
     
     db.4 <-summaryBy(Ndavid + 
                        elo.original + 
                        elo.no.rand +
                        elo.rand + 
-                       #elochoice.no.rand +
                        elochoice.rand
-                     #elo.no.rand.2 +
-                     #elo.rand.2
                      ~ Nobs, 
                      data = db.3, 
                      FUN = function(x) { c(m = mean(x),
@@ -1032,10 +1042,7 @@ for (p in 1:length(N.inds.values)){
                      "elo.original.m","elo.original.lower","elo.original.upper",
                      "elo.no.rand.m","elo.no.rand.lower","elo.no.rand.upper",
                      "elo.rand.m","elo.rand.lower","elo.rand.upper",
-                     #"elochoice.no.rand.m","elochoice.no.rand.lower","elochoice.no.rand.upper",
                      "elochoice.rand.m","elochoice.rand.lower","elochoice.rand.upper")
-    #"elo.no.rand.2.m","elo.no.rand.2.lower","elo.no.rand.2.upper",
-    #"elo.rand.2.m","elo.rand.2.lower","elo.rand.2.upper")
     
     plot(db.4$elo.rand.m~db.4$Nobs,0.5,type="n",
          ylab="spearman correlation",
@@ -1050,11 +1057,11 @@ for (p in 1:length(N.inds.values)){
     
     axis(2,at=round(seq(-0.6,1,0.2),1),cex.axis=0.80,las=2)
     
-    #     #adding points for the means and shadowed areas for the 95% CI
-    #     points(db.4$Nobs,db.4$elo.original.m,type="b",col="red",pch=19)
-    #     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-    #             c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
-    #             border=NA,col=rgb(1,0,0, 0.15))
+    #adding points for the means and shadowed areas for the 95% CI
+    points(db.4$Nobs,db.4$elo.original.m,type="b",col="red",pch=19)
+    polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+            c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
+            border=NA,col=rgb(1,0,0, 0.15))
     
     points(db.4$Nobs,db.4$elo.no.rand.m,type="b",col="orange",pch=19)
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
@@ -1076,10 +1083,10 @@ for (p in 1:length(N.inds.values)){
     #             c(db.4$elochoice.no.rand.lower,rev(db.4$elochoice.no.rand.upper)),
     #             border=NA,col=rgb(238/255,130/255,238/255, 0.15))
     
-    #     points(db.4$Nobs,db.4$elochoice.rand.m,type="b",col="green",pch=19)
-    #     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-    #             c(db.4$elochoice.rand.lower,rev(db.4$elochoice.rand.upper)),
-    #             border=NA,col=rgb(0,1,0, 0.15))
+        points(db.4$Nobs,db.4$elochoice.rand.m,type="b",col="green",pch=19)
+        polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+                c(db.4$elochoice.rand.lower,rev(db.4$elochoice.rand.upper)),
+                border=NA,col=rgb(0,1,0, 0.15))
     
     #     points(db.4$Nobs,db.4$elo.no.rand.2.m,type="b",col="pink",pch=19)
     #     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
@@ -1112,18 +1119,14 @@ for (p in 1:length(N.inds.values)){
            #"bottomright",
            c("Elo-rating randomized",
              "Elo-rating original",
-             "David's score"),
-           #"elochoice()",
-           #"elo.seq()"),
-           #"Elo original 2",
-           #"Elo randomized 2"),
+             "David's score",
+             "elochoice()",
+             "elo.seq()"),
            col=c("blue",
                  "orange",
-                 "black"),
-           #"green",
-           #"red"),
-           #"pink",
-           #"black"),
+                 "black",
+                 "green",
+                 "red"),
            cex=1,bty='n',
            #y.intersp=0.2,
            #x.intersp=0.2,
