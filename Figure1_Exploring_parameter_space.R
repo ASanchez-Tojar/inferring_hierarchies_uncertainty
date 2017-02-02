@@ -16,6 +16,8 @@
 # reliable dominance hierarchies and estimating their uncertainty: a practical 
 # guide.
 
+# more info at the Open Science Framework: https://osf.io/9gyek/
+
 
 ###############################################################################
 # Packages needed
