@@ -47,7 +47,7 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 }
 
 ###############################################################################
-# Estimating original Elo-rating and correlating it with real rank
+# Simulation: Estimating original Elo-rating and correlating it with real rank
 ###############################################################################
 
 ptm <- proc.time()
@@ -136,7 +136,7 @@ write.csv(db,
 
 
 ###############################################################################
-# MAIN TEXT: Plotting Elo-rating ~ real rank: spearman correlation - 95%CI
+# Plotting: MAIN TEXT: Elo-rating ~ real rank: spearman correlation - 95%CI
 ###############################################################################
 
 eloparameterspace <- read.table("databases_package/Fig2_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
@@ -342,17 +342,18 @@ for (p in 1:length(N.inds.values)){
 dev.off()
 
 
-
 ###############################################################################
-# SUPPLEMENTARY MATERIAL: uniform, dominant bias, poisson*dominant bias
+# Plotting: SUPPLEMENTARY MATERIAL: uniform, dominant bias, poisson*dominant bias
 ###############################################################################
 
 # eloparameterspace <- read.table("databases_package/Fig2_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
 #                                 header=TRUE,sep=",")
 
+
 #db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
 #db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==1,]
 db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==1,]
+
 
 avalues <- seq(0,30,5)
 bvalues <- c(-5,-5,-5,5,5,5,15,15,15)
