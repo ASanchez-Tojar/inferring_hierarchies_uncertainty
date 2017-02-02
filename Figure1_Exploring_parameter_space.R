@@ -13,7 +13,8 @@
 # scenarios explored in Figure 1 from: 
 
 # Sanchez-Tojar, A., Schroeder, J., Farine, D.R. (In preparation) Inferring 
-# reliable dominance hierarchies and estimating their uncertainty: a practical guide.
+# reliable dominance hierarchies and estimating their uncertainty: a practical 
+# guide.
 
 
 ###############################################################################
@@ -23,7 +24,7 @@
 # packages needed to be loaded for this script (a couple of them might be only needed in the following
 # script)
 
-
+library(RColorBrewer)
 
 # Clear memory and get to know where you are
 rm(list=ls())
