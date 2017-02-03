@@ -154,12 +154,18 @@ N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
 db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
+#db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
+#db<-db_rep[db_rep$poiss==0 & db_rep$dombias==1,]
+#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==1,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure4_Elo-rating_repeatability_poisson.tiff", 
+tiff("plots/Figure4_Elo-rating_repeatability_poisson.tiff",
+     #"plots/supplements/FigureS_Elo-rating_repeatability_uniform.tiff", 
+     #"plots/supplements/FigureS_Elo-rating_repeatability_dombias.tiff",
+     #"plots/supplements/FigureS_Elo-rating_repeatability_poiss+dombias.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -292,164 +298,7 @@ dev.off()
 
 
 ###############################################################################
-# Plotting: SUPPLEMENTARY MATERIAL, part 1: 
-# intermediate scenarios: uniform, dominant bias, poisson*dominant bias
-###############################################################################
-
-db_rep <- read.table("databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases.csv",header=TRUE,sep=",")
-
-
-avalues <- c(15,15,15,10,10,10,5,5,5)
-bvalues <- c(5,5,5,5,5,5,5,5,5)
-N.inds.values <- c(50)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-
-
-#db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
-#db<-db_rep[db_rep$poiss==0 & db_rep$dombias==1,]
-db<-db_rep[db_rep$poiss==1 & db_rep$dombias==1,]
-
-
-a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
-
-
-tiff(#"plots/supplements/FigureS_Elo-rating_repeatability_uniform.tiff", 
-     #"plots/supplements/FigureS_Elo-rating_repeatability_dombias.tiff",
-     "plots/supplements/FigureS_Elo-rating_repeatability_poiss+dombias.tiff",
-     height=29.7, width=21,
-     units='cm', compression="lzw", res=600)
-
-
-for (p in 1:length(N.inds.values)){
-  
-  m <- rbind(c(1,1,2),c(1,1,3),
-             c(4,4,5),c(4,4,6),
-             c(7,7,8),c(7,7,9))
-  
-  layout(m)
-  
-  op <- par(oma = c(6,3,1,1) + 0.1,
-            mar = c(0.5,5,1,0) + 0.1,
-            cex.lab=2.5)
-  
-  db.2 <- db[db$Ninds==N.inds.values[p],]
-  
-  for (i in 1:length(avalues)){
-    
-    if(i %in% c(1,4,7)){
-      
-      db.3 <- db.2[db.2$alevel==avalues[i]
-                   & db.2$blevel==bvalues[i]
-                   ,]
-      
-      db.4 <-summaryBy(rep ~ Nobs, 
-                       data = db.3, 
-                       FUN = function(x) { c(m = mean(x),
-                                             q = quantile(x,probs=c(0.025,0.975))) })
-      
-      names(db.4) <- c("Nobs",
-                       "rep.m","lower","upper")
-      
-      plot(db.4$rep.m~db.4$Nobs,0.5,type="n",
-           ylab="",
-           xlab="",
-           xaxt="n",
-           yaxt="n",
-           ylim=c(0.3,1))
-      
-      if(i<7){
-        
-        axis(1,at=N.obs.values,
-             cex.axis=1,tck=0.015,
-             labels=FALSE)
-        
-        
-      } else {
-        
-        axis(1,at=N.obs.values,
-             labels=as.character(N.obs.values),
-             cex.axis=1,tck=0.015)
-        
-        mtext("number of interactions/individual",
-              side=1, adj=0, line=4, cex=1.8); 
-        
-      }
-      
-      axis(2,at=seq(0.3,1,0.1),cex.axis=1.2,las=2)
-      
-      
-      #adding points for the means and shadowed areas for the 95% CI
-      points(db.4$Nobs,db.4$rep.m,type="b",col="blue",pch=19)
-      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-              c(db.4$lower,rev(db.4$upper)),
-              border=NA,col=rgb(0,0,1, 0.15))
-      
-      lines(c(0,51),c(0.7,0.7),col="red",lty=3,lwd=1.5)
-      
-      
-      text(48,0.33,a[i],adj = 0 ,cex=1.5)
-      
-      
-    }else {
-      
-      if(i %in% c(2,5,8)){
-        
-        plot(c(1,50),c(0.5,1),type="n",
-             ylab="", 
-             xlab="",
-             xaxt="n",
-             yaxt="n",
-             cex=1.5)
-        
-        axis(1,at=seq(0,50,10),
-             cex.axis=1,tck=0.015)
-        
-        axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
-        
-        plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
-        
-        mtext("P (dominant wins)",
-              side=2, adj=0, line=3, cex=1.10); 
-        
-      } else {
-        
-        plot(c(1,50),c(0,1),type="n",
-             ylab="", 
-             xlab="",
-             xaxt="n",
-             yaxt="n",
-             frame.plot=FALSE)    
-        
-        
-        atext <- paste("\na = ",avalues[i])
-        btext <- paste("\nb = ",bvalues[i])
-        ttext <- paste0(atext,btext,sep="\n")
-        text(15,0.45,ttext,adj = 0,cex=2.25)
-        
-        
-        mtext("Difference in rank    ",
-              side=3, adj=1, line=-2, cex=1.15); 
-        
-      }
-      
-    }
-    
-  }
-  
-  
-  title(ylab = "Elo-rating repeatability",
-        outer = TRUE, line = 0)
-  
-  par(mfrow=c(1,1))
-  
-}
-
-dev.off()
-
-
-###############################################################################
-# Plotting: SUPPLEMENTARY MATERIAL, part 2: 
-# steep and flat scenarios
+# Plotting: SUPPLEMENTARY MATERIAL: steep and flat scenarios
 ###############################################################################
 
 db_rep <- read.table("databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases.csv",header=TRUE,sep=",")
