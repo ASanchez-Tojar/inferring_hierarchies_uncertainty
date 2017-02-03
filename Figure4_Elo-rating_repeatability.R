@@ -469,7 +469,7 @@ db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/supplements/Figure4_Elo-rating_repeatability_steep_and_flat_poisson.tiff",
+tiff("plots/supplements/FigureS_Elo-rating_repeatability_steep_and_flat_poisson.tiff",
      #"plots/supplements/FigureS_Elo-rating_repeatability_steep_and_flat_uniform.tiff", 
      #"plots/supplements/FigureS_Elo-rating_repeatability_steep_and_flat_dombias.tiff",
      #"plots/supplements/FigureS_Elo-rating_repeatability_steep_and_flat_poiss+dombias.tiff",
