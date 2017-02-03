@@ -771,3 +771,211 @@ for (p in 1:length(N.inds.values)){
 }
 
 dev.off()
+
+
+###############################################################################
+# Plotting: SUPPLEMENTARY MATERIAL, part 2: 
+# steep and flat scenarios
+###############################################################################
+
+avalues <- c(10,10,10,15,15,15,30,30,30,0,0,0)
+bvalues <- c(-5,-5,-5,0,0,0,5,5,5,5,5,5)
+N.inds.values <- c(50)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+
+
+#db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
+#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
+#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==1,]
+db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==1,]
+
+
+a <- c("(a)","x","x","(b)","x","x","(c)","x","x","(d)","x","x")
+
+
+tiff(#"plots/supplements/FigureS_Comparing_different_dominance_methods_steep_and_flat_poisson.tiff",
+     #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_steep_and_flat_poisson.tiff",
+     #"plots/supplements/FigureS_Comparing_different_dominance_methods_steep_and_flat_uniform.tiff",
+     #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_steep_and_flat_uniform.tiff",
+     #"plots/supplements/FigureS_Comparing_different_dominance_methods_steep_and_flat_dombias.tiff",
+     #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_steep_and_flat_dombias.tiff",
+     #"plots/supplements/FigureS_Comparing_different_dominance_methods_steep_and_flat_poiss+dombias.tiff",
+     "plots/supplements/FigureS_Comparing_original_Elo-rating_packages_steep_and_flat_poiss+dombias.tiff",
+     height=29.7, width=21,
+     units='cm', compression="lzw", res=600)
+
+
+for (p in 1:length(N.inds.values)){
+  
+  m <- rbind(c(1,1,2),c(1,1,3),
+             c(4,4,5),c(4,4,6),
+             c(7,7,8),c(7,7,9),
+             c(10,10,11),c(10,10,12))
+  
+  layout(m)
+  
+  op <- par(oma = c(6,3,1,1) + 0.1,
+            mar = c(0.5,5,1,0) + 0.1,
+            cex.lab=2.5)
+  
+  
+  db.2 <- db[db$Ninds==N.inds.values[p] & (db$Nobs %in% N.obs.values),]
+  
+  for (i in 1:length(avalues)){
+    
+    if(i %in% c(1,4,7,10)){
+      
+      db.3 <- db.2[db.2$alevel==avalues[i] & db.2$blevel==bvalues[i],]
+      
+      db.4 <-summaryBy(Ndavid + 
+                         elo.original + 
+                         elo.no.rand +
+                         elo.rand + 
+                         ADAGIO
+                       ~ Nobs, 
+                       data = db.3, 
+                       FUN = function(x) { c(m = mean(x),
+                                             q = quantile(x,probs=c(0.025,0.975))) })
+      
+      names(db.4) <- c("Nobs",
+                       "Ndavid.m","Ndavid.lower","Ndavid.upper",
+                       "elo.original.m","elo.original.lower","elo.original.upper",
+                       "elo.no.rand.m","elo.no.rand.lower","elo.no.rand.upper",
+                       "elo.rand.m","elo.rand.lower","elo.rand.upper",
+                       "ADAGIO.m","ADAGIO.lower","ADAGIO.upper")
+      
+      plot(db.4$elo.rand.m~db.4$Nobs,0.5,type="n",
+           ylab="",
+           xlab="",
+           xaxt="n",
+           yaxt="n",
+           ylim=c(-0.6,1))
+      
+      
+      if(i<10){
+        
+        axis(1,at=N.obs.values,
+             cex.axis=1,tck=0.015,
+             labels=FALSE)
+        
+        
+      } else {
+        
+        axis(1,at=N.obs.values,
+             labels=as.character(N.obs.values),
+             cex.axis=1,tck=0.015)
+        
+        mtext("number of interactions/individual",
+              side=1, adj=0, line=4, cex=1.8); 
+        
+      }
+      
+      axis(2,at=round(seq(-0.6,1,0.1),1),cex.axis=1.2,las=2,tck=0.015)
+      
+      
+      #adding points for the means and shadowed areas for the 95% CI
+      points(db.4$Nobs,db.4$elo.original.m,type="b",col="green",pch=19)
+      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+              c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
+              border=NA,col=rgb(0,1,0, 0.15))
+      
+      points(db.4$Nobs,db.4$elo.no.rand.m,type="b",col="red",pch=19)
+      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+              c(db.4$elo.no.rand.lower,rev(db.4$elo.no.rand.upper)),
+              border=NA,col=rgb(1,0,0,0.15))
+      
+      # points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
+      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+      #         c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
+      #         border=NA,col=rgb(120/255,120/255,120/255,0.15))
+      # 
+      # points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
+      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+      #         c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
+      #         border=NA,col=rgb(0,0,1, 0.15))
+      # 
+      # points(db.4$Nobs,db.4$ADAGIO.m,type="b",col="orange",pch=19)
+      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+      #         c(db.4$ADAGIO.lower,rev(db.4$ADAGIO.upper)),
+      #         border=NA,col=rgb(1,165/255,0,0.15))
+      
+      lines(c(0,51),c(0.7,0.7),col="red",lty=3,lwd=1.5)
+      
+      atext <- paste("\na = ",avalues[i])
+      btext <- paste("\nb = ",bvalues[i])
+      ttext <- paste0(atext,btext,sep="\n")
+      text(48,-0.55,a[i],adj = 0 ,cex=1.5)
+      text(31,-0.45,ttext,adj = 0,cex=2)
+      
+      
+    } else {
+      
+      if(i %in% c(2,5,8,11)){
+        
+        plot(c(1,50),c(0.5,1),type="n",
+             ylab="", 
+             xlab="",
+             xaxt="n",
+             yaxt="n",
+             cex=1.5)
+        
+        axis(1,at=seq(0,50,10),
+             cex.axis=1,tck=0.015)
+        
+        axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
+        
+        plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        
+        mtext("P (dominant wins)",
+              side=2, adj=0, line=3, cex=0.85); 
+        
+      } else {
+        
+        plot(c(1,50),c(0,1),type="n",
+             ylab="", 
+             xlab="",
+             xaxt="n",
+             yaxt="n",
+             frame.plot=FALSE)    
+        
+        par(xpd=TRUE)
+        # legend(0,0.7,
+        #        c("David's score",
+        #          "original Elo-rating",
+        #          "randomized Elo-rating",
+        #          "ADAGIO"),
+        #        col=c("black",
+        #              "red",
+        #              "blue",
+        #              "orange"),
+        #        cex=1.35,bty='n',
+        #        pch=rep(19,4),
+        #        inset=c(0,0))
+        
+        legend(0,0.8,
+               c("package:aniDom",
+                 "package:EloRating"),
+               col=c("red",
+                     "green"),
+               cex=1.35,bty='n',
+               pch=rep(19,4),
+               inset=c(0,0))
+        
+        mtext("Difference in rank      ",
+              side=3, adj=1, line=-2, cex=1); 
+        
+      }
+      
+    }
+    
+  }
+  
+  
+  title(ylab = "spearman correlation coefficient",
+        outer = TRUE, line = 0)
+  
+  par(mfrow=c(1,1))
+  
+}
+
+dev.off()
