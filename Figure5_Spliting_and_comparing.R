@@ -190,9 +190,9 @@ db_split100sim0 <-
 
 
 db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
-#db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
-#db_split100sim<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==1,]
-#db_split100sim<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==1,]
+#db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
+#db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==1,]
+#db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==1,]
 
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
