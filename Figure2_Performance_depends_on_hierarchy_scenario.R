@@ -23,12 +23,12 @@
 # Packages needed
 ###############################################################################
 
-# packages needed to be loaded for this script (a couple of them might be only needed in the following
-# script)
+# packages needed for this script
 
 library(aniDom)
 library(doBy)
 library(RColorBrewer)
+
 
 # Clear memory and get to know where you are
 rm(list=ls())
@@ -46,11 +46,13 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
   
 }
 
+
 ###############################################################################
 # Simulation: Estimating original Elo-rating and correlating it with real rank
 ###############################################################################
 
 ptm <- proc.time()
+
 
 avalues <- seq(0,30,5)
 bvalues <- seq(-5,20,5)
@@ -130,6 +132,7 @@ for (typ in 1:length(poiss)){
 
 
 proc.time() - ptm
+
 
 write.csv(db,
           "databases_package/Fig2_elo_no_rand_parameter_space_100sim_fixed_biases.csv",row.names=FALSE)
@@ -350,9 +353,9 @@ dev.off()
 #                                 header=TRUE,sep=",")
 
 
-#db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
+db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
 #db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==1,]
-db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==1,]
+#db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==1,]
 
 
 avalues <- seq(0,30,5)
@@ -363,9 +366,9 @@ N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
-tiff(#"plots/supplements/FigureS_Exploring_eloscores_and_steepness_uniform.tiff", 
+tiff("plots/supplements/FigureS_Exploring_eloscores_and_steepness_uniform.tiff", 
      #"plots/supplements/FigureS_Exploring_eloscores_and_steepness_dombias.tiff",
-     "plots/supplements/FigureS_Exploring_eloscores_and_steepness_poiss+dombias.tiff",
+     #"plots/supplements/FigureS_Exploring_eloscores_and_steepness_poiss+dombias.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
