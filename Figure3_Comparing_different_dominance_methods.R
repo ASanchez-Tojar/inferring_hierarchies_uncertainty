@@ -23,16 +23,17 @@
 # Packages needed
 ###############################################################################
 
-# packages needed to be loaded for this script (a couple of them might be only needed in the following
-# script)
+# packages needed for this script
 
 library(aniDom)
 library(doBy)
 library(RColorBrewer)
 library(EloRating)
 
+
 # Clear memory and get to know where you are
 rm(list=ls())
+
 
 ###############################################################################
 # Functions needed
@@ -46,11 +47,13 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
   
 }
 
+
 ###############################################################################
 # Simulating: COMPARING all METHODS
 ###############################################################################
 
 ptm <- proc.time()
+
 
 db <- data.frame(Ninds=integer(),
                  Nobs=integer(),
@@ -219,6 +222,7 @@ write.csv(db,
 
 temp = list.files(pattern="*.csv.adagio.ranks") #check you are in the right folder - getwd() and setwd()
 
+
 db <- data.frame(Ninds=integer(),
                  Nobs=integer(),
                  poiss=integer(),
@@ -228,7 +232,9 @@ db <- data.frame(Ninds=integer(),
                  spearman=numeric(),
                  stringsAsFactors=FALSE)
 
+
 N.inds.values <- c(50)
+
 
 for (filename in 1:length(temp)){
   
@@ -326,6 +332,7 @@ names(db) <- c("Ninds","Nobs",
                "poiss","dombias",
                "alevel","blevel","spearman")
 
+
 write.csv(db,
           "databases_package/db_ADAGIO_100simulations_fixed_biases.csv",row.names=FALSE)
 
@@ -338,6 +345,7 @@ write.csv(db,
 db5methods <- read.table("databases_package/Fig3_db_methods_100sim_fixed_biases.csv",
                                   header=TRUE,sep=",")
 
+
 db5methods_sorted <- db5methods[order(db5methods$Ninds,
                                       db5methods$Nobs,
                                       db5methods$poiss,
@@ -345,8 +353,10 @@ db5methods_sorted <- db5methods[order(db5methods$Ninds,
                                       db5methods$blevel,
                                       db5methods$alevel),]
 
+
 dbADAGIO <- read.table("databases_package/Fig3b_db_ADAGIO_100simulations_fixed_biases.csv",
                        header=TRUE,sep=",")
+
 
 dbADAGIO_sorted <- dbADAGIO[order(dbADAGIO$Ninds,
                                   dbADAGIO$Nobs,
@@ -358,6 +368,7 @@ dbADAGIO_sorted <- dbADAGIO[order(dbADAGIO$Ninds,
 # making sure everything is identical
 
 iden <- as.factor(c("Nobs","poiss","dombias","alevel","blevel"))
+
 
 for (column in levels(iden)){
   
@@ -373,7 +384,9 @@ for (column in levels(iden)){
 dbADAGIO_cor <- dbADAGIO_sorted[,c("blevel", "spearman")]
 names(dbADAGIO_cor) <- c("blevel","ADAGIO")
 
+
 db.provisional <- cbind(db5methods_sorted,dbADAGIO_cor)
+
 
 db.provisional.2 <- db.provisional[,c(1:11,13)]
 
@@ -583,9 +596,11 @@ bvalues <- c(5,5,5,5,5,5,5,5,5)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
+
 db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
 #db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==1,]
 #db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==1,]
+
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
