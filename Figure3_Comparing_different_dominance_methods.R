@@ -373,9 +373,9 @@ for (column in levels(iden)){
 dbADAGIO_cor <- dbADAGIO_sorted[,c("blevel", "spearman")]
 names(dbADAGIO_cor) <- c("blevel","ADAGIO")
 
-db <- cbind(db5methods_sorted,dbADAGIO_cor)
+db.provisional <- cbind(db5methods_sorted,dbADAGIO_cor)
 
-db <- db[,c(1:11,13)]
+db.provisional.2 <- db.provisional[,c(1:11,13)]
 
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
@@ -384,7 +384,7 @@ N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
-db<-db[db$poiss==1 & db$dombias==0,]
+db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
@@ -580,16 +580,19 @@ bvalues <- c(5,5,5,5,5,5,5,5,5)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
-db<-db[db$poiss==0 & db$dombias==0,]
-#db<-db[db$poiss==0 & db$dombias==1,]
-#db<-db[db$poiss==1 & db$dombias==1,]
+db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
+#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==1,]
+#db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==1,]
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/supplements/FigureS_Comparing_different_dominance_methods_uniform.tiff", 
+tiff("plots/supplements/FigureS_Comparing_different_dominance_methods_uniform.tiff",
+     #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_uniform.tiff",
      #"plots/supplements/FigureS_Comparing_different_dominance_methods_dombias.tiff",
+     #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_dombias.tiff",
      #"plots/supplements/FigureS_Comparing_different_dominance_methods_poiss+dombias.tiff",
+     #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_poiss+dombias.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
