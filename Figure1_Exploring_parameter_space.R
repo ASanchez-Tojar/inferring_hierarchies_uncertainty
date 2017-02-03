@@ -12,9 +12,9 @@
 # This script aims to generate a figure that shows the variety of hierarchy
 # scenarios explored in Figure 1 from: 
 
-# Sanchez-Tojar, A., Schroeder, J., Farine, D.R. (In preparation) Inferring 
-# reliable dominance hierarchies and estimating their uncertainty: a practical 
-# guide.
+# Sanchez-Tojar, A., Schroeder, J., Farine, D.R. (In preparation) A practical 
+# guide for inferring reliable dominance hierarchies and estimating their 
+# uncertainty
 
 # more info at the Open Science Framework: https://osf.io/9gyek/
 

@@ -12,9 +12,9 @@
 # This script aims to generate a figure that shows how the latent hierarchy
 # affects the performance of the hierarchy method, Figure 2 from: 
 
-# Sanchez-Tojar, A., Schroeder, J., Farine, D.R. (In preparation) Inferring 
-# reliable dominance hierarchies and estimating their uncertainty: a practical 
-# guide.
+# Sanchez-Tojar, A., Schroeder, J., Farine, D.R. (In preparation) A practical 
+# guide for inferring reliable dominance hierarchies and estimating their 
+# uncertainty
 
 # more info at the Open Science Framework: https://osf.io/9gyek/
 
