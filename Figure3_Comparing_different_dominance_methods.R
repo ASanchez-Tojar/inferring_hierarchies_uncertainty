@@ -580,19 +580,19 @@ bvalues <- c(5,5,5,5,5,5,5,5,5)
 N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
-db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
-#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==1,]
+#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
+db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==1,]
 #db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==1,]
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/supplements/FigureS_Comparing_different_dominance_methods_uniform.tiff",
+tiff(#"plots/supplements/FigureS_Comparing_different_dominance_methods_uniform.tiff",
      #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_uniform.tiff",
      #"plots/supplements/FigureS_Comparing_different_dominance_methods_dombias.tiff",
      #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_dombias.tiff",
      #"plots/supplements/FigureS_Comparing_different_dominance_methods_poiss+dombias.tiff",
-     #"plots/supplements/FigureS_Comparing_original_Elo-rating_packages_poiss+dombias.tiff",
+     "plots/supplements/FigureS_Comparing_original_Elo-rating_packages_poiss+dombias.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -665,30 +665,30 @@ for (p in 1:length(N.inds.values)){
       
       
       #adding points for the means and shadowed areas for the 95% CI
-      # points(db.4$Nobs,db.4$elo.original.m,type="b",col="green",pch=19)
-      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-      #         c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
-      #         border=NA,col=rgb(0,1,0, 0.15))
+      points(db.4$Nobs,db.4$elo.original.m,type="b",col="green",pch=19)
+      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+              c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
+              border=NA,col=rgb(0,1,0, 0.15))
       
       points(db.4$Nobs,db.4$elo.no.rand.m,type="b",col="red",pch=19)
       polygon(c(db.4$Nobs,rev(db.4$Nobs)),
               c(db.4$elo.no.rand.lower,rev(db.4$elo.no.rand.upper)),
               border=NA,col=rgb(1,0,0,0.15))
       
-      points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
-      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-              c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
-              border=NA,col=rgb(120/255,120/255,120/255,0.15))
-      
-      points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
-      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-              c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
-              border=NA,col=rgb(0,0,1, 0.15))
-      
-      points(db.4$Nobs,db.4$ADAGIO.m,type="b",col="orange",pch=19)
-      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-              c(db.4$ADAGIO.lower,rev(db.4$ADAGIO.upper)),
-              border=NA,col=rgb(1,165/255,0,0.15))
+      # points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
+      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+      #         c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
+      #         border=NA,col=rgb(120/255,120/255,120/255,0.15))
+      # 
+      # points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
+      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+      #         c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
+      #         border=NA,col=rgb(0,0,1, 0.15))
+      # 
+      # points(db.4$Nobs,db.4$ADAGIO.m,type="b",col="orange",pch=19)
+      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+      #         c(db.4$ADAGIO.lower,rev(db.4$ADAGIO.upper)),
+      #         border=NA,col=rgb(1,165/255,0,0.15))
       
       lines(c(0,51),c(0.7,0.7),col="red",lty=3,lwd=1.5)
       
@@ -730,27 +730,27 @@ for (p in 1:length(N.inds.values)){
              frame.plot=FALSE)    
         
         par(xpd=TRUE)
-        legend(0,0.8,
-               c("David's score",
-                 "original Elo-rating",
-                 "randomized Elo-rating",
-                 "ADAGIO"),
-               col=c("black",
-                     "red",
-                     "blue",
-                     "orange"),
-               cex=1.35,bty='n',
-               pch=rep(19,4),
-               inset=c(0,0))
-        
         # legend(0,0.8,
-        #        c("package:aniDom",
-        #          "package:EloRating"),
-        #        col=c("red",
-        #              "green"),
+        #        c("David's score",
+        #          "original Elo-rating",
+        #          "randomized Elo-rating",
+        #          "ADAGIO"),
+        #        col=c("black",
+        #              "red",
+        #              "blue",
+        #              "orange"),
         #        cex=1.35,bty='n',
         #        pch=rep(19,4),
         #        inset=c(0,0))
+        
+        legend(0,0.8,
+               c("package:aniDom",
+                 "package:EloRating"),
+               col=c("red",
+                     "green"),
+               cex=1.35,bty='n',
+               pch=rep(19,4),
+               inset=c(0,0))
         
         mtext("Difference in rank    ",
               side=3, adj=1, line=-2, cex=1.15); 
