@@ -516,7 +516,7 @@ for (p in 1:length(N.inds.values)){
            xlab="",
            xaxt="n",
            yaxt="n",
-           ylim=c(0.3,1))
+           ylim=c(0.2,1))
       
       if(i<10){
         
@@ -536,7 +536,7 @@ for (p in 1:length(N.inds.values)){
         
       }
       
-      axis(2,at=seq(0.3,1,0.1),cex.axis=1.2,las=2)
+      axis(2,at=seq(0.2,1,0.1),cex.axis=1.2,las=2)
       
       
       #adding points for the means and shadowed areas for the 95% CI
@@ -570,7 +570,7 @@ for (p in 1:length(N.inds.values)){
         plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
         
         mtext("P (dominant wins)",
-              side=2, adj=0, line=3, cex=1.10); 
+              side=2, adj=0, line=3, cex=0.85); 
         
       } else {
         
@@ -585,11 +585,11 @@ for (p in 1:length(N.inds.values)){
         atext <- paste("\na = ",avalues[i])
         btext <- paste("\nb = ",bvalues[i])
         ttext <- paste0(atext,btext,sep="\n")
-        text(15,0.45,ttext,adj = 0,cex=2.25)
+        text(15,0.35,ttext,adj = 0,cex=2.25)
         
         
-        mtext("Difference in rank    ",
-              side=3, adj=1, line=-2, cex=1.15); 
+        mtext("Difference in rank     ",
+              side=3, adj=1, line=-2, cex=1); 
         
       }
       
