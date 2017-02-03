@@ -10,7 +10,7 @@
 ###############################################################################
 
 # This script aims to generate a figure that shows how Elo-rating repeatability
-# changes depending on the steepness of the hierarchy
+# changes depending on the steepness of the hierarchy. Figure 4 for:
 
 # Sanchez-Tojar, A., Schroeder, J., Farine, D.R. (In preparation) A practical 
 # guide for inferring reliable dominance hierarchies and estimating their 
