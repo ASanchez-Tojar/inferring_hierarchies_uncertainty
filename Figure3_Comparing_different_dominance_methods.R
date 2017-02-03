@@ -572,7 +572,8 @@ dev.off()
 
 
 ###############################################################################
-# Plotting: SUPPLEMENTARY MATERIAL: B: uniform, dominant bias, poisson*dominant bias
+# Plotting: SUPPLEMENTARY MATERIAL, part 1: 
+# intermediate scenarios: uniform, dominant bias, poisson*dominant bias
 ###############################################################################
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
