@@ -343,7 +343,7 @@ tiff(#"plots/supplements/FigureS2_randomized_Elo-rating_repeatability_steep_and_
      #"plots/supplements/FigureS12_randomized_Elo-rating_repeatability_steep_and_flat_dombias.tiff",
      "plots/supplements/FigureS19_randomized_Elo-rating_repeatability_steep_and_flat_poiss+dombias.tiff",
      #"plots/supplements/FigureS9_randomized_Elo-rating_repeatability_steep_and_flat_poisson_10ind.tiff",
-     #"plots/supplements/FigureS9_randomized_Elo-rating_repeatability_steep_and_flat_uniform_10ind.tiff",
+     #"plots/supplements/FigureS11_randomized_Elo-rating_repeatability_steep_and_flat_uniform_10ind.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
