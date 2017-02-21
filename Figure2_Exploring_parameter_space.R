@@ -10,7 +10,7 @@
 ###############################################################################
 
 # This script aims to generate a figure that shows the variety of hierarchy
-# scenarios explored in Figure 1 from: 
+# scenarios explored in Figure 2 from: 
 
 # Sanchez-Tojar, A., Schroeder, J., Farine, D.R. (In preparation) A practical 
 # guide for inferring reliable dominance hierarchies and estimating their 
@@ -57,7 +57,8 @@ a1 <- c("(a)","(b)","(c)","(d)","(e)","(f)","(g)","(h)","(i)")
 colours <- brewer.pal(7,"Set1")
 
 
-tiff("plots/Figure1_Exploring_parameter_space.tiff", 
+tiff(#"plots/Figure2_Exploring_parameter_space.tiff", 
+     "plots/Figure2_Exploring_parameter_space_10ind.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -75,7 +76,9 @@ par(mfrow=c(3,3))
 
 for (i in 1:length(bvalues)){
   
-  plot(c(1,50),c(0.2,1),type="n",
+  plot(#c(1,50),
+       c(1,10),
+       c(0.2,1),type="n",
        #ylab="P of higher rank winning", 
        #xlab="Difference in rank",
        ylab="",
@@ -85,19 +88,24 @@ for (i in 1:length(bvalues)){
   
   for (j in 1:length(avalues)){
     coline <- colours[j]
-    plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
+    #plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
+    plot_winner_prob(1:10,a=avalues[j],b=bvalues[i],coline)
 
   }
   
   if(i<7){
     
-    axis(1,at=seq(0,50,10),
+    axis(1,
+         #at=seq(0,50,10),
+         at=seq(0,10,1),
          cex.axis=1,tck=0.015,
          labels=FALSE)
     
   } else {
     
-    axis(1,at=seq(0,50,10),
+    axis(1,
+         #at=seq(0,50,10),
+         at=seq(0,10,1),
          #labels=as.character(N.obs.values),
          cex.axis=1,tck=0.015)
     
@@ -115,21 +123,25 @@ for (i in 1:length(bvalues)){
     
   }
 
-  lines(c(0,52),c(0.5,0.5),col="red",lty=3,lwd=1.5) # line at randomness, i.e. P=0.5
+  #lines(c(0,52),c(0.5,0.5),col="red",lty=3,lwd=1.5) # line at randomness, i.e. P=0.5
+  lines(c(0,12),c(0.5,0.5),col="red",lty=3,lwd=1.5) # line at randomness, i.e. P=0.5
+  
     
   btext <- paste("\nb = ",bvalues[i])
-  text(46,0.22,a1[i],adj = 0,cex=1.5)
-  text(34,0.37,btext,adj = 0,cex=2)
+  #text(46,0.22,a1[i],adj = 0,cex=1.5)
+  #text(34,0.37,btext,adj = 0,cex=2)
+  text(9,0.22,a1[i],adj = 0,cex=1.5)
+  text(7,0.37,btext,adj = 0,cex=2)
   
   par(xpd=TRUE)
-  legend(3,0.4,
+  legend(1,0.4,
          c("a = 0","a = 5","a = 10","a = 15"),
          col=colours[1:4],
          cex=1,bty='n',
          pch=rep(19,4),
          inset=c(0,0))
   
-  legend(17,0.4,
+  legend(3.5,0.4,
          c("a = 20","a = 25","a = 30"),
          col=colours[5:7],
          cex=1,bty='n',
