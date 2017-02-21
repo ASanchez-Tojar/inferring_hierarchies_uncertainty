@@ -68,7 +68,8 @@ db <- data.frame(Ninds=integer(),
 
 avalues <- c(10,15,30,15,10,5,0)
 bvalues <- c(-5,0,5,5,5,5,5)
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 poiss <- c(FALSE,FALSE,TRUE,TRUE)
 dombias <- c(FALSE,TRUE,FALSE,TRUE)
@@ -135,7 +136,7 @@ for (typ in 1:length(poiss)){
           
           # saving matrices for running ADAGIO
           write.csv(as.data.frame(domatrix),
-                    paste0("databases_package/matrices_for_ADAGIO",
+                    paste0("databases_package/matrices_10ind",
                            typ,"/matrices/matrix_",filename,"_sim",sim,".csv"),
                     row.names=TRUE,
                     quote = FALSE)
@@ -210,8 +211,11 @@ names(db) <- c("Ninds","Nobs",
 proc.time() - ptm
 
 
+# write.csv(db,
+#           "databases_package/Fig3_db_methods_100sim_fixed_biases.csv",row.names=FALSE)
+
 write.csv(db,
-          "databases_package/Fig3_db_methods_100sim_fixed_biases.csv",row.names=FALSE)
+          "databases_package/Fig3_db_methods_100sim_fixed_biases_10ind.csv",row.names=FALSE)
 
 
 ###############################################################################
