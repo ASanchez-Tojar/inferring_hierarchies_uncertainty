@@ -61,15 +61,16 @@ db <- data.frame(Ninds=integer(),
                  alevel=integer(),
                  blevel=integer(),
                  rep=numeric(),
-                 lower=numeric(),
-                 upper=numeric(),
-                 pvalue=numeric(),
+                 #lower=numeric(),
+                 #upper=numeric(),
+                 #pvalue=numeric(),
                  stringsAsFactors=FALSE)
 
 
 avalues <- c(10,15,30,15,10,5,0)
 bvalues <- c(-5,0,5,5,5,5,5)
 N.inds.values <- c(50)
+#N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 poiss <- c(FALSE,FALSE,TRUE,TRUE)
 dombias <- c(FALSE,TRUE,FALSE,TRUE)
@@ -110,13 +111,14 @@ for (typ in 1:length(poiss)){
                          dombias[typ],
                          avalues[j],
                          bvalues[j],
-                         rept$R[[1]],
-                         rept$CI.R[1],
-                         rept$CI.R[2],
-                         rept$P[[1]]))
+                         # rept$R[[1]],
+                         # rept$CI.R[1],
+                         # rept$CI.R[2],
+                         # rept$P[[1]],
+                         rept))
           
-          # write.csv(db,
-          #           "databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases_t.csv",row.names=FALSE)
+          write.csv(db,
+                    "databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases_t.csv",row.names=FALSE)
           
           
         }
@@ -129,15 +131,18 @@ for (typ in 1:length(poiss)){
 names(db) <- c("Ninds","Nobs",
                "poiss","dombias",
                "alevel","blevel",
-               "rep","lower","upper",
-               "pvalue")
+               "rep")#,"lower","upper",
+               #"pvalue")
 
 
 proc.time() - ptm
 
 
 write.csv(db,
-          "databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases.csv",row.names=FALSE)
+          "databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom.csv",row.names=FALSE)
+
+# write.csv(db,
+#           "databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom_10ind.csv",row.names=FALSE)
 
 
 ###############################################################################
