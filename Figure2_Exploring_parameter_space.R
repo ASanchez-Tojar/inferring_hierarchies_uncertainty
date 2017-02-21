@@ -134,14 +134,18 @@ for (i in 1:length(bvalues)){
   text(7,0.37,btext,adj = 0,cex=2)
   
   par(xpd=TRUE)
-  legend(1,0.4,
+  legend(#3,
+         1,
+         0.4,
          c("a = 0","a = 5","a = 10","a = 15"),
          col=colours[1:4],
          cex=1,bty='n',
          pch=rep(19,4),
          inset=c(0,0))
   
-  legend(3.5,0.4,
+  legend(#17,
+         3.5,
+         0.4,
          c("a = 20","a = 25","a = 30"),
          col=colours[5:7],
          cex=1,bty='n',
