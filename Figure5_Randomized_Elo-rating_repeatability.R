@@ -118,7 +118,7 @@ for (typ in 1:length(poiss)){
                          rept))
           
           write.csv(db,
-                    "databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases_t.csv",row.names=FALSE)
+                    "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_t.csv",row.names=FALSE)
           
           
         }
@@ -139,17 +139,17 @@ proc.time() - ptm
 
 
 write.csv(db,
-          "databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom.csv",row.names=FALSE)
+          "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom.csv",row.names=FALSE)
 
 # write.csv(db,
-#           "databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom_10ind.csv",row.names=FALSE)
+#           "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom_10ind.csv",row.names=FALSE)
 
 
 ###############################################################################
 # Plotting repeatability and adding 95% CI intervals 
 ###############################################################################
 
-db_rep <- read.table("databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases.csv",header=TRUE,sep=",")
+db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom.csv",header=TRUE,sep=",")
 
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
@@ -158,19 +158,19 @@ N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
-db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
+#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
 #db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
 #db<-db_rep[db_rep$poiss==0 & db_rep$dombias==1,]
-#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==1,]
+db<-db_rep[db_rep$poiss==1 & db_rep$dombias==1,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure4_Elo-rating_repeatability_poisson.tiff",
-     #"plots/supplements/FigureS_Elo-rating_repeatability_uniform.tiff", 
-     #"plots/supplements/FigureS_Elo-rating_repeatability_dombias.tiff",
-     #"plots/supplements/FigureS_Elo-rating_repeatability_poiss+dombias.tiff",
+tiff(#"plots/Figure5_randomized_Elo-rating_repeatability_poisson.tiff",
+     #"plots/supplements/FigureS4_randomized_Elo-rating_repeatability_uniform.tiff", 
+     #"plots/supplements/FigureS11_randomized_Elo-rating_repeatability_dombias.tiff",
+     "plots/supplements/FigureS18_randomized_Elo-rating_repeatability_poiss+dombias.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -225,7 +225,7 @@ for (p in 1:length(N.inds.values)){
            labels=as.character(N.obs.values),
            cex.axis=1,tck=0.015)
       
-      mtext("number of interactions/individual",
+      mtext("ratio of interactions to individuals",
             side=1, adj=0, line=4, cex=1.8); 
       
     }
@@ -306,7 +306,7 @@ dev.off()
 # Plotting: SUPPLEMENTARY MATERIAL: steep and flat scenarios
 ###############################################################################
 
-db_rep <- read.table("databases_package/Fig4_db_repeatabilityANOVA_100_simulations_fixed_biases.csv",header=TRUE,sep=",")
+db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom.csv",header=TRUE,sep=",")
 
 
 avalues <- c(10,10,10,15,15,15,30,30,30,0,0,0)
