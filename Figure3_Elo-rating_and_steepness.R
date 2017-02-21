@@ -56,7 +56,8 @@ ptm <- proc.time()
 
 avalues <- seq(0,30,5)
 bvalues <- seq(-5,20,5)
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 poiss <- c(FALSE,FALSE,TRUE,TRUE)
 dombias <- c(FALSE,TRUE,FALSE,TRUE)
@@ -134,15 +135,21 @@ for (typ in 1:length(poiss)){
 proc.time() - ptm
 
 
+# write.csv(db,
+#           "databases_package/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",row.names=FALSE)
+
 write.csv(db,
-          "databases_package/Fig2_elo_no_rand_parameter_space_100sim_fixed_biases.csv",row.names=FALSE)
+          "databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",row.names=FALSE)
 
 
 ###############################################################################
 # Plotting: MAIN TEXT: Elo-rating ~ real rank: spearman correlation - 95%CI
 ###############################################################################
 
-eloparameterspace <- read.table("databases_package/Fig2_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
+# eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
+#                                 header=TRUE,sep=",")
+
+eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",
                                 header=TRUE,sep=",")
 
 
@@ -151,14 +158,16 @@ db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,
 
 avalues <- seq(0,30,5)
 bvalues <- c(-5,-5,-5,5,5,5,15,15,15)
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure2_Exploring_eloscores_and_steepness_poisson.tiff", 
+tiff(#"plots/Figure3_Elo-rating_and_steepness_poisson.tiff", 
+     "plots/Figure3_Elo-rating_and_steepness_poisson_10ind.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -223,7 +232,7 @@ for (p in 1:length(N.inds.values)){
              labels=as.character(N.obs.values),
              cex.axis=1,tck=0.015)
         
-        mtext("number of interactions/individual",
+        mtext(" ratio of interactions to individuals",
               side=1, adj=0, line=4, cex=1.8); 
         
       }
@@ -278,21 +287,26 @@ for (p in 1:length(N.inds.values)){
       
       if(i %in% c(2,5,8)){
         
-        plot(c(1,50),c(0.5,1),type="n",
+        plot(#c(1,50),
+             c(1,10),
+             c(0.5,1),type="n",
              ylab="", 
              xlab="",
              xaxt="n",
              yaxt="n",
              cex=1.5)
         
-        axis(1,at=seq(0,50,10),
+        axis(1,
+             #at=seq(0,50,10),
+             at=seq(0,10,1),
              cex.axis=1,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
         
         for (j in 1:length(avalues)){
           coline <- colours[j]
-          plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
+          #plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
+          plot_winner_prob(1:10,a=avalues[j],b=bvalues[i],coline)
           
         }
         
@@ -301,7 +315,8 @@ for (p in 1:length(N.inds.values)){
         
       } else {
         
-        plot(c(1,50),c(0,1),type="n",
+        plot(c(1,50),
+             c(0,1),type="n",
              ylab="", 
              xlab="",
              xaxt="n",
@@ -335,7 +350,7 @@ for (p in 1:length(N.inds.values)){
   }
   
   
-  title(ylab = "spearman correlation coefficient",
+  title(ylab = "Spearman rank correlation coefficient",
         outer = TRUE, line = 0)
   
   par(mfrow=c(1,1))
@@ -349,13 +364,13 @@ dev.off()
 # Plotting: SUPPLEMENTARY MATERIAL: uniform, dominant bias, poisson*dominant bias
 ###############################################################################
 
-# eloparameterspace <- read.table("databases_package/Fig2_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
-#                                 header=TRUE,sep=",")
+eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
+                                header=TRUE,sep=",")
 
 
-db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
+#db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
 #db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==1,]
-#db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==1,]
+db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==1,]
 
 
 avalues <- seq(0,30,5)
@@ -366,9 +381,9 @@ N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
-tiff("plots/supplements/FigureS_Exploring_eloscores_and_steepness_uniform.tiff", 
-     #"plots/supplements/FigureS_Exploring_eloscores_and_steepness_dombias.tiff",
-     #"plots/supplements/FigureS_Exploring_eloscores_and_steepness_poiss+dombias.tiff",
+tiff(#"plots/supplements/FigureS1_Elo-rating_and_steepness_uniform.tiff", 
+     #"plots/supplements/FigureS8_Elo-rating_and_steepness_dombias.tiff",
+     "plots/supplements/FigureS15_Elo-rating_and_steepness_poiss+dombias.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -433,7 +448,7 @@ for (p in 1:length(N.inds.values)){
              labels=as.character(N.obs.values),
              cex.axis=1,tck=0.015)
         
-        mtext("number of interactions/individual",
+        mtext(" ratio of interactions to individuals",
               side=1, adj=0, line=4, cex=1.8); 
         
       }
@@ -545,7 +560,7 @@ for (p in 1:length(N.inds.values)){
   }
   
   
-  title(ylab = "spearman correlation coefficient",
+  title(ylab = "Spearman rank correlation coefficient",
         outer = TRUE, line = 0)
   
   par(mfrow=c(1,1))
