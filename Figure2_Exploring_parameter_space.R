@@ -58,7 +58,7 @@ colours <- brewer.pal(7,"Set1")
 
 
 tiff(#"plots/Figure2_Exploring_parameter_space.tiff", 
-     "plots/Figure2_Exploring_parameter_space_10ind.tiff", 
+     "plots/FigureS1_Exploring_parameter_space_10ind.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
