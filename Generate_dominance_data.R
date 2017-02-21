@@ -1510,12 +1510,12 @@ db <- data.frame(Ninds=integer(),
 # avalues <- c(0,5,10,15,20) # bvalues are the same as those are where elo-rating did to seem to do very well (see above plots)
 
 N.inds.values <- c(50)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+N.obs.values <- c(20,50)
 
 #for steeper scenarios
 # avalues <- c(5,10,20,10,20)
 # bvalues <- c(0,5,10,10,20)
-avalues <- c(0)
+avalues <- c(10)
 bvalues <- c(5)
 
 
@@ -1525,7 +1525,7 @@ for (j in 1:length(avalues)){
     
     for (o in 1:length(N.obs.values)){
       
-      for (sim in 1:100){
+      for (sim in 1){
         
         output <- generate_interactions(N.inds.values[p],
                                         N.inds.values[p]*N.obs.values[o],
@@ -1535,15 +1535,16 @@ for (j in 1:length(avalues)){
         
         winner <- output$interactions$Winner
         loser <- output$interactions$Loser
-        date <- output$interactions$Date
+        #date <- output$interactions$Date
         
 
         # generating elo-rating according to elo.scores() from this script and
         # randomizing the order of the interactions 1000 times
-        result <- as.data.frame(elo.scores(winner,loser,init.score=1000,
-                                           n.inds=N.inds.values[p]))
+        result <- as.data.frame(elo_scores(winner,loser,
+                                           n.inds=N.inds.values[p],
+                                           randomise=TRUE))
         
-              
+        
         # #mean.scores <- rowMeans(result)
         # ranks <- as.data.frame(apply(-result,2,
         #                              function(x) rank(x, na.last="keep")))
@@ -1554,9 +1555,13 @@ for (j in 1:length(avalues)){
         
         ranks3 <- melt(ranks2, id=(c("id")))
         
-        rep <- rpt.aov(ranks3$value,ranks3$id, 
-                       npermut=0, CI=0.95)
-              
+        # rep <- rpt.aov(ranks3$value,ranks3$id,
+        #               npermut=0, CI=0.95)
+        rep <- rptGaussian(value ~ (1|id), 
+                               grname="id", 
+                               data=ranks3,
+                               nboot=0, npermut=0)
+
         db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
                        avalues[j],
                        bvalues[j],
