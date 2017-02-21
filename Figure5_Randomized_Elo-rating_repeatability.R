@@ -315,18 +315,18 @@ N.inds.values <- c(50)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
-db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
+#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
 #db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
 #db<-db_rep[db_rep$poiss==0 & db_rep$dombias==1,]
-#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==1,]
+db<-db_rep[db_rep$poiss==1 & db_rep$dombias==1,]
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/supplements/FigureS_Elo-rating_repeatability_steep_and_flat_poisson.tiff",
-     #"plots/supplements/FigureS_Elo-rating_repeatability_steep_and_flat_uniform.tiff", 
-     #"plots/supplements/FigureS_Elo-rating_repeatability_steep_and_flat_dombias.tiff",
-     #"plots/supplements/FigureS_Elo-rating_repeatability_steep_and_flat_poiss+dombias.tiff",
+tiff(#"plots/supplements/FigureS2_randomized_Elo-rating_repeatability_steep_and_flat_poisson.tiff",
+     #"plots/supplements/FigureS5_randomized_Elo-rating_repeatability_steep_and_flat_uniform.tiff", 
+     #"plots/supplements/FigureS12_randomized_Elo-rating_repeatability_steep_and_flat_dombias.tiff",
+     "plots/supplements/FigureS19_randomized_Elo-rating_repeatability_steep_and_flat_poiss+dombias.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -385,7 +385,7 @@ for (p in 1:length(N.inds.values)){
              labels=as.character(N.obs.values),
              cex.axis=1,tck=0.015)
         
-        mtext("number of interactions/individual",
+        mtext("ratio of interactions to individuals",
               side=1, adj=0, line=4, cex=1.8); 
         
       }
