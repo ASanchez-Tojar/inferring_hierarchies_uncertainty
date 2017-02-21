@@ -167,7 +167,7 @@ a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
 tiff(#"plots/Figure3_Elo-rating_and_steepness_poisson.tiff", 
-     "plots/Figure3_Elo-rating_and_steepness_poisson_10ind.tiff", 
+     "plots/supplements/FigureS2_Elo-rating_and_steepness_poisson_10ind.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -217,7 +217,8 @@ for (p in 1:length(N.inds.values)){
            xlab="",
            xaxt="n",
            yaxt="n",
-           ylim=c(-0.6,1))
+           #ylim=c(-0.6,1)
+           ylim=c(-0.8,1))
       
       if(i<7){
         
@@ -237,7 +238,10 @@ for (p in 1:length(N.inds.values)){
         
       }
       
-      axis(2,at=round(seq(-0.6,1,0.2),1),cex.axis=1.2,las=2)
+      axis(2,
+           #at=round(seq(-0.6,1,0.2),1),
+           at=round(seq(-0.8,1,0.2),1),
+           cex.axis=1.2,las=2)
       
       
       #adding points for the means and shadowed areas for the 95% CI
@@ -279,8 +283,10 @@ for (p in 1:length(N.inds.values)){
               border=NA,col=rgb(139/255,69/255,19/255,0.15))
       
       btext <- paste("\nb = ",bvalues[i])
-      text(48,-0.55,a[i],adj = 0,cex=1.5)
-      text(30,-0.40,btext,adj = 0,cex=2)
+      # text(48,-0.55,a[i],adj = 0,cex=1.5)
+      # text(30,-0.40,btext,adj = 0,cex=2)
+      text(48,-0.75,a[i],adj = 0,cex=1.5)
+      text(30,-0.65,btext,adj = 0,cex=2)
       
             
     }else {
@@ -364,18 +370,22 @@ dev.off()
 # Plotting: SUPPLEMENTARY MATERIAL: uniform, dominant bias, poisson*dominant bias
 ###############################################################################
 
-eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
+# eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
+#                                 header=TRUE,sep=",")
+
+eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",
                                 header=TRUE,sep=",")
 
 
-#db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
+db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
 #db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==1,]
-db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==1,]
+#db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==1,]
 
 
 avalues <- seq(0,30,5)
 bvalues <- c(-5,-5,-5,5,5,5,15,15,15)
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
@@ -383,7 +393,8 @@ a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 tiff(#"plots/supplements/FigureS1_Elo-rating_and_steepness_uniform.tiff", 
      #"plots/supplements/FigureS8_Elo-rating_and_steepness_dombias.tiff",
-     "plots/supplements/FigureS15_Elo-rating_and_steepness_poiss+dombias.tiff",
+     #"plots/supplements/FigureS15_Elo-rating_and_steepness_poiss+dombias.tiff",
+     "plots/supplements/FigureS3_Elo-rating_and_steepness_uniform_10ind.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -433,7 +444,8 @@ for (p in 1:length(N.inds.values)){
            xlab="",
            xaxt="n",
            yaxt="n",
-           ylim=c(-0.6,1))
+           #ylim=c(-0.6,1),
+           ylim=c(-0.8,1))
       
       if(i<7){
         
@@ -453,7 +465,10 @@ for (p in 1:length(N.inds.values)){
         
       }
       
-      axis(2,at=round(seq(-0.6,1,0.2),1),cex.axis=1.2,las=2)
+      axis(2,
+           #at=round(seq(-0.6,1,0.2),1),
+           at=round(seq(-0.8,1,0.2),1),
+           cex.axis=1.2,las=2)
       
       
       #adding points for the means and shadowed areas for the 95% CI
@@ -495,29 +510,36 @@ for (p in 1:length(N.inds.values)){
               border=NA,col=rgb(139/255,69/255,19/255,0.15))
       
       btext <- paste("\nb = ",bvalues[i])
-      text(48,-0.55,a[i],adj = 0,cex=1.5)
-      text(30,-0.40,btext,adj = 0,cex=2)
+      # text(48,-0.55,a[i],adj = 0,cex=1.5)
+      # text(30,-0.40,btext,adj = 0,cex=2)
+      text(48,-0.75,a[i],adj = 0,cex=1.5)
+      text(30,-0.65,btext,adj = 0,cex=2)
       
       
     }else {
       
       if(i %in% c(2,5,8)){
         
-        plot(c(1,50),c(0.5,1),type="n",
+        plot(#c(1,50),
+             c(1,10),
+             c(0.5,1),type="n",
              ylab="", 
              xlab="",
              xaxt="n",
              yaxt="n",
              cex=1.5)
         
-        axis(1,at=seq(0,50,10),
+        axis(1,
+             #at=seq(0,50,10),
+             at=seq(0,10,1),
              cex.axis=1,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
         
         for (j in 1:length(avalues)){
           coline <- colours[j]
-          plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
+          #plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
+          plot_winner_prob(1:10,a=avalues[j],b=bvalues[i],coline)
           
         }
         
