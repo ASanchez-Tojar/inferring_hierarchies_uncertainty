@@ -224,9 +224,10 @@ write.csv(db,
 
 # importing all rank files (output from ADAGIO)
 
+setwd("C:/Users/nb5093/Documents/allmatrices")
+
 temp = list.files(pattern="*.csv.adagio.ranks") #check you are in the right folder - getwd() and setwd()
 
-setwd("C:/Users/nb5093/Documents/allmatrices")
 
 db <- data.frame(Ninds=integer(),
                  Nobs=integer(),
@@ -343,7 +344,7 @@ names(db) <- c("Ninds","Nobs",
 #          "databases_package/db_ADAGIO_100simulations_fixed_biases.csv",row.names=FALSE)
 
 write.csv(db,
-          "databases_package/final_data_for_Figures_backup/db_ADAGIO_100simulations_fixed_biases_10ind.csv",row.names=FALSE)
+          "databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_10ind.csv",row.names=FALSE)
 
 
 ###############################################################################
