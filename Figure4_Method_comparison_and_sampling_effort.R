@@ -352,8 +352,12 @@ write.csv(db,
 # method. Adding 95% CI intervals 
 ###############################################################################
 
-db5methods <- read.table("databases_package/final_data_for_Figures_backup/Fig4a_db_methods_100sim_fixed_biases.csv",
-                                  header=TRUE,sep=",")
+# db5methods <- read.table("databases_package/final_data_for_Figures_backup/Fig4a_db_methods_100sim_fixed_biases.csv",
+#                                   header=TRUE,sep=",")
+
+db5methods <- read.table("databases_package/final_data_for_Figures_backup/Fig4a_db_methods_100sim_fixed_biases_10ind.csv",
+                         header=TRUE,sep=",")
+
 
 
 db5methods_sorted <- db5methods[order(db5methods$Ninds,
@@ -364,7 +368,10 @@ db5methods_sorted <- db5methods[order(db5methods$Ninds,
                                       db5methods$alevel),]
 
 
-dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases.csv",
+# dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases.csv",
+#                        header=TRUE,sep=",")
+
+dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_10ind.csv",
                        header=TRUE,sep=",")
 
 
@@ -398,14 +405,17 @@ names(dbADAGIO_cor) <- c("blevel","ADAGIO")
 db.provisional <- cbind(db5methods_sorted,dbADAGIO_cor)
 
 
-db.provisional.2 <- db.provisional[,c(1:11,13)]
+#db.provisional.2 <- db.provisional[,c(1:11,13)]
+db.provisional.2 <- db.provisional[,c(1:10,12)]
+
 
 
 # Database is ready, plotting starts!
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
 bvalues <- c(5,5,5,5,5,5,5,5,5)
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
@@ -416,7 +426,8 @@ a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
 tiff(#"plots/Figure4_Method_comparison_and_sampling_effort_poisson.tiff",
-     "plots/supplements/FigureS1_Comparing_original_Elo-rating_packages_poisson.tiff",
+     #"plots/supplements/FigureS1_Comparing_original_Elo-rating_packages_poisson.tiff",
+     "plots/supplements/FigureS4_Comparing_original_Elo-rating_packages_poisson_10ind.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -464,7 +475,8 @@ for (p in 1:length(N.inds.values)){
            xlab="",
            xaxt="n",
            yaxt="n",
-           ylim=c(-0.3,1))
+           #ylim=c(-0.3,1),
+           ylim=c(-0.7,1))
       
     
     if(i<7){
@@ -485,61 +497,69 @@ for (p in 1:length(N.inds.values)){
       
     }
     
-    axis(2,at=round(seq(-0.3,1,0.1),1),cex.axis=1.2,las=2,tck=0.015)
+    axis(2,
+         #at=round(seq(-0.3,1,0.1),1),
+         at=round(seq(-0.7,1,0.1),1),
+         cex.axis=1.2,las=2,tck=0.015)
 
     
     #adding points for the means and shadowed areas for the 95% CI
-    points(db.4$Nobs,db.4$elo.original.m,type="b",col="green",pch=19)
-    polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-            c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
-            border=NA,col=rgb(0,1,0, 0.15))
+    # points(db.4$Nobs,db.4$elo.original.m,type="b",col="green",pch=19)
+    # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+    #         c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
+    #         border=NA,col=rgb(0,1,0, 0.15))
     
     points(db.4$Nobs,db.4$elo.no.rand.m,type="b",col="red",pch=19)
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
             c(db.4$elo.no.rand.lower,rev(db.4$elo.no.rand.upper)),
             border=NA,col=rgb(1,0,0,0.15))
     
-    # points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
-    # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-    #         c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
-    #         border=NA,col=rgb(120/255,120/255,120/255,0.15))
-    # 
-    # points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
-    # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-    #         c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
-    #         border=NA,col=rgb(0,0,1, 0.15))
-    # 
-    # points(db.4$Nobs,db.4$ADAGIO.m,type="b",col="orange",pch=19)
-    # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-    #         c(db.4$ADAGIO.lower,rev(db.4$ADAGIO.upper)),
-    #         border=NA,col=rgb(1,165/255,0,0.15))
+    points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
+    polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+            c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
+            border=NA,col=rgb(120/255,120/255,120/255,0.15))
+
+    points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
+    polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+            c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
+            border=NA,col=rgb(0,0,1, 0.15))
+
+    points(db.4$Nobs,db.4$ADAGIO.m,type="b",col="orange",pch=19)
+    polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+            c(db.4$ADAGIO.lower,rev(db.4$ADAGIO.upper)),
+            border=NA,col=rgb(1,165/255,0,0.15))
     
     lines(c(0,51),c(0.7,0.7),col="red",lty=3,lwd=1.5)
     
     atext <- paste("\na = ",avalues[i])
     btext <- paste("\nb = ",bvalues[i])
     ttext <- paste0(atext,btext,sep="\n")
-    text(48,-0.25,a[i],adj = 0 ,cex=1.5)
-    text(31,-0.2,ttext,adj = 0,cex=2)
+    text(48,-0.65,a[i],adj = 0 ,cex=1.5)
+    text(31,-0.6,ttext,adj = 0,cex=2)
 
     
     } else {
       
       if(i %in% c(2,5,8)){
                 
-        plot(c(1,50),c(0.5,1),type="n",
+        plot(#c(1,50),
+             c(1,10),
+             c(0.5,1),type="n",
              ylab="", 
              xlab="",
              xaxt="n",
              yaxt="n",
              cex=1.5)
         
-        axis(1,at=seq(0,50,10),
+        axis(1,
+             #at=seq(0,50,10),
+             at=seq(0,10,1),
              cex.axis=1,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
         
-        plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
         
         mtext("P (dominant wins)",
               side=2, adj=0, line=3, cex=1.10); 
@@ -554,27 +574,27 @@ for (p in 1:length(N.inds.values)){
              frame.plot=FALSE)    
         
         par(xpd=TRUE)
-        # legend(0,0.8,
-        #        c("David's score",
-        #          "original Elo-rating",
-        #          "randomized Elo-rating",
-        #          "ADAGIO"),
-        #        col=c("black",
-        #              "red",
-        #              "blue",
-        #              "orange"),
-        #        cex=1.35,bty='n',
-        #        pch=rep(19,4),
-        #        inset=c(0,0))
-        
         legend(0,0.8,
-               c("package:aniDom",
-                 "package:EloRating"),
-               col=c("red",
-                     "green"),
+               c("David's score",
+                 "original Elo-rating",
+                 "randomized Elo-rating",
+                 "ADAGIO"),
+               col=c("black",
+                     "red",
+                     "blue",
+                     "orange"),
                cex=1.35,bty='n',
                pch=rep(19,4),
                inset=c(0,0))
+        
+        # legend(0,0.8,
+        #        c("package:aniDom",
+        #          "package:EloRating"),
+        #        col=c("red",
+        #              "green"),
+        #        cex=1.35,bty='n',
+        #        pch=rep(19,4),
+        #        inset=c(0,0))
         
         mtext("Difference in rank    ",
               side=3, adj=1, line=-2, cex=1.15); 
