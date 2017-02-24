@@ -419,7 +419,8 @@ N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
-db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
+#db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
+db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
@@ -427,7 +428,8 @@ a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 tiff(#"plots/Figure4_Method_comparison_and_sampling_effort_poisson.tiff",
      #"plots/supplements/FigureS1_Comparing_original_Elo-rating_packages_poisson.tiff",
-     "plots/supplements/FigureS4_Comparing_original_Elo-rating_packages_poisson_10ind.tiff",
+     #"plots/supplements/FigureS4_Comparing_original_Elo-rating_packages_poisson_10ind.tiff",
+     "plots/supplements/FigureS6_Comparing_original_Elo-rating_packages_uniform_10ind.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -623,13 +625,14 @@ dev.off()
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
 bvalues <- c(5,5,5,5,5,5,5,5,5)
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
-#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
+db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
 #db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==1,]
-db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==1,]
+#db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==1,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
@@ -827,7 +830,8 @@ dev.off()
 
 avalues <- c(10,10,10,15,15,15,30,30,30,0,0,0)
 bvalues <- c(-5,-5,-5,0,0,0,5,5,5,5,5,5)
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
@@ -843,11 +847,13 @@ a <- c("(a)","x","x","(b)","x","x","(c)","x","x","(d)","x","x")
 tiff(#"plots/supplements/FigureS1_Method_comparison_and_sampling_effort_steep_and_flat_poisson.tiff",
      #"plots/supplements/FigureS2_Comparing_original_Elo-rating_packages_steep_and_flat_poisson.tiff",
      #"plots/supplements/FigureS3_Method_comparison_and_sampling_effort_steep_and_flat_uniform.tiff",
-     "plots/supplements/FigureS4_Comparing_original_Elo-rating_packages_steep_and_flat_uniform.tiff",
+     #"plots/supplements/FigureS4_Comparing_original_Elo-rating_packages_steep_and_flat_uniform.tiff",
      #"plots/supplements/FigureS10_Method_comparison_and_sampling_effort_steep_and_flat_dombias.tiff",
      #"plots/supplements/FigureSX_Comparing_original_Elo-rating_packages_steep_and_flat_dombias.tiff",
      #"plots/supplements/FigureS17_Method_comparison_and_sampling_effort_steep_and_flat_poiss+dombias.tiff",
      #"plots/supplements/FigureSX_Comparing_original_Elo-rating_packages_steep_and_flat_poiss+dombias.tiff",
+     #"plots/supplements/FigureS5_Method_comparison_and_sampling_effort_steep_and_flat_poisson_10ind.tiff",
+     "plots/supplements/FigureS7_Method_comparison_and_sampling_effort_steep_and_flat_uniform_10ind.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -896,7 +902,8 @@ for (p in 1:length(N.inds.values)){
            xlab="",
            xaxt="n",
            yaxt="n",
-           ylim=c(-0.6,1))
+           #ylim=c(-0.6,1)
+           ylim=c(-1,1))
       
       
       if(i<10){
@@ -917,61 +924,69 @@ for (p in 1:length(N.inds.values)){
         
       }
       
-      axis(2,at=round(seq(-0.6,1,0.1),1),cex.axis=1.2,las=2,tck=0.015)
+      axis(2,
+           #at=round(seq(-0.6,1,0.1),1),
+           at=round(seq(-1,1,0.2),1),
+           cex.axis=1.2,las=2,tck=0.015)
       
       
       #adding points for the means and shadowed areas for the 95% CI
-      points(db.4$Nobs,db.4$elo.original.m,type="b",col="green",pch=19)
-      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-              c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
-              border=NA,col=rgb(0,1,0, 0.15))
+      # points(db.4$Nobs,db.4$elo.original.m,type="b",col="green",pch=19)
+      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+      #         c(db.4$elo.original.lower,rev(db.4$elo.original.upper)),
+      #         border=NA,col=rgb(0,1,0, 0.15))
       
       points(db.4$Nobs,db.4$elo.no.rand.m,type="b",col="red",pch=19)
       polygon(c(db.4$Nobs,rev(db.4$Nobs)),
               c(db.4$elo.no.rand.lower,rev(db.4$elo.no.rand.upper)),
               border=NA,col=rgb(1,0,0,0.15))
       
-      # points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
-      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-      #         c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
-      #         border=NA,col=rgb(120/255,120/255,120/255,0.15))
-      # 
-      # points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
-      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-      #         c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
-      #         border=NA,col=rgb(0,0,1, 0.15))
-      # 
-      # points(db.4$Nobs,db.4$ADAGIO.m,type="b",col="orange",pch=19)
-      # polygon(c(db.4$Nobs,rev(db.4$Nobs)),
-      #         c(db.4$ADAGIO.lower,rev(db.4$ADAGIO.upper)),
-      #         border=NA,col=rgb(1,165/255,0,0.15))
+      points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
+      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+              c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
+              border=NA,col=rgb(120/255,120/255,120/255,0.15))
+
+      points(db.4$Nobs,db.4$elo.rand.m,type="b",col="blue",pch=19)
+      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+              c(db.4$elo.rand.lower,rev(db.4$elo.rand.upper)),
+              border=NA,col=rgb(0,0,1, 0.15))
+
+      points(db.4$Nobs,db.4$ADAGIO.m,type="b",col="orange",pch=19)
+      polygon(c(db.4$Nobs,rev(db.4$Nobs)),
+              c(db.4$ADAGIO.lower,rev(db.4$ADAGIO.upper)),
+              border=NA,col=rgb(1,165/255,0,0.15))
       
       lines(c(0,51),c(0.7,0.7),col="red",lty=3,lwd=1.5)
       
       atext <- paste("\na = ",avalues[i])
       btext <- paste("\nb = ",bvalues[i])
       ttext <- paste0(atext,btext,sep="\n")
-      text(48,-0.55,a[i],adj = 0 ,cex=1.5)
-      text(31,-0.45,ttext,adj = 0,cex=2)
+      text(48,-0.95,a[i],adj = 0 ,cex=1.5)
+      text(31,-0.85,ttext,adj = 0,cex=2)
       
       
     } else {
       
       if(i %in% c(2,5,8,11)){
         
-        plot(c(1,50),c(0.5,1),type="n",
+        plot(#c(1,50),
+             c(1,10),
+             c(0.5,1),type="n",
              ylab="", 
              xlab="",
              xaxt="n",
              yaxt="n",
              cex=1.5)
         
-        axis(1,at=seq(0,50,10),
+        axis(1,
+             #at=seq(0,50,10),
+             at=seq(0,10,1),
              cex.axis=1,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
         
-        plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
         
         mtext("P (dominant wins)",
               side=2, adj=0, line=3, cex=0.85); 
