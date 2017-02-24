@@ -226,6 +226,7 @@ write.csv(db,
 
 temp = list.files(pattern="*.csv.adagio.ranks") #check you are in the right folder - getwd() and setwd()
 
+setwd("C:/Users/nb5093/Documents/allmatrices")
 
 db <- data.frame(Ninds=integer(),
                  Nobs=integer(),
@@ -237,7 +238,8 @@ db <- data.frame(Ninds=integer(),
                  stringsAsFactors=FALSE)
 
 
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
 
 
 for (filename in 1:length(temp)){
@@ -337,8 +339,11 @@ names(db) <- c("Ninds","Nobs",
                "alevel","blevel","spearman")
 
 
+#write.csv(db,
+#          "databases_package/db_ADAGIO_100simulations_fixed_biases.csv",row.names=FALSE)
+
 write.csv(db,
-          "databases_package/db_ADAGIO_100simulations_fixed_biases.csv",row.names=FALSE)
+          "databases_package/final_data_for_Figures_backup/db_ADAGIO_100simulations_fixed_biases_10ind.csv",row.names=FALSE)
 
 
 ###############################################################################
