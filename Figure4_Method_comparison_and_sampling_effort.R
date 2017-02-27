@@ -1001,27 +1001,27 @@ for (p in 1:length(N.inds.values)){
              frame.plot=FALSE)    
         
         par(xpd=TRUE)
-        # legend(0,0.7,
-        #        c("David's score",
-        #          "original Elo-rating",
-        #          "randomized Elo-rating",
-        #          "ADAGIO"),
-        #        col=c("black",
-        #              "red",
-        #              "blue",
-        #              "orange"),
-        #        cex=1.35,bty='n',
-        #        pch=rep(19,4),
-        #        inset=c(0,0))
-        
-        legend(0,0.8,
-               c("package:aniDom",
-                 "package:EloRating"),
-               col=c("red",
-                     "green"),
+        legend(0,0.7,
+               c("David's score",
+                 "original Elo-rating",
+                 "randomized Elo-rating",
+                 "ADAGIO"),
+               col=c("black",
+                     "red",
+                     "blue",
+                     "orange"),
                cex=1.35,bty='n',
                pch=rep(19,4),
                inset=c(0,0))
+        
+        # legend(0,0.8,
+        #        c("package:aniDom",
+        #          "package:EloRating"),
+        #        col=c("red",
+        #              "green"),
+        #        cex=1.35,bty='n',
+        #        pch=rep(19,4),
+        #        inset=c(0,0))
         
         mtext("Difference in rank      ",
               side=3, adj=1, line=-2, cex=1); 
