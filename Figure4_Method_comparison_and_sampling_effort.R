@@ -352,11 +352,11 @@ write.csv(db,
 # method. Adding 95% CI intervals 
 ###############################################################################
 
-# db5methods <- read.table("databases_package/final_data_for_Figures_backup/Fig4a_db_methods_100sim_fixed_biases.csv",
-#                                   header=TRUE,sep=",")
+db5methods <- read.table("databases_package/final_data_for_Figures_backup/Fig4a_db_methods_100sim_fixed_biases.csv",
+                                  header=TRUE,sep=",")
 
-db5methods <- read.table("databases_package/final_data_for_Figures_backup/Fig4a_db_methods_100sim_fixed_biases_10ind.csv",
-                         header=TRUE,sep=",")
+# db5methods <- read.table("databases_package/final_data_for_Figures_backup/Fig4a_db_methods_100sim_fixed_biases_10ind.csv",
+#                          header=TRUE,sep=",")
 
 
 
@@ -368,11 +368,11 @@ db5methods_sorted <- db5methods[order(db5methods$Ninds,
                                       db5methods$alevel),]
 
 
-# dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases.csv",
-#                        header=TRUE,sep=",")
-
-dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_10ind.csv",
+dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases.csv",
                        header=TRUE,sep=",")
+
+# dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_10ind.csv",
+#                        header=TRUE,sep=",")
 
 
 dbADAGIO_sorted <- dbADAGIO[order(dbADAGIO$Ninds,
@@ -405,8 +405,8 @@ names(dbADAGIO_cor) <- c("blevel","ADAGIO")
 db.provisional <- cbind(db5methods_sorted,dbADAGIO_cor)
 
 
-#db.provisional.2 <- db.provisional[,c(1:11,13)]
-db.provisional.2 <- db.provisional[,c(1:10,12)]
+db.provisional.2 <- db.provisional[,c(1:11,13)]
+#db.provisional.2 <- db.provisional[,c(1:10,12)]
 
 
 
@@ -414,13 +414,13 @@ db.provisional.2 <- db.provisional[,c(1:10,12)]
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
 bvalues <- c(5,5,5,5,5,5,5,5,5)
-#N.inds.values <- c(50)
-N.inds.values <- c(10)
+N.inds.values <- c(50)
+#N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 
 
-#db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
-db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
+db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
+#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
@@ -515,7 +515,7 @@ for (p in 1:length(N.inds.values)){
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
             c(db.4$elo.no.rand.lower,rev(db.4$elo.no.rand.upper)),
             border=NA,col=rgb(1,0,0,0.15))
-    
+
     points(db.4$Nobs,db.4$Ndavid.m,type="b",col="black",pch=19)
     polygon(c(db.4$Nobs,rev(db.4$Nobs)),
             c(db.4$Ndavid.lower,rev(db.4$Ndavid.upper)),
@@ -544,8 +544,8 @@ for (p in 1:length(N.inds.values)){
       
       if(i %in% c(2,5,8)){
                 
-        plot(#c(1,50),
-             c(1,10),
+        plot(c(1,50),
+             #c(1,10),
              c(0.5,1),type="n",
              ylab="", 
              xlab="",
@@ -554,14 +554,14 @@ for (p in 1:length(N.inds.values)){
              cex=1.5)
         
         axis(1,
-             #at=seq(0,50,10),
-             at=seq(0,10,1),
+             at=seq(0,50,10),
+             #at=seq(0,10,1),
              cex.axis=1,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
         
-        #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
-        plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
         
         mtext("P (dominant wins)",
               side=2, adj=0, line=3, cex=1.10); 
