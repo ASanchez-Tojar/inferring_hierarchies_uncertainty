@@ -69,8 +69,9 @@ db <- data.frame(Ninds=integer(),
 
 avalues <- c(10,15,30,15,10,5,0)
 bvalues <- c(-5,0,5,5,5,5,5)
-N.inds.values <- c(50)
+#N.inds.values <- c(50)
 #N.inds.values <- c(10)
+N.inds.values <- c(25)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50)
 poiss <- c(FALSE,FALSE,TRUE,TRUE)
 dombias <- c(FALSE,TRUE,FALSE,TRUE)
@@ -118,7 +119,7 @@ for (typ in 1:length(poiss)){
                          rept))
           
           write.csv(db,
-                    "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_t.csv",row.names=FALSE)
+                    "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_25ind_t.csv",row.names=FALSE)
           
           
         }
@@ -139,7 +140,7 @@ proc.time() - ptm
 
 
 write.csv(db,
-          "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom.csv",row.names=FALSE)
+          "databases_package/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_25ind.csv",row.names=FALSE)
 
 # write.csv(db,
 #           "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom_10ind.csv",row.names=FALSE)
