@@ -372,7 +372,7 @@ for (p in 1:length(N.inds.values)){
   
   
   title(ylab = "Spearman rank correlation coefficient",
-        outer = TRUE, line = 0)
+        outer = TRUE, line = -1)
   
   par(mfrow=c(1,1))
   
