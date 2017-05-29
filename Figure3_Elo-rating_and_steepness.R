@@ -54,14 +54,20 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 ptm <- proc.time()
 
 
-avalues <- seq(0,30,5)
-bvalues <- seq(-5,20,5)
-#N.inds.values <- c(50)
-N.inds.values <- c(10)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-poiss <- c(FALSE,FALSE,TRUE,TRUE)
-dombias <- c(FALSE,TRUE,FALSE,TRUE)
+# avalues <- seq(0,30,5)
+# bvalues <- seq(-5,20,5)
+# #N.inds.values <- c(50)
+# N.inds.values <- c(10)
+# N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+# poiss <- c(FALSE,FALSE,TRUE,TRUE)
+# dombias <- c(FALSE,TRUE,FALSE,TRUE)
 
+avalues <- seq(0,30,5)
+bvalues <- seq(-5,5,5)
+N.inds.values <- c(25)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
+poiss <- c(TRUE,FALSE)
+dombias <- c(FALSE,FALSE)
 
 #creating empty database
 db <- data.frame(Ninds=integer(),
@@ -138,8 +144,11 @@ proc.time() - ptm
 # write.csv(db,
 #           "databases_package/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",row.names=FALSE)
 
+# write.csv(db,
+#           "databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",row.names=FALSE)
+
 write.csv(db,
-          "databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",row.names=FALSE)
+          "databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_25ind_100int.csv",row.names=FALSE)
 
 
 ###############################################################################
