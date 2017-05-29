@@ -155,11 +155,16 @@ write.csv(db,
 # Plotting: MAIN TEXT: Elo-rating ~ real rank: spearman correlation - 95%CI
 ###############################################################################
 
-eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
-                                header=TRUE,sep=",")
+# eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
+#                                 header=TRUE,sep=",")
 
 # eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",
 #                                 header=TRUE,sep=",")
+
+eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_25ind_100int.csv",
+                                header=TRUE,sep=",")
+
+
 
 
 db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,]
@@ -168,9 +173,9 @@ db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,
 avalues <- seq(0,30,5)
 #bvalues <- c(-5,-5,-5,5,5,5,15,15,15)
 bvalues <- c(-5,-5,-5,0,0,0,5,5,5)
-N.inds.values <- c(50)
+N.inds.values <- c(25)
 #N.inds.values <- c(10)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
@@ -184,9 +189,9 @@ tiff("plots/Figure3_Elo-rating_and_steepness_poisson_NEW.tiff",
 
 for (p in 1:length(N.inds.values)){
   
-  m <- rbind(c(1,1,2),c(1,1,3),
-             c(4,4,5),c(4,4,6),
-             c(7,7,8),c(7,7,9))
+  m <- rbind(c(1,1,1,2),c(1,1,1,3),
+             c(4,4,4,5),c(4,4,4,6),
+             c(7,7,7,8),c(7,7,7,9))
   
   layout(m)
   
@@ -233,7 +238,7 @@ for (p in 1:length(N.inds.values)){
       if(i<7){
         
         axis(1,at=N.obs.values,
-             cex.axis=1,tck=0.015,
+             cex.axis=0.75,tck=0.015,
              labels=FALSE)
         
         
@@ -241,9 +246,9 @@ for (p in 1:length(N.inds.values)){
         
         axis(1,at=N.obs.values,
              labels=as.character(N.obs.values),
-             cex.axis=1,tck=0.015)
+             cex.axis=0.75,tck=0.015)
         
-        mtext(" ratio of interactions to individuals",
+        mtext("     ratio of interactions to individuals",
               side=1, adj=0, line=4, cex=1.8); 
         
       }
@@ -251,7 +256,7 @@ for (p in 1:length(N.inds.values)){
       axis(2,
            #at=round(seq(-0.6,1,0.2),1),
            at=round(seq(-0.8,1,0.2),1),
-           cex.axis=1.2,las=2)
+           cex.axis=1,las=2)
       
       
       #adding points for the means and shadowed areas for the 95% CI
@@ -295,15 +300,15 @@ for (p in 1:length(N.inds.values)){
       btext <- paste("\nb = ",bvalues[i])
       # text(48,-0.55,a[i],adj = 0,cex=1.5)
       # text(30,-0.40,btext,adj = 0,cex=2)
-      text(48,-0.75,a[i],adj = 0,cex=1.5)
-      text(30,-0.65,btext,adj = 0,cex=2)
+      text(98,-0.75,a[i],adj = 0,cex=1.5)
+      text(80,-0.60,btext,adj = 0,cex=2)
       
             
     }else {
       
       if(i %in% c(2,5,8)){
         
-        plot(c(1,50),
+        plot(c(1,25),
              #c(1,10),
              c(0.5,1),type="n",
              ylab="", 
@@ -313,7 +318,7 @@ for (p in 1:length(N.inds.values)){
              cex=1.5)
         
         axis(1,
-             at=seq(0,50,10),
+             at=seq(1,25,2),
              #at=seq(0,10,1),
              cex.axis=1,tck=0.015)
         
@@ -321,7 +326,7 @@ for (p in 1:length(N.inds.values)){
         
         for (j in 1:length(avalues)){
           coline <- colours[j]
-          plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
+          plot_winner_prob(1:25,a=avalues[j],b=bvalues[i],coline)
           #plot_winner_prob(1:10,a=avalues[j],b=bvalues[i],coline)
           
         }
@@ -341,14 +346,14 @@ for (p in 1:length(N.inds.values)){
         
         
         par(xpd=TRUE)
-        legend(0,0.75,
+        legend(-10,0.75,
                c("a = 0","a = 5","a = 10","a = 15"),
                col=colours[1:4],
                cex=1.35,bty='n',
                pch=rep(19,4),
                inset=c(0,0))
         
-        legend(24,0.75,
+        legend(23,0.75,
                c("a = 20","a = 25","a = 30"),
                col=colours[5:7],
                cex=1.35,bty='n',
@@ -356,8 +361,8 @@ for (p in 1:length(N.inds.values)){
                inset=c(0,0))
         
         
-        mtext("Difference in rank    ",
-              side=3, adj=1, line=-2, cex=1.15); 
+        mtext("Difference in rank",
+              side=3, adj=1, line=-2, cex=0.95); 
         
       }
       
