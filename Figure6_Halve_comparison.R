@@ -115,14 +115,19 @@ db.split <- data.frame(Ninds=integer(),
                        stringsAsFactors=FALSE)
 
 
-avalues <- c(10,15,30,15,10,5,0)
-bvalues <- c(-5,0,5,5,5,5,5)
+# avalues <- c(10,15,30,15,10,5,0)
+# bvalues <- c(-5,0,5,5,5,5,5)
+avalues <- c(10,15,10,5)
+bvalues <- c(-5,5,5,5)
 #N.inds.values <- c(50)
 #N.inds.values <- c(10)
-N.inds.values <- c(25)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-poiss <- c(FALSE,FALSE,TRUE,TRUE)
-dombias <- c(FALSE,TRUE,FALSE,TRUE)
+N.inds.values <- c(10)
+#N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+N.obs.values <- c(100)
+# poiss <- c(FALSE,FALSE,TRUE,TRUE)
+# dombias <- c(FALSE,TRUE,FALSE,TRUE)
+poiss <- c(FALSE,TRUE)
+dombias <- c(FALSE,FALSE)
 
 
 for (typ in 1:length(poiss)){
@@ -163,7 +168,7 @@ for (typ in 1:length(poiss)){
                                      split.res[[3]]))
           
           write.csv(db.split,
-                    "databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_25ind_t.csv",row.names=FALSE)
+                    "databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind_100int_t.csv",row.names=FALSE)
           
         }
       }
@@ -185,7 +190,7 @@ proc.time() - ptm
 #           "databases_package/Fig6_db_split_elorand_100sim_fixed_biases.csv",row.names=FALSE)
 
 write.csv(db.split,
-          "databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_25ind.csv",row.names=FALSE)
+          "databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind_100int.csv",row.names=FALSE)
 
 
 
