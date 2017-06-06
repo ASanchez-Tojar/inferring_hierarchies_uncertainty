@@ -243,7 +243,7 @@ for (p in 1:length(N.inds.values)){
            labels=as.character(N.obs.values),
            cex.axis=0.75,tck=0.015)
       
-      mtext("ratio of interactions to individuals",
+      mtext("    ratio of interactions to individuals",
             side=1, adj=0, line=4, cex=1.8); 
       
     }
