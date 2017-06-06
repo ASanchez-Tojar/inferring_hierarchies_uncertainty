@@ -220,6 +220,8 @@ for (p in 1:length(N.inds.values)){
     names(db.4) <- c("Nobs",
                      "rep.m","lower","upper")
     
+    print(summary(db.4))
+    
     plot(db.4$rep.m~db.4$Nobs,0.5,type="n",
          ylab="",
          xlab="",
