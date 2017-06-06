@@ -156,18 +156,23 @@ write.csv(db,
 ###############################################################################
 
 #db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom.csv",header=TRUE,sep=",")
-db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_10ind.csv",header=TRUE,sep=",")
+#db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_10ind.csv",header=TRUE,sep=",")
+db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_25ind.csv",header=TRUE,sep=",")
 
+db_rep.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_25ind_100int.csv",header=TRUE,sep=",")
+
+db_rep <- rbind(db_rep,db_rep.100)
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
 bvalues <- c(5,5,5,5,5,5,5,5,5)
 #N.inds.values <- c(50)
-N.inds.values <- c(10)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+#N.inds.values <- c(10)
+N.inds.values <- c(25)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
 
-#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
-db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
+db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
+#db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
 #db<-db_rep[db_rep$poiss==0 & db_rep$dombias==1,]
 #db<-db_rep[db_rep$poiss==1 & db_rep$dombias==1,]
 
@@ -175,21 +180,21 @@ db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff(#"plots/Figure5_randomized_Elo-rating_repeatability_poisson.tiff",
+tiff("plots/Figure5_randomized_Elo-rating_repeatability_poisson_100.tiff",
      #"plots/supplements/FigureS4_randomized_Elo-rating_repeatability_uniform.tiff", 
      #"plots/supplements/FigureS11_randomized_Elo-rating_repeatability_dombias.tiff",
      #"plots/supplements/FigureS18_randomized_Elo-rating_repeatability_poiss+dombias.tiff",
      #"plots/supplements/FigureS8_randomized_Elo-rating_repeatability_poisson_10ind.tiff",
-     "plots/supplements/FigureS10_randomized_Elo-rating_repeatability_uniform_10ind.tiff",
+     #"plots/supplements/FigureS10_randomized_Elo-rating_repeatability_uniform_10ind.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
 
 for (p in 1:length(N.inds.values)){
   
-  m <- rbind(c(1,1,2),c(1,1,3),
-             c(4,4,5),c(4,4,6),
-             c(7,7,8),c(7,7,9))
+  m <- rbind(c(1,1,1,2),c(1,1,1,3),
+             c(4,4,4,5),c(4,4,4,6),
+             c(7,7,7,8),c(7,7,7,9))
   
   layout(m)
   
@@ -234,7 +239,7 @@ for (p in 1:length(N.inds.values)){
       
       axis(1,at=N.obs.values,
            labels=as.character(N.obs.values),
-           cex.axis=1,tck=0.015)
+           cex.axis=0.75,tck=0.015)
       
       mtext("ratio of interactions to individuals",
             side=1, adj=0, line=4, cex=1.8); 
@@ -253,10 +258,10 @@ for (p in 1:length(N.inds.values)){
             c(db.4$lower,rev(db.4$upper)),
             border=NA,col=rgb(0,0,1, 0.15))
     
-    lines(c(0,51),c(0.7,0.7),col="red",lty=3,lwd=1.5)
+    lines(c(0,101),c(0.7,0.7),col="red",lty=3,lwd=1.5)
 
     #text(48,0.33,a[i],adj = 0 ,cex=1.5)
-    text(48,0.23,a[i],adj = 0 ,cex=1.5)
+    text(98,0.23,a[i],adj = 0 ,cex=1.5)
 
     
     }else {
@@ -264,7 +269,8 @@ for (p in 1:length(N.inds.values)){
       if(i %in% c(2,5,8)){
         
         plot(#c(1,50),
-             c(1,10),
+             #c(1,10),
+             c(1,25),
              c(0.5,1),type="n",
              ylab="", 
              xlab="",
@@ -274,13 +280,15 @@ for (p in 1:length(N.inds.values)){
         
         axis(1,
              #at=seq(0,50,10),
-             at=seq(0,10,1),
+             #at=seq(0,10,1),
+             at=seq(1,25,2),
              cex.axis=1,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
         
         #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
-        plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
         
         mtext("P (dominant wins)",
               side=2, adj=0, line=3, cex=1.10); 
@@ -298,11 +306,11 @@ for (p in 1:length(N.inds.values)){
         atext <- paste("\na = ",avalues[i])
         btext <- paste("\nb = ",bvalues[i])
         ttext <- paste0(atext,btext,sep="\n")
-        text(15,0.45,ttext,adj = 0,cex=2.25)
+        text(5,0.45,ttext,adj = 0,cex=2.25)
         
                 
-        mtext("Difference in rank    ",
-              side=3, adj=1, line=-2, cex=1.15); 
+        mtext("Difference in rank",
+              side=3, adj=1, line=-2, cex=0.95); 
         
       }
       
