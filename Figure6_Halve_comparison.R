@@ -202,12 +202,21 @@ write.csv(db.split,
 # db_split100sim0 <- 
 #   read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_full.csv",header=TRUE,sep=",")
 
+# db_split100sim0 <- 
+#   read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind.csv",header=TRUE,sep=",")
+
 db_split100sim0 <- 
-  read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind.csv",header=TRUE,sep=",")
+  read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_25ind.csv",header=TRUE,sep=",")
 
 
-#db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
-db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
+
+db_split.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_25ind_100int.csv",header=TRUE,sep=",")
+
+db_split100sim0 <- rbind(db_split100sim0,db_split.100)
+
+
+db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
+#db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
 #db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==1,]
 #db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==1,]
 
@@ -215,28 +224,29 @@ db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
 avalues <- c(15,15,15,10,10,10,5,5,5)
 bvalues <- c(5,5,5,5,5,5,5,5,5)
 #N.inds.values <- c(50)
-N.inds.values <- c(10)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+#N.inds.values <- c(10)
+N.inds.values <- c(25)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff(#"plots/Figure6_Halve_comparison_poisson.tiff",
+tiff("plots/Figure6_Halve_comparison_poisson_100.tiff",
      #"plots/supplements/FigureS6_Halve_comparison_uniform.tiff", 
      #"plots/supplements/FigureS13_Halve_comparison_dombias.tiff",
      #"plots/supplements/FigureS20_Halve_comparison_poiss+dombias.tiff",
      #"plots/supplements/FigureS12_Halve_comparison_poisson_10ind.tiff",
-     "plots/supplements/FigureS14_Halve_comparison_uniform_10ind.tiff",
+     #"plots/supplements/FigureS14_Halve_comparison_uniform_10ind.tiff",
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
 
 for (p in 1:length(N.inds.values)){
   
-  m <- rbind(c(1,1,2),c(1,1,3),
-             c(4,4,5),c(4,4,6),
-             c(7,7,8),c(7,7,9))
+  m <- rbind(c(1,1,1,2),c(1,1,1,3),
+             c(4,4,4,5),c(4,4,4,6),
+             c(7,7,7,8),c(7,7,7,9))
   
   layout(m)
   
@@ -267,8 +277,8 @@ for (p in 1:length(N.inds.values)){
            xlab="",
            xaxt="n",
            yaxt="n",
-           #ylim=c(-0.4,1),
-           ylim=c(-0.6,1))
+           ylim=c(-0.4,1))
+           #ylim=c(-0.6,1))
       
       if(i<7){
         
@@ -281,17 +291,17 @@ for (p in 1:length(N.inds.values)){
         
         axis(1,at=N.obs.values,
              labels=as.character(N.obs.values),
-             cex.axis=1,tck=0.015)
+             cex.axis=0.75,tck=0.015)
         
-        mtext(" ratio of interactions to individuals",
-              side=1, adj=0, line=4, cex=1.8); 
+        mtext("    ratio of interactions to individuals",
+              side=1, adj=0, line=4, cex=1.8) 
         
       }
       
       axis(2,
-           #at=seq(-0.4,1,0.2),
-           at=round(seq(-0.6,1,0.2),1),
-           cex.axis=1.2,las=2)
+           at=seq(-0.4,1,0.2),
+           #at=round(seq(-0.6,1,0.2),1),
+           cex.axis=0.9,las=2)
       
       
       #adding points for the means and shadowed areas for the 95% CI
@@ -300,18 +310,19 @@ for (p in 1:length(N.inds.values)){
               c(db.4$lower,rev(db.4$upper)),
               border=NA,col=rgb(0,0,1, 0.15))
       
-      lines(c(0,51),c(0.35,0.35),col="red",lty=3,lwd=1.5)
+      #lines(c(0,101),c(0.35,0.35),col="red",lty=3,lwd=1.5)
       
     
-      #text(48,-0.37,a[i],adj = 0 ,cex=1.5)
-      text(48,-0.57,a[i],adj = 0 ,cex=1.5)
+      text(98,-0.37,a[i],adj = 0 ,cex=1.5)
+      #text(98,-0.57,a[i],adj = 0 ,cex=1.5)
 
     }else {
       
       if(i %in% c(2,5,8)){
         
         plot(#c(1,50),
-             c(1,10),
+             #c(1,10),
+             c(1,25),
              c(0.5,1),type="n",
              ylab="", 
              xlab="",
@@ -321,16 +332,18 @@ for (p in 1:length(N.inds.values)){
         
         axis(1,
              #at=seq(0,50,10),
-             at=seq(0,10,1),
-             cex.axis=1,tck=0.015)
+             #at=seq(0,10,1),
+             at=seq(1,25,4),
+             cex.axis=0.75,tck=0.015)
         
-        axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
+        axis(2,at=seq(0.5,1,0.1),cex.axis=0.75,las=2,tck=0.015) 
         
         #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
-        plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
         
-        mtext("P (dominant wins)",
-              side=2, adj=0, line=3, cex=1.10); 
+        mtext("   P (dominant wins)",
+              side=2, adj=0, line=3, cex=0.95) 
         
       } else {
         
@@ -345,11 +358,11 @@ for (p in 1:length(N.inds.values)){
         atext <- paste("\na = ",avalues[i])
         btext <- paste("\nb = ",bvalues[i])
         ttext <- paste0(atext,btext,sep="\n")
-        text(15,0.45,ttext,adj = 0,cex=2.25)
+        text(5,0.45,ttext,adj = 0,cex=2.25)
         
         
-        mtext("Difference in rank    ",
-              side=3, adj=1, line=-2, cex=1.15); 
+        mtext("Difference in rank",
+              side=3, adj=1, line=-2, cex=0.95); 
         
       }
       
@@ -359,7 +372,7 @@ for (p in 1:length(N.inds.values)){
   
   
   title(ylab = "Spearman rank correlation coefficient",
-        outer = TRUE, line = 0)
+        outer = TRUE, line = -1)
   
   par(mfrow=c(1,1))
   
