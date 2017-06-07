@@ -251,7 +251,7 @@ for (p in 1:length(N.inds.values)){
     axis(2,
          #at=seq(0.3,1,0.1),
          at=seq(0.2,1,0.1),
-         cex.axis=1.2,las=2)
+         cex.axis=0.9,las=2)
     
     
     #adding points for the means and shadowed areas for the 95% CI
@@ -260,7 +260,7 @@ for (p in 1:length(N.inds.values)){
             c(db.4$lower,rev(db.4$upper)),
             border=NA,col=rgb(0,0,1, 0.15))
     
-    lines(c(0,101),c(0.7,0.7),col="red",lty=3,lwd=1.5)
+    #lines(c(0,101),c(0.7,0.7),col="red",lty=3,lwd=1.5)
 
     #text(48,0.33,a[i],adj = 0 ,cex=1.5)
     text(98,0.23,a[i],adj = 0 ,cex=1.5)
@@ -283,17 +283,17 @@ for (p in 1:length(N.inds.values)){
         axis(1,
              #at=seq(0,50,10),
              #at=seq(0,10,1),
-             at=seq(1,25,2),
-             cex.axis=1,tck=0.015)
+             at=seq(1,25,4),
+             cex.axis=0.75,tck=0.015)
         
-        axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
+        axis(2,at=seq(0.5,1,0.1),cex.axis=0.75,las=2,tck=0.015) 
         
         #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
         #plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
         plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
         
-        mtext("P (dominant wins)",
-              side=2, adj=0, line=3, cex=1.10); 
+        mtext("   P (dominant wins)",
+              side=2, adj=0, line=3, cex=0.95) 
         
       } else {
         
@@ -322,7 +322,7 @@ for (p in 1:length(N.inds.values)){
   
   
   title(ylab = "Elo-rating repeatability",
-        outer = TRUE, line = 0)
+        outer = TRUE, line = -1)
   
   par(mfrow=c(1,1))
   
