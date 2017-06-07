@@ -272,6 +272,8 @@ for (p in 1:length(N.inds.values)){
       names(db.4) <- c("Nobs",
                        "elo.rand.split.m","lower","upper")
       
+      print(summary(db.4))
+      
       plot(db.4$elo.rand.split.m~db.4$Nobs,0.5,type="n",
            ylab="",
            xlab="",
