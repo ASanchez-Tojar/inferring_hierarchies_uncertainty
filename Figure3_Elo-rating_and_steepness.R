@@ -47,109 +47,109 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 }
 
 
-###############################################################################
-# Simulation: Estimating original Elo-rating and correlating it with real rank
-###############################################################################
-
-ptm <- proc.time()
-
-
+# ###############################################################################
+# # Simulation: Estimating original Elo-rating and correlating it with real rank
+# ###############################################################################
+# 
+# ptm <- proc.time()
+# 
+# 
+# # avalues <- seq(0,30,5)
+# # bvalues <- seq(-5,20,5)
+# # #N.inds.values <- c(50)
+# # N.inds.values <- c(10)
+# # N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+# # poiss <- c(FALSE,FALSE,TRUE,TRUE)
+# # dombias <- c(FALSE,TRUE,FALSE,TRUE)
+# 
 # avalues <- seq(0,30,5)
-# bvalues <- seq(-5,20,5)
-# #N.inds.values <- c(50)
-# N.inds.values <- c(10)
-# N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-# poiss <- c(FALSE,FALSE,TRUE,TRUE)
-# dombias <- c(FALSE,TRUE,FALSE,TRUE)
-
-avalues <- seq(0,30,5)
-bvalues <- seq(-5,5,5)
-N.inds.values <- c(25)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
-poiss <- c(TRUE,FALSE)
-dombias <- c(FALSE,FALSE)
-
-#creating empty database
-db <- data.frame(Ninds=integer(),
-                 Nobs=integer(),
-                 poiss=logical(),
-                 dombias=logical(),
-                 alevel=integer(),
-                 blevel=integer(),
-                 spearman=numeric(),
-                 stringsAsFactors=FALSE)
-
-
-# for each b value and each a value, estimate elo.rating for each number
-# of interactions per individual.
-
-for (typ in 1:length(poiss)){
-  
-  for (i in 1:length(bvalues)){
-    
-    for (j in 1:length(avalues)){
-      
-      for (p in 1:length(N.inds.values)){
-        
-        for (o in 1:length(N.obs.values)){
-          
-          for (simnum in 1:100){
-            
-            output <- generate_interactions(N.inds.values[p],
-                                            N.inds.values[p]*N.obs.values[o],
-                                            a=avalues[j],
-                                            b=bvalues[i],
-                                            id.biased=poiss[typ],
-                                            rank.biased=dombias[typ])
-            
-            winner <- output$interactions$Winner
-            loser <- output$interactions$Loser
-            hierarchy <- output$hierarchy
-            
-            result.no.rand <- elo_scores(winner,
-                                         loser,
-                                         identities=c(1:N.inds.values[p]),
-                                         init.score=1000,
-                                         randomise=FALSE)
-            
-            spearman.cor<-cor(output$hierarchy$Rank,
-                              rank(-result.no.rand,na.last="keep"),
-                              use="complete.obs",method="spearman")
-            
-            
-            #adding values to db
-            db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
-                           poiss[typ],dombias[typ],
-                           avalues[j],bvalues[i],
-                           spearman.cor))
-            
-          }        
-        }
-      }
-    }
-  }
-  
-  #renaming variables in database
-  names(db) <- c("Ninds","Nobs",
-                 "poiss","dombias",
-                 "alevel","blevel",
-                 "spearman")
-  
-}
-
-
-proc.time() - ptm
-
-
+# bvalues <- seq(-5,5,5)
+# N.inds.values <- c(25)
+# N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
+# poiss <- c(TRUE,FALSE)
+# dombias <- c(FALSE,FALSE)
+# 
+# #creating empty database
+# db <- data.frame(Ninds=integer(),
+#                  Nobs=integer(),
+#                  poiss=logical(),
+#                  dombias=logical(),
+#                  alevel=integer(),
+#                  blevel=integer(),
+#                  spearman=numeric(),
+#                  stringsAsFactors=FALSE)
+# 
+# 
+# # for each b value and each a value, estimate elo.rating for each number
+# # of interactions per individual.
+# 
+# for (typ in 1:length(poiss)){
+#   
+#   for (i in 1:length(bvalues)){
+#     
+#     for (j in 1:length(avalues)){
+#       
+#       for (p in 1:length(N.inds.values)){
+#         
+#         for (o in 1:length(N.obs.values)){
+#           
+#           for (simnum in 1:100){
+#             
+#             output <- generate_interactions(N.inds.values[p],
+#                                             N.inds.values[p]*N.obs.values[o],
+#                                             a=avalues[j],
+#                                             b=bvalues[i],
+#                                             id.biased=poiss[typ],
+#                                             rank.biased=dombias[typ])
+#             
+#             winner <- output$interactions$Winner
+#             loser <- output$interactions$Loser
+#             hierarchy <- output$hierarchy
+#             
+#             result.no.rand <- elo_scores(winner,
+#                                          loser,
+#                                          identities=c(1:N.inds.values[p]),
+#                                          init.score=1000,
+#                                          randomise=FALSE)
+#             
+#             spearman.cor<-cor(output$hierarchy$Rank,
+#                               rank(-result.no.rand,na.last="keep"),
+#                               use="complete.obs",method="spearman")
+#             
+#             
+#             #adding values to db
+#             db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
+#                            poiss[typ],dombias[typ],
+#                            avalues[j],bvalues[i],
+#                            spearman.cor))
+#             
+#           }        
+#         }
+#       }
+#     }
+#   }
+#   
+#   #renaming variables in database
+#   names(db) <- c("Ninds","Nobs",
+#                  "poiss","dombias",
+#                  "alevel","blevel",
+#                  "spearman")
+#   
+# }
+# 
+# 
+# proc.time() - ptm
+# 
+# 
+# # write.csv(db,
+# #           "databases_package/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",row.names=FALSE)
+# 
+# # write.csv(db,
+# #           "databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",row.names=FALSE)
+# 
 # write.csv(db,
-#           "databases_package/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",row.names=FALSE)
-
-# write.csv(db,
-#           "databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",row.names=FALSE)
-
-write.csv(db,
-          "databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_25ind_100int.csv",row.names=FALSE)
-
+#           "databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_25ind_100int.csv",row.names=FALSE)
+# 
 
 ###############################################################################
 # Plotting: MAIN TEXT: Elo-rating ~ real rank: spearman correlation - 95%CI
@@ -165,9 +165,8 @@ eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup
                                 header=TRUE,sep=",")
 
 
-
-
-db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,]
+#db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,]
+db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
 
 
 avalues <- seq(0,30,5)
@@ -181,8 +180,8 @@ N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure3_Elo-rating_and_steepness_poisson_NEW.tiff", 
-     #"plots/supplements/FigureS2_Elo-rating_and_steepness_poisson_25ind.tiff", 
+tiff(#"plots/Figure3_Elo-rating_and_steepness_poisson_NEW.tiff", 
+     "plots/supplements/FigureS1_Elo-rating_and_steepness_25ind_uniform.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
