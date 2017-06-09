@@ -47,108 +47,108 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 }
 
 
-###############################################################################
-# Estimating repeatability
-###############################################################################
-
-ptm <- proc.time()
-
-
-db <- data.frame(Ninds=integer(),
-                 Nobs=integer(),
-                 poiss=logical(),
-                 dombias=logical(),
-                 alevel=integer(),
-                 blevel=integer(),
-                 rep=numeric(),
-                 #lower=numeric(),
-                 #upper=numeric(),
-                 #pvalue=numeric(),
-                 stringsAsFactors=FALSE)
-
-
-# avalues <- c(10,15,30,15,10,5,0)
-# bvalues <- c(-5,0,5,5,5,5,5)
-avalues <- c(10,15,10,5)
-bvalues <- c(-5,5,5,5)
-#N.inds.values <- c(50)
-#N.inds.values <- c(10)
-N.inds.values <- c(50)
-#N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-N.obs.values <- c(100)
-# poiss <- c(FALSE,FALSE,TRUE,TRUE)
-# dombias <- c(FALSE,TRUE,FALSE,TRUE)
-poiss <- c(FALSE,TRUE)
-dombias <- c(FALSE,FALSE)
-
-
-for (typ in 1:length(poiss)){
-  
-  for (j in 1:length(avalues)){
-    
-    for (p in 1:length(N.inds.values)){
-      
-      for (o in 1:length(N.obs.values)){
-        
-        for (sim in 1:100){
-          
-          #print(sim)
-          
-          output <- generate_interactions(N.inds.values[p],
-                                          N.inds.values[p]*N.obs.values[o],
-                                          a=avalues[j],
-                                          b=bvalues[j],
-                                          id.biased=poiss[typ],
-                                          rank.biased=dombias[typ])
-          
-          
-          winner <- output$interactions$Winner
-          loser <- output$interactions$Loser
-          
-          rept <- estimate_uncertainty_by_repeatability(winner,
-                                                        loser, 
-                                                        identities=c(1:N.inds.values[p]),   
-                                                        init.score=1000, 
-                                                        n.rands = 1000)
-          
-          
-          db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
-                         poiss[typ],
-                         dombias[typ],
-                         avalues[j],
-                         bvalues[j],
-                         # rept$R[[1]],
-                         # rept$CI.R[1],
-                         # rept$CI.R[2],
-                         # rept$P[[1]],
-                         rept))
-          
-          write.csv(db,
-                    "databases_package/final_data_for_Figures_backup/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_50ind_100int_t.csv",row.names=FALSE)
-          
-          
-        }
-      }
-    }
-  }
-}
-
-
-names(db) <- c("Ninds","Nobs",
-               "poiss","dombias",
-               "alevel","blevel",
-               "rep")#,"lower","upper",
-               #"pvalue")
-
-
-proc.time() - ptm
-
-
-write.csv(db,
-          "databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_50ind_100int.csv",row.names=FALSE)
-
+# ###############################################################################
+# # Estimating repeatability
+# ###############################################################################
+# 
+# ptm <- proc.time()
+# 
+# 
+# db <- data.frame(Ninds=integer(),
+#                  Nobs=integer(),
+#                  poiss=logical(),
+#                  dombias=logical(),
+#                  alevel=integer(),
+#                  blevel=integer(),
+#                  rep=numeric(),
+#                  #lower=numeric(),
+#                  #upper=numeric(),
+#                  #pvalue=numeric(),
+#                  stringsAsFactors=FALSE)
+# 
+# 
+# # avalues <- c(10,15,30,15,10,5,0)
+# # bvalues <- c(-5,0,5,5,5,5,5)
+# avalues <- c(10,15,10,5)
+# bvalues <- c(-5,5,5,5)
+# #N.inds.values <- c(50)
+# #N.inds.values <- c(10)
+# N.inds.values <- c(50)
+# #N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+# N.obs.values <- c(100)
+# # poiss <- c(FALSE,FALSE,TRUE,TRUE)
+# # dombias <- c(FALSE,TRUE,FALSE,TRUE)
+# poiss <- c(FALSE,TRUE)
+# dombias <- c(FALSE,FALSE)
+# 
+# 
+# for (typ in 1:length(poiss)){
+#   
+#   for (j in 1:length(avalues)){
+#     
+#     for (p in 1:length(N.inds.values)){
+#       
+#       for (o in 1:length(N.obs.values)){
+#         
+#         for (sim in 1:100){
+#           
+#           #print(sim)
+#           
+#           output <- generate_interactions(N.inds.values[p],
+#                                           N.inds.values[p]*N.obs.values[o],
+#                                           a=avalues[j],
+#                                           b=bvalues[j],
+#                                           id.biased=poiss[typ],
+#                                           rank.biased=dombias[typ])
+#           
+#           
+#           winner <- output$interactions$Winner
+#           loser <- output$interactions$Loser
+#           
+#           rept <- estimate_uncertainty_by_repeatability(winner,
+#                                                         loser, 
+#                                                         identities=c(1:N.inds.values[p]),   
+#                                                         init.score=1000, 
+#                                                         n.rands = 1000)
+#           
+#           
+#           db<-rbind(db,c(N.inds.values[p],N.obs.values[o],
+#                          poiss[typ],
+#                          dombias[typ],
+#                          avalues[j],
+#                          bvalues[j],
+#                          # rept$R[[1]],
+#                          # rept$CI.R[1],
+#                          # rept$CI.R[2],
+#                          # rept$P[[1]],
+#                          rept))
+#           
+#           write.csv(db,
+#                     "databases_package/final_data_for_Figures_backup/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_50ind_100int_t.csv",row.names=FALSE)
+#           
+#           
+#         }
+#       }
+#     }
+#   }
+# }
+# 
+# 
+# names(db) <- c("Ninds","Nobs",
+#                "poiss","dombias",
+#                "alevel","blevel",
+#                "rep")#,"lower","upper",
+#                #"pvalue")
+# 
+# 
+# proc.time() - ptm
+# 
+# 
 # write.csv(db,
-#           "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom_10ind.csv",row.names=FALSE)
+#           "databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_50ind_100int.csv",row.names=FALSE)
+# 
+# # write.csv(db,
+# #           "databases_package/Fig5_db_repeatabilityANOVA_100_simulations_fixed_biases_newaniDom_10ind.csv",row.names=FALSE)
 
 
 ###############################################################################
@@ -171,17 +171,15 @@ N.inds.values <- c(25)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
 
-db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
-#db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
-#db<-db_rep[db_rep$poiss==0 & db_rep$dombias==1,]
-#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==1,]
+#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
+db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure5_randomized_Elo-rating_repeatability_poisson_100.tiff",
-     #"plots/supplements/FigureS4_randomized_Elo-rating_repeatability_uniform.tiff", 
+tiff(#"plots/Figure5_randomized_Elo-rating_repeatability_poisson_100.tiff",
+     "plots/supplements/FigureS3_Elo-rating_repeatability_100int_25ind_uniform.tiff", 
      #"plots/supplements/FigureS11_randomized_Elo-rating_repeatability_dombias.tiff",
      #"plots/supplements/FigureS18_randomized_Elo-rating_repeatability_poiss+dombias.tiff",
      #"plots/supplements/FigureS8_randomized_Elo-rating_repeatability_poisson_10ind.tiff",
