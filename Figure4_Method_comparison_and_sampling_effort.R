@@ -47,325 +47,325 @@ plot_winner_prob_2 <- function(diff.rank, a, b,coline) {
 }
 
 
-###############################################################################
-# Simulating: COMPARING all METHODS
-###############################################################################
-
-ptm <- proc.time()
-
-
-db <- data.frame(Ninds=integer(),
-                 Nobs=integer(),
-                 alevel=integer(),
-                 blevel=integer(),
-                 Ndavid=numeric(),
-                 elo.original=numeric(),
-                 elo.no.rand=numeric(),
-                 elo.rand=numeric(),
-                 stringsAsFactors=FALSE)
-
-
-avalues <- c(10,15,30,15,10,5,0)
-bvalues <- c(-5,0,5,5,5,5,5)
-#N.inds.values <- c(50)
-N.inds.values <- c(10)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-poiss <- c(FALSE,FALSE,TRUE,TRUE)
-dombias <- c(FALSE,TRUE,FALSE,TRUE)
-
-
-for (typ in 1:length(poiss)){
-  
-  for (j in 1:length(avalues)){
-    
-    for (p in 1:length(N.inds.values)){
-      
-      for (o in 1:length(N.obs.values)){
-        
-        for (sim in 1:100){
-          
-          output <- generate_interactions(N.inds.values[p],
-                                          N.inds.values[p]*N.obs.values[o],
-                                          a=avalues[j],
-                                          b=bvalues[j],
-                                          id.biased=poiss[typ],
-                                          rank.biased=dombias[typ])
-          
-          
-          filename <- paste(paste(paste(ifelse(poiss[typ]==TRUE,1,0),
-                                        ifelse(dombias[typ]==TRUE,1,0),
-                                        sep=""),
-                                  paste0(bvalues[j],a=avalues[j]),
-                                  sep="_"),
-                            N.obs.values[o],
-                            sep="_")
-          
-          #saving hierarchies
-          # write.csv(output$hierarchy,
-          #           paste0("databases_package/matrices_for_ADAGIO",
-          #                  typ,"/hierarchies/hierarchy_",filename,"_sim",sim,".csv"),
-          #           row.names=FALSE)
-          
-          winner <- output$interactions$Winner
-          loser <- output$interactions$Loser
-          date <- c("2010-01-25",rep("2010-01-26",length(loser)-1)) #fake date needed for elo.seq()
-          
-          # generating elo.rating according to elo.seq from library(EloRating)
-          x<-elo.seq(winner=as.factor(winner),
-                     loser=as.factor(loser), 
-                     Date=date,
-                     k=200,
-                     progressbar=FALSE)
-          
-          w<-extract.elo(x,standardize = FALSE)
-          
-          z <- data.frame(w,attributes(w),
-                          row.names = as.character(seq(1,length(w),
-                                                       1)))
-          
-          z$rank <- as.numeric(as.character(z$names))
-          
-          z$Elo.ranked <- rank(-z$w,na.last="keep")
-          
-          spearman.original<-cor(z$rank,z$Elo.ranked,
-                                 use="complete.obs",method="spearman")
-          
-          # generating David's score
-          domatrix<-creatematrix(x, drawmethod="0.5")
-          
-          # saving matrices for running ADAGIO
-          write.csv(as.data.frame(domatrix),
-                    paste0("databases_package/matrices_10ind",
-                           typ,"/matrices/matrix_",filename,"_sim",sim,".csv"),
-                    row.names=TRUE,
-                    quote = FALSE)
-          
-          dav<-DS(domatrix)
-          
-          dav$ID <- as.numeric(as.character(dav$ID))
-          
-          dav$normDSrank <- rank(-dav$normDS,na.last="keep")
-          
-          Ndavid <- cor(dav$ID,dav$normDSrank,
-                        use="complete.obs",method="spearman")
-          
-          # generating elo-rating according to elo_scores() from aniDom
-          result.no.rand <- elo_scores(winner,
-                                       loser,
-                                       identities=c(1:N.inds.values[p]),
-                                       init.score=1000,
-                                       randomise=FALSE,
-                                       return.as.ranks=TRUE)
-          
-          #ranks.no.rand <- rank(-result.no.rand,na.last="keep")
-          
-          spearman.cor.no.rand<-cor(output$hierarchy$Rank,
-                                    #ranks.no.rand,
-                                    result.no.rand,
-                                    use="complete.obs",method="spearman")
-          
-          # generating elo-rating according to elo_scores() from aniDom and
-          # randomizing the order of the interactions 1000 times
-          result <- elo_scores(winner,
-                               loser,
-                               identities=c(1:N.inds.values[p]),
-                               init.score=1000,
-                               randomise=TRUE,
-                               return.as.ranks=TRUE)
-          
-          mean.scores <- rowMeans(result)
-          #ranks <- apply(-result,2,function(x) rank(x, na.last="keep"))
-          #mean.ranks <- rowMeans(ranks)
-          
-          spearman.cor.rand<-cor(output$hierarchy$Rank,
-                                 mean.scores,
-                                 use="complete.obs",method="spearman")
-          
-          db<-rbind(db,c(N.inds.values[p],
-                         N.obs.values[o],
-                         poiss[typ],
-                         dombias[typ],
-                         avalues[j],
-                         bvalues[j],
-                         Ndavid,
-                         spearman.original,
-                         spearman.cor.no.rand,
-                         spearman.cor.rand))
-          
-        }
-      }
-    }
-  }
-  
-}
-
-names(db) <- c("Ninds","Nobs",
-               "poiss","dombias",
-               "alevel","blevel",
-               "Ndavid",
-               "elo.original",
-               "elo.no.rand",
-               "elo.rand")
-
-proc.time() - ptm
-
-
+# ###############################################################################
+# # Simulating: COMPARING all METHODS
+# ###############################################################################
+# 
+# ptm <- proc.time()
+# 
+# 
+# db <- data.frame(Ninds=integer(),
+#                  Nobs=integer(),
+#                  alevel=integer(),
+#                  blevel=integer(),
+#                  Ndavid=numeric(),
+#                  elo.original=numeric(),
+#                  elo.no.rand=numeric(),
+#                  elo.rand=numeric(),
+#                  stringsAsFactors=FALSE)
+# 
+# 
+# avalues <- c(10,15,30,15,10,5,0)
+# bvalues <- c(-5,0,5,5,5,5,5)
+# #N.inds.values <- c(50)
+# N.inds.values <- c(10)
+# N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+# poiss <- c(FALSE,FALSE,TRUE,TRUE)
+# dombias <- c(FALSE,TRUE,FALSE,TRUE)
+# 
+# 
+# for (typ in 1:length(poiss)){
+#   
+#   for (j in 1:length(avalues)){
+#     
+#     for (p in 1:length(N.inds.values)){
+#       
+#       for (o in 1:length(N.obs.values)){
+#         
+#         for (sim in 1:100){
+#           
+#           output <- generate_interactions(N.inds.values[p],
+#                                           N.inds.values[p]*N.obs.values[o],
+#                                           a=avalues[j],
+#                                           b=bvalues[j],
+#                                           id.biased=poiss[typ],
+#                                           rank.biased=dombias[typ])
+#           
+#           
+#           filename <- paste(paste(paste(ifelse(poiss[typ]==TRUE,1,0),
+#                                         ifelse(dombias[typ]==TRUE,1,0),
+#                                         sep=""),
+#                                   paste0(bvalues[j],a=avalues[j]),
+#                                   sep="_"),
+#                             N.obs.values[o],
+#                             sep="_")
+#           
+#           #saving hierarchies
+#           # write.csv(output$hierarchy,
+#           #           paste0("databases_package/matrices_for_ADAGIO",
+#           #                  typ,"/hierarchies/hierarchy_",filename,"_sim",sim,".csv"),
+#           #           row.names=FALSE)
+#           
+#           winner <- output$interactions$Winner
+#           loser <- output$interactions$Loser
+#           date <- c("2010-01-25",rep("2010-01-26",length(loser)-1)) #fake date needed for elo.seq()
+#           
+#           # generating elo.rating according to elo.seq from library(EloRating)
+#           x<-elo.seq(winner=as.factor(winner),
+#                      loser=as.factor(loser), 
+#                      Date=date,
+#                      k=200,
+#                      progressbar=FALSE)
+#           
+#           w<-extract.elo(x,standardize = FALSE)
+#           
+#           z <- data.frame(w,attributes(w),
+#                           row.names = as.character(seq(1,length(w),
+#                                                        1)))
+#           
+#           z$rank <- as.numeric(as.character(z$names))
+#           
+#           z$Elo.ranked <- rank(-z$w,na.last="keep")
+#           
+#           spearman.original<-cor(z$rank,z$Elo.ranked,
+#                                  use="complete.obs",method="spearman")
+#           
+#           # generating David's score
+#           domatrix<-creatematrix(x, drawmethod="0.5")
+#           
+#           # saving matrices for running ADAGIO
+#           write.csv(as.data.frame(domatrix),
+#                     paste0("databases_package/matrices_10ind",
+#                            typ,"/matrices/matrix_",filename,"_sim",sim,".csv"),
+#                     row.names=TRUE,
+#                     quote = FALSE)
+#           
+#           dav<-DS(domatrix)
+#           
+#           dav$ID <- as.numeric(as.character(dav$ID))
+#           
+#           dav$normDSrank <- rank(-dav$normDS,na.last="keep")
+#           
+#           Ndavid <- cor(dav$ID,dav$normDSrank,
+#                         use="complete.obs",method="spearman")
+#           
+#           # generating elo-rating according to elo_scores() from aniDom
+#           result.no.rand <- elo_scores(winner,
+#                                        loser,
+#                                        identities=c(1:N.inds.values[p]),
+#                                        init.score=1000,
+#                                        randomise=FALSE,
+#                                        return.as.ranks=TRUE)
+#           
+#           #ranks.no.rand <- rank(-result.no.rand,na.last="keep")
+#           
+#           spearman.cor.no.rand<-cor(output$hierarchy$Rank,
+#                                     #ranks.no.rand,
+#                                     result.no.rand,
+#                                     use="complete.obs",method="spearman")
+#           
+#           # generating elo-rating according to elo_scores() from aniDom and
+#           # randomizing the order of the interactions 1000 times
+#           result <- elo_scores(winner,
+#                                loser,
+#                                identities=c(1:N.inds.values[p]),
+#                                init.score=1000,
+#                                randomise=TRUE,
+#                                return.as.ranks=TRUE)
+#           
+#           mean.scores <- rowMeans(result)
+#           #ranks <- apply(-result,2,function(x) rank(x, na.last="keep"))
+#           #mean.ranks <- rowMeans(ranks)
+#           
+#           spearman.cor.rand<-cor(output$hierarchy$Rank,
+#                                  mean.scores,
+#                                  use="complete.obs",method="spearman")
+#           
+#           db<-rbind(db,c(N.inds.values[p],
+#                          N.obs.values[o],
+#                          poiss[typ],
+#                          dombias[typ],
+#                          avalues[j],
+#                          bvalues[j],
+#                          Ndavid,
+#                          spearman.original,
+#                          spearman.cor.no.rand,
+#                          spearman.cor.rand))
+#           
+#         }
+#       }
+#     }
+#   }
+#   
+# }
+# 
+# names(db) <- c("Ninds","Nobs",
+#                "poiss","dombias",
+#                "alevel","blevel",
+#                "Ndavid",
+#                "elo.original",
+#                "elo.no.rand",
+#                "elo.rand")
+# 
+# proc.time() - ptm
+# 
+# 
+# # write.csv(db,
+# #           "databases_package/Fig3_db_methods_100sim_fixed_biases.csv",row.names=FALSE)
+# 
 # write.csv(db,
-#           "databases_package/Fig3_db_methods_100sim_fixed_biases.csv",row.names=FALSE)
-
-write.csv(db,
-          "databases_package/Fig3_db_methods_100sim_fixed_biases_10ind.csv",row.names=FALSE)
+#           "databases_package/Fig3_db_methods_100sim_fixed_biases_10ind.csv",row.names=FALSE)
 
 
-###############################################################################
-# ADAGIO: Adding the results from ADAGIO, which needed to be run at the terminal
-###############################################################################
-
-# importing all rank files (output from ADAGIO)
-
-#setwd("C:/Users/nb5093/Documents/allmatrices")
-setwd("F:/allmatrices")
-
-
-temp = list.files(pattern="*.csv.adagio.ranks") #check you are in the right folder - getwd() and setwd()
-
-
-db <- data.frame(Ninds=integer(),
-                 Nobs=integer(),
-                 poiss=integer(),
-                 dombias=integer(),
-                 alevel=integer(),
-                 blevel=integer(),
-                 spearman=numeric(),
-                 stringsAsFactors=FALSE)
-
-
-#N.inds.values <- c(50)
-#N.inds.values <- c(10)
-N.inds.values <- c(25)
-
-
-
-for (filename in 1:length(temp)){
-  
-  poiss <- substr(temp[filename], 8, 8)
-  dombias <- substr(temp[filename], 9, 9)
-  
-  if(substr(temp[filename], 11, 12)=="-5"){
-    
-    blevel <- substr(temp[filename], 11, 12)
-    
-    if(substr(temp[filename], 14, 14)=="_"){
-      
-      alevel <- substr(temp[filename], 13, 13)
-      
-      if(substr(temp[filename], 16, 16)=="_"){
-        
-        Nobs <- substr(temp[filename], 15, 15)
-        
-      } else if(substr(temp[filename], 17, 17)=="_") {
-        
-        Nobs <- substr(temp[filename], 15, 16)
-        
-      } else{
-        
-        Nobs <- substr(temp[filename], 15, 17)
-        
-      }
-      
-    } else {
-      
-      alevel <- substr(temp[filename], 13, 14)
-      
-      if(substr(temp[filename], 17, 17)=="_"){
-        
-        Nobs <- substr(temp[filename], 16, 16)
-        
-      } else if(substr(temp[filename], 18, 18)=="_") {
-        
-        Nobs <- substr(temp[filename], 16, 17)
-        
-      } else{
-        
-        Nobs <- substr(temp[filename], 16, 18)
-        
-      }
-      
-    }
-    
-  } else {
-    
-    blevel <- substr(temp[filename], 11, 11)
-    
-    if(substr(temp[filename], 13, 13)=="_"){
-      
-      alevel <- substr(temp[filename], 12, 12)
-      
-      if(substr(temp[filename], 15, 15)=="_"){
-        
-        Nobs <- substr(temp[filename], 14, 14)
-        
-      } else if(substr(temp[filename], 16, 16)=="_") {
-        
-        Nobs <- substr(temp[filename], 14, 15)
-        
-      } else{
-        
-        Nobs <- substr(temp[filename], 14, 16)
-        
-      }
-      
-    } else {
-      
-      alevel <- substr(temp[filename], 12, 13)
-      
-      if(substr(temp[filename], 16, 16)=="_"){
-        
-        Nobs <- substr(temp[filename], 15, 15)
-        
-      } else if(substr(temp[filename], 17, 17)=="_") {
-        
-        Nobs <- substr(temp[filename], 15, 16)
-        
-      } else{
-        
-        Nobs <- substr(temp[filename], 15, 17)
-        
-      }
-      
-    }
-    
-  } 
-  
-  db_temp <- read.table(temp[filename],header=FALSE,sep="\t")
-  
-  spearman.cor<-cor(db_temp$V1,
-                    db_temp$V2,
-                    use="complete.obs",method="spearman")
-  
-  
-  db <- rbind(db,as.numeric(c(N.inds.values,
-                              Nobs,
-                              poiss,
-                              dombias,
-                              alevel,
-                              blevel,
-                              spearman.cor)))
-  
-}
-
-names(db) <- c("Ninds","Nobs",
-               "poiss","dombias",
-               "alevel","blevel","spearman")
-
-
-#write.csv(db,
-#          "databases_package/db_ADAGIO_100simulations_fixed_biases.csv",row.names=FALSE)
-
-setwd("C:/Users/nb5093/Dropbox/sparrow/Projects/Chap6_Elo-rating_robustness/analyses_Elo-randomization")
-
-write.csv(db,
-          "databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_25ind_100int.csv",row.names=FALSE)
+# ###############################################################################
+# # ADAGIO: Adding the results from ADAGIO, which needed to be run at the terminal
+# ###############################################################################
+# 
+# # importing all rank files (output from ADAGIO)
+# 
+# #setwd("C:/Users/nb5093/Documents/allmatrices")
+# setwd("F:/allmatrices")
+# 
+# 
+# temp = list.files(pattern="*.csv.adagio.ranks") #check you are in the right folder - getwd() and setwd()
+# 
+# 
+# db <- data.frame(Ninds=integer(),
+#                  Nobs=integer(),
+#                  poiss=integer(),
+#                  dombias=integer(),
+#                  alevel=integer(),
+#                  blevel=integer(),
+#                  spearman=numeric(),
+#                  stringsAsFactors=FALSE)
+# 
+# 
+# #N.inds.values <- c(50)
+# #N.inds.values <- c(10)
+# N.inds.values <- c(25)
+# 
+# 
+# 
+# for (filename in 1:length(temp)){
+#   
+#   poiss <- substr(temp[filename], 8, 8)
+#   dombias <- substr(temp[filename], 9, 9)
+#   
+#   if(substr(temp[filename], 11, 12)=="-5"){
+#     
+#     blevel <- substr(temp[filename], 11, 12)
+#     
+#     if(substr(temp[filename], 14, 14)=="_"){
+#       
+#       alevel <- substr(temp[filename], 13, 13)
+#       
+#       if(substr(temp[filename], 16, 16)=="_"){
+#         
+#         Nobs <- substr(temp[filename], 15, 15)
+#         
+#       } else if(substr(temp[filename], 17, 17)=="_") {
+#         
+#         Nobs <- substr(temp[filename], 15, 16)
+#         
+#       } else{
+#         
+#         Nobs <- substr(temp[filename], 15, 17)
+#         
+#       }
+#       
+#     } else {
+#       
+#       alevel <- substr(temp[filename], 13, 14)
+#       
+#       if(substr(temp[filename], 17, 17)=="_"){
+#         
+#         Nobs <- substr(temp[filename], 16, 16)
+#         
+#       } else if(substr(temp[filename], 18, 18)=="_") {
+#         
+#         Nobs <- substr(temp[filename], 16, 17)
+#         
+#       } else{
+#         
+#         Nobs <- substr(temp[filename], 16, 18)
+#         
+#       }
+#       
+#     }
+#     
+#   } else {
+#     
+#     blevel <- substr(temp[filename], 11, 11)
+#     
+#     if(substr(temp[filename], 13, 13)=="_"){
+#       
+#       alevel <- substr(temp[filename], 12, 12)
+#       
+#       if(substr(temp[filename], 15, 15)=="_"){
+#         
+#         Nobs <- substr(temp[filename], 14, 14)
+#         
+#       } else if(substr(temp[filename], 16, 16)=="_") {
+#         
+#         Nobs <- substr(temp[filename], 14, 15)
+#         
+#       } else{
+#         
+#         Nobs <- substr(temp[filename], 14, 16)
+#         
+#       }
+#       
+#     } else {
+#       
+#       alevel <- substr(temp[filename], 12, 13)
+#       
+#       if(substr(temp[filename], 16, 16)=="_"){
+#         
+#         Nobs <- substr(temp[filename], 15, 15)
+#         
+#       } else if(substr(temp[filename], 17, 17)=="_") {
+#         
+#         Nobs <- substr(temp[filename], 15, 16)
+#         
+#       } else{
+#         
+#         Nobs <- substr(temp[filename], 15, 17)
+#         
+#       }
+#       
+#     }
+#     
+#   } 
+#   
+#   db_temp <- read.table(temp[filename],header=FALSE,sep="\t")
+#   
+#   spearman.cor<-cor(db_temp$V1,
+#                     db_temp$V2,
+#                     use="complete.obs",method="spearman")
+#   
+#   
+#   db <- rbind(db,as.numeric(c(N.inds.values,
+#                               Nobs,
+#                               poiss,
+#                               dombias,
+#                               alevel,
+#                               blevel,
+#                               spearman.cor)))
+#   
+# }
+# 
+# names(db) <- c("Ninds","Nobs",
+#                "poiss","dombias",
+#                "alevel","blevel","spearman")
+# 
+# 
+# #write.csv(db,
+# #          "databases_package/db_ADAGIO_100simulations_fixed_biases.csv",row.names=FALSE)
+# 
+# setwd("C:/Users/nb5093/Dropbox/sparrow/Projects/Chap6_Elo-rating_robustness/analyses_Elo-randomization")
+# 
+# write.csv(db,
+#           "databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_25ind_100int.csv",row.names=FALSE)
 
 
 ###############################################################################
@@ -449,14 +449,15 @@ N.inds.values <- c(25)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
 
-db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
-#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
+#db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
+db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure4_Method_comparison_and_sampling_effort_poisson_100.tiff",
+tiff(#"plots/Figure4_Method_comparison_and_sampling_effort_poisson_100.tiff",
+     "plots/supplements/FigureS2_Method_comparison_and_sampling_effort_100int_25ind_uniform.tiff",
      #"plots/Figure4_Method_comparison_and_sampling_effort_poisson.tiff",
      #"plots/supplements/FigureS1_Comparing_original_Elo-rating_packages_poisson.tiff",
      #"plots/supplements/FigureS4_Comparing_original_Elo-rating_packages_poisson_10ind.tiff",
@@ -602,9 +603,9 @@ for (p in 1:length(N.inds.values)){
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
         
-        plot_winner_prob_2(1:25,a=avalues[i],b=bvalues[i],"black")
-        #plot_winner_prob_2(1:50,a=avalues[i],b=bvalues[i],"black")
-        #plot_winner_prob_2(1:10,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
         
         mtext("P (dominant wins)",
               side=2, adj=0, line=3, cex=1.10); 
