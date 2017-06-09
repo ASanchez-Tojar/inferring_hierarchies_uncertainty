@@ -38,7 +38,7 @@ rm(list=ls())
 # Functions needed
 ###############################################################################
 
-plot_winner_prob_2 <- function(diff.rank, a, b,coline) {
+plot_winner_prob <- function(diff.rank, a, b,coline) {
   
   diff.rank.norm <- diff.rank/max(diff.rank)
   
@@ -449,15 +449,15 @@ N.inds.values <- c(25)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
 
-#db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
-db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
+db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
+#db<-db.provisional.2[db.provisional.2$poiss==0 & db.provisional.2$dombias==0,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff(#"plots/Figure4_Method_comparison_and_sampling_effort_poisson_100.tiff",
-     "plots/supplements/FigureS2_Method_comparison_and_sampling_effort_100int_25ind_uniform.tiff",
+tiff("plots/Figure4_Method_comparison_and_sampling_effort_100int_25ind_Poisson.tiff",
+     #"plots/supplements/FigureS2_Method_comparison_and_sampling_effort_100int_25ind_uniform.tiff",
      #"plots/Figure4_Method_comparison_and_sampling_effort_poisson.tiff",
      #"plots/supplements/FigureS1_Comparing_original_Elo-rating_packages_poisson.tiff",
      #"plots/supplements/FigureS4_Comparing_original_Elo-rating_packages_poisson_10ind.tiff",
@@ -599,9 +599,9 @@ for (p in 1:length(N.inds.values)){
              at=seq(1,25,2),
              #at=seq(0,50,10),
              #at=seq(0,10,1),
-             cex.axis=1,tck=0.015)
+             cex.axis=0.75,tck=0.015)
         
-        axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
+        axis(2,at=seq(0.5,1,0.1),cex.axis=0.75,las=2,tck=0.015) 
         
         plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
         #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
