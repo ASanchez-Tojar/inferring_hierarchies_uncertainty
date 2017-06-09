@@ -217,155 +217,163 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 #           "databases_package/Fig3_db_methods_100sim_fixed_biases_10ind.csv",row.names=FALSE)
 
 
-# ###############################################################################
-# # ADAGIO: Adding the results from ADAGIO, which needed to be run at the terminal
-# ###############################################################################
-# 
-# # importing all rank files (output from ADAGIO)
-# 
-# #setwd("C:/Users/nb5093/Documents/allmatrices")
-# setwd("F:/allmatrices")
-# 
-# 
-# temp = list.files(pattern="*.csv.adagio.ranks") #check you are in the right folder - getwd() and setwd()
-# 
-# 
-# db <- data.frame(Ninds=integer(),
-#                  Nobs=integer(),
-#                  poiss=integer(),
-#                  dombias=integer(),
-#                  alevel=integer(),
-#                  blevel=integer(),
-#                  spearman=numeric(),
-#                  stringsAsFactors=FALSE)
-# 
-# 
-# #N.inds.values <- c(50)
-# #N.inds.values <- c(10)
-# N.inds.values <- c(25)
-# 
-# 
-# 
-# for (filename in 1:length(temp)){
-#   
-#   poiss <- substr(temp[filename], 8, 8)
-#   dombias <- substr(temp[filename], 9, 9)
-#   
-#   if(substr(temp[filename], 11, 12)=="-5"){
-#     
-#     blevel <- substr(temp[filename], 11, 12)
-#     
-#     if(substr(temp[filename], 14, 14)=="_"){
-#       
-#       alevel <- substr(temp[filename], 13, 13)
-#       
-#       if(substr(temp[filename], 16, 16)=="_"){
-#         
-#         Nobs <- substr(temp[filename], 15, 15)
-#         
-#       } else if(substr(temp[filename], 17, 17)=="_") {
-#         
-#         Nobs <- substr(temp[filename], 15, 16)
-#         
-#       } else{
-#         
-#         Nobs <- substr(temp[filename], 15, 17)
-#         
-#       }
-#       
-#     } else {
-#       
-#       alevel <- substr(temp[filename], 13, 14)
-#       
-#       if(substr(temp[filename], 17, 17)=="_"){
-#         
-#         Nobs <- substr(temp[filename], 16, 16)
-#         
-#       } else if(substr(temp[filename], 18, 18)=="_") {
-#         
-#         Nobs <- substr(temp[filename], 16, 17)
-#         
-#       } else{
-#         
-#         Nobs <- substr(temp[filename], 16, 18)
-#         
-#       }
-#       
-#     }
-#     
-#   } else {
-#     
-#     blevel <- substr(temp[filename], 11, 11)
-#     
-#     if(substr(temp[filename], 13, 13)=="_"){
-#       
-#       alevel <- substr(temp[filename], 12, 12)
-#       
-#       if(substr(temp[filename], 15, 15)=="_"){
-#         
-#         Nobs <- substr(temp[filename], 14, 14)
-#         
-#       } else if(substr(temp[filename], 16, 16)=="_") {
-#         
-#         Nobs <- substr(temp[filename], 14, 15)
-#         
-#       } else{
-#         
-#         Nobs <- substr(temp[filename], 14, 16)
-#         
-#       }
-#       
-#     } else {
-#       
-#       alevel <- substr(temp[filename], 12, 13)
-#       
-#       if(substr(temp[filename], 16, 16)=="_"){
-#         
-#         Nobs <- substr(temp[filename], 15, 15)
-#         
-#       } else if(substr(temp[filename], 17, 17)=="_") {
-#         
-#         Nobs <- substr(temp[filename], 15, 16)
-#         
-#       } else{
-#         
-#         Nobs <- substr(temp[filename], 15, 17)
-#         
-#       }
-#       
-#     }
-#     
-#   } 
-#   
-#   db_temp <- read.table(temp[filename],header=FALSE,sep="\t")
-#   
-#   spearman.cor<-cor(db_temp$V1,
-#                     db_temp$V2,
-#                     use="complete.obs",method="spearman")
-#   
-#   
-#   db <- rbind(db,as.numeric(c(N.inds.values,
-#                               Nobs,
-#                               poiss,
-#                               dombias,
-#                               alevel,
-#                               blevel,
-#                               spearman.cor)))
-#   
-# }
-# 
-# names(db) <- c("Ninds","Nobs",
-#                "poiss","dombias",
-#                "alevel","blevel","spearman")
-# 
-# 
-# #write.csv(db,
-# #          "databases_package/db_ADAGIO_100simulations_fixed_biases.csv",row.names=FALSE)
-# 
-# setwd("C:/Users/nb5093/Dropbox/sparrow/Projects/Chap6_Elo-rating_robustness/analyses_Elo-randomization")
-# 
+###############################################################################
+# ADAGIO: Adding the results from ADAGIO, which needed to be run at the terminal
+###############################################################################
+
+# importing all rank files (output from ADAGIO)
+
+#setwd("C:/Users/nb5093/Documents/allmatrices")
+#setwd("F:/allmatrices")
+
+#setwd("C:/Users/nb5093/Dropbox/sparrow/Projects/Chap6_Elo-rating_robustness/analyses_Elo-randomization/databases_package/matrices_10ind_ISI")
+setwd("C:/Users/nb5093/Dropbox/sparrow/Projects/Chap6_Elo-rating_robustness/analyses_Elo-randomization/databases_package/matrices_50ind_ISI")
+
+temp = list.files(pattern="*.csv.adagio.ranks") #check you are in the right folder - getwd() and setwd()
+
+
+db <- data.frame(Ninds=integer(),
+                 Nobs=integer(),
+                 poiss=integer(),
+                 dombias=integer(),
+                 alevel=integer(),
+                 blevel=integer(),
+                 spearman=numeric(),
+                 stringsAsFactors=FALSE)
+
+
+N.inds.values <- c(50)
+#N.inds.values <- c(10)
+#N.inds.values <- c(25)
+
+
+
+for (filename in 1:length(temp)){
+
+  poiss <- substr(temp[filename], 8, 8)
+  dombias <- substr(temp[filename], 9, 9)
+
+  if(substr(temp[filename], 11, 12)=="-5"){
+
+    blevel <- substr(temp[filename], 11, 12)
+
+    if(substr(temp[filename], 14, 14)=="_"){
+
+      alevel <- substr(temp[filename], 13, 13)
+
+      if(substr(temp[filename], 16, 16)=="_"){
+
+        Nobs <- substr(temp[filename], 15, 15)
+
+      } else if(substr(temp[filename], 17, 17)=="_") {
+
+        Nobs <- substr(temp[filename], 15, 16)
+
+      } else{
+
+        Nobs <- substr(temp[filename], 15, 17)
+
+      }
+
+    } else {
+
+      alevel <- substr(temp[filename], 13, 14)
+
+      if(substr(temp[filename], 17, 17)=="_"){
+
+        Nobs <- substr(temp[filename], 16, 16)
+
+      } else if(substr(temp[filename], 18, 18)=="_") {
+
+        Nobs <- substr(temp[filename], 16, 17)
+
+      } else{
+
+        Nobs <- substr(temp[filename], 16, 18)
+
+      }
+
+    }
+
+  } else {
+
+    blevel <- substr(temp[filename], 11, 11)
+
+    if(substr(temp[filename], 13, 13)=="_"){
+
+      alevel <- substr(temp[filename], 12, 12)
+
+      if(substr(temp[filename], 15, 15)=="_"){
+
+        Nobs <- substr(temp[filename], 14, 14)
+
+      } else if(substr(temp[filename], 16, 16)=="_") {
+
+        Nobs <- substr(temp[filename], 14, 15)
+
+      } else{
+
+        Nobs <- substr(temp[filename], 14, 16)
+
+      }
+
+    } else {
+
+      alevel <- substr(temp[filename], 12, 13)
+
+      if(substr(temp[filename], 16, 16)=="_"){
+
+        Nobs <- substr(temp[filename], 15, 15)
+
+      } else if(substr(temp[filename], 17, 17)=="_") {
+
+        Nobs <- substr(temp[filename], 15, 16)
+
+      } else{
+
+        Nobs <- substr(temp[filename], 15, 17)
+
+      }
+
+    }
+
+  }
+
+  db_temp <- read.table(temp[filename],header=FALSE,sep="\t")
+
+  spearman.cor<-cor(db_temp$V1,
+                    db_temp$V2,
+                    use="complete.obs",method="spearman")
+
+
+  db <- rbind(db,as.numeric(c(N.inds.values,
+                              Nobs,
+                              poiss,
+                              dombias,
+                              alevel,
+                              blevel,
+                              spearman.cor)))
+
+}
+
+names(db) <- c("Ninds","Nobs",
+               "poiss","dombias",
+               "alevel","blevel","spearman")
+
+
+#write.csv(db,
+#          "databases_package/db_ADAGIO_100simulations_fixed_biases.csv",row.names=FALSE)
+
+setwd("C:/Users/nb5093/Dropbox/sparrow/Projects/Chap6_Elo-rating_robustness/analyses_Elo-randomization")
+
 # write.csv(db,
 #           "databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_25ind_100int.csv",row.names=FALSE)
+
+# write.csv(db,
+#           "databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_10ind_100int.csv",row.names=FALSE)
+
+write.csv(db,
+          "databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_50ind_100int.csv",row.names=FALSE)
 
 
 ###############################################################################
@@ -379,7 +387,13 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 # db5methods <- read.table("databases_package/final_data_for_Figures_backup/Fig4a_db_methods_100sim_fixed_biases_10ind.csv",
 #                          header=TRUE,sep=",")
 
-db5methods <- read.table("databases_package/final_data_for_Figures_backup/ISIincluded_25ind_1st.csv",
+# db5methods <- read.table("databases_package/final_data_for_Figures_backup/ISIincluded_25ind_1st.csv",
+#                          header=TRUE,sep=",")
+
+# db5methods <- read.table("databases_package/final_data_for_Figures_backup/ISIincluded_10ind_1st.csv",
+#                          header=TRUE,sep=",")
+
+db5methods <- read.table("databases_package/final_data_for_Figures_backup/ISIincluded_50ind_1st.csv",
                          header=TRUE,sep=",")
 
 
@@ -399,7 +413,13 @@ db5methods_sorted <- db5methods[order(db5methods$Ninds,
 # dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_10ind.csv",
 #                        header=TRUE,sep=",")
 
-dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_25ind_100int.csv",
+# dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_25ind_100int.csv",
+#                        header=TRUE,sep=",")
+
+# dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_10ind_100int.csv",
+#                        header=TRUE,sep=",")
+
+dbADAGIO <- read.table("databases_package/final_data_for_Figures_backup/Fig4b_db_ADAGIO_100simulations_fixed_biases_50ind_100int.csv",
                        header=TRUE,sep=",")
 
 
@@ -443,8 +463,8 @@ db.provisional.2 <- db.provisional[,c(1:15,17)]
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
 bvalues <- c(5,5,5,5,5,5,5,5,5)
-#N.inds.values <- c(50)
-N.inds.values <- c(25)
+N.inds.values <- c(50)
+#N.inds.values <- c(25)
 #N.inds.values <- c(10)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
@@ -456,7 +476,9 @@ db<-db.provisional.2[db.provisional.2$poiss==1 & db.provisional.2$dombias==0,]
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure4_Method_comparison_and_sampling_effort_100int_25ind_Poisson.tiff",
+tiff(#"plots/Figure4_Method_comparison_and_sampling_effort_100int_25ind_Poisson.tiff",
+     #"plots/supplements/after_revision/FigureS04_Method_comparison_and_sampling_effort_100int_10ind_Poisson.tiff",
+     "plots/supplements/after_revision/FigureS11_Method_comparison_and_sampling_effort_100int_50ind_Poisson.tiff",
      #"plots/supplements/FigureS2_Method_comparison_and_sampling_effort_100int_25ind_uniform.tiff",
      #"plots/Figure4_Method_comparison_and_sampling_effort_poisson.tiff",
      #"plots/supplements/FigureS1_Comparing_original_Elo-rating_packages_poisson.tiff",
@@ -512,8 +534,8 @@ for (p in 1:length(N.inds.values)){
            xaxt="n",
            yaxt="n",
            #ylim=c(0,1))
-           ylim=c(-0.4,1))
-      #ylim=c(-0.7,1))
+           #ylim=c(-0.4,1))
+           ylim=c(-0.8,1))
       
       
       if(i<7){
@@ -536,8 +558,8 @@ for (p in 1:length(N.inds.values)){
       
       axis(2,
            #at=round(seq(0,1,0.1),1),
-           at=round(seq(-0.4,1,0.1),1),
-           #at=round(seq(-0.7,1,0.1),1),
+           #at=round(seq(-0.4,1,0.1),1),
+           at=round(seq(-0.8,1,0.1),1),
            cex.axis=1,las=2,tck=0.015)
       
       
@@ -577,16 +599,18 @@ for (p in 1:length(N.inds.values)){
       atext <- paste("\na = ",avalues[i])
       btext <- paste("\nb = ",bvalues[i])
       ttext <- paste0(atext,btext,sep="\n")
-      text(98,-0.35,a[i],adj = 0 ,cex=1.5)
-      text(81,-0.3,ttext,adj = 0,cex=2)
+      # text(98,-0.35,a[i],adj = 0 ,cex=1.5)
+      # text(81,-0.3,ttext,adj = 0,cex=2)
+      text(98,-0.75,a[i],adj = 0 ,cex=1.5)
+      text(81,-0.7,ttext,adj = 0,cex=2)
       
       
     } else {
       
       if(i %in% c(2,5,8)){
         
-        plot(c(1,25),
-             #c(1,50),
+        plot(#c(1,25),
+             c(1,50),
              #c(1,10),
              c(0.5,1),type="n",
              ylab="", 
@@ -596,15 +620,15 @@ for (p in 1:length(N.inds.values)){
              cex=1.5)
         
         axis(1,
-             at=seq(1,25,2),
-             #at=seq(0,50,10),
-             #at=seq(0,10,1),
+             #at=seq(1,25,2),
+             at=seq(1,50,6),
+             #at=seq(1,10,1),
              cex.axis=0.75,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=0.75,las=2,tck=0.015) 
         
-        plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
-        #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
         #plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
         
         mtext("P (dominant wins)",
