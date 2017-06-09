@@ -319,9 +319,9 @@ for (p in 1:length(N.inds.values)){
         axis(1,
              at=seq(1,25,2),
              #at=seq(0,10,1),
-             cex.axis=1,tck=0.015)
+             cex.axis=0.75,tck=0.015)
         
-        axis(2,at=seq(0.5,1,0.1),cex.axis=1.2,las=2,tck=0.015) 
+        axis(2,at=seq(0.5,1,0.1),cex.axis=0.75,las=2,tck=0.015) 
         
         for (j in 1:length(avalues)){
           coline <- colours[j]
