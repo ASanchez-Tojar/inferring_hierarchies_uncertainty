@@ -96,101 +96,101 @@ estimate_uncertainty_by_splitting_2 <-
   }
 
 
-###############################################################################
-# Spliting and comparing halves of the data
-###############################################################################
-
-ptm <- proc.time()
-
-
-db.split <- data.frame(Ninds=integer(),
-                       Nobs=integer(),
-                       poiss=logical(),
-                       dombias=logical(),
-                       alevel=integer(),
-                       blevel=integer(),
-                       elo.rand.split=numeric(),
-                       lower=numeric(),
-                       upper=numeric(),
-                       stringsAsFactors=FALSE)
-
-
-# avalues <- c(10,15,30,15,10,5,0)
-# bvalues <- c(-5,0,5,5,5,5,5)
-avalues <- c(10,15,10,5)
-bvalues <- c(-5,5,5,5)
-#N.inds.values <- c(50)
-#N.inds.values <- c(10)
-N.inds.values <- c(10)
-#N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-N.obs.values <- c(100)
-# poiss <- c(FALSE,FALSE,TRUE,TRUE)
-# dombias <- c(FALSE,TRUE,FALSE,TRUE)
-poiss <- c(FALSE,TRUE)
-dombias <- c(FALSE,FALSE)
-
-
-for (typ in 1:length(poiss)){
-  
-  for (j in 1:length(avalues)){
-    
-    for (p in 1:length(N.inds.values)){
-      
-      for (o in 1:length(N.obs.values)){
-        
-        for (numsim in 1:100){
-          
-          output <- generate_interactions(N.inds.values[p],
-                                          N.inds.values[p]*N.obs.values[o],
-                                          a=avalues[j],
-                                          b=bvalues[j],
-                                          id.biased=poiss[typ],
-                                          rank.biased=dombias[typ])
-          
-          winner <- output$interactions$Winner
-          loser <- output$interactions$Loser
-          
-          
-          split.res <- estimate_uncertainty_by_splitting_2(winner,
-                                                           loser, 
-                                                           identities=c(1:N.inds.values[p]),
-                                                           init.score=1000,
-                                                           randomise = TRUE, 
-                                                           n.rands = 1000)
-          
-          db.split<-rbind(db.split,c(N.inds.values[p],N.obs.values[o],
-                                     poiss[typ],
-                                     dombias[typ],
-                                     avalues[j],
-                                     bvalues[j],
-                                     split.res[[1]],
-                                     split.res[[2]],
-                                     split.res[[3]]))
-          
-          write.csv(db.split,
-                    "databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind_100int_t.csv",row.names=FALSE)
-          
-        }
-      }
-    }
-  }
-}
-
-names(db.split) <- c("Ninds","Nobs",
-                     "poiss","dombias",
-                     "alevel","blevel",
-                     "elo.rand.split",
-                     "lower","upper")
-
-
-proc.time() - ptm
-
-
+# ###############################################################################
+# # Spliting and comparing halves of the data
+# ###############################################################################
+# 
+# ptm <- proc.time()
+# 
+# 
+# db.split <- data.frame(Ninds=integer(),
+#                        Nobs=integer(),
+#                        poiss=logical(),
+#                        dombias=logical(),
+#                        alevel=integer(),
+#                        blevel=integer(),
+#                        elo.rand.split=numeric(),
+#                        lower=numeric(),
+#                        upper=numeric(),
+#                        stringsAsFactors=FALSE)
+# 
+# 
+# # avalues <- c(10,15,30,15,10,5,0)
+# # bvalues <- c(-5,0,5,5,5,5,5)
+# avalues <- c(10,15,10,5)
+# bvalues <- c(-5,5,5,5)
+# #N.inds.values <- c(50)
+# #N.inds.values <- c(10)
+# N.inds.values <- c(10)
+# #N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+# N.obs.values <- c(100)
+# # poiss <- c(FALSE,FALSE,TRUE,TRUE)
+# # dombias <- c(FALSE,TRUE,FALSE,TRUE)
+# poiss <- c(FALSE,TRUE)
+# dombias <- c(FALSE,FALSE)
+# 
+# 
+# for (typ in 1:length(poiss)){
+#   
+#   for (j in 1:length(avalues)){
+#     
+#     for (p in 1:length(N.inds.values)){
+#       
+#       for (o in 1:length(N.obs.values)){
+#         
+#         for (numsim in 1:100){
+#           
+#           output <- generate_interactions(N.inds.values[p],
+#                                           N.inds.values[p]*N.obs.values[o],
+#                                           a=avalues[j],
+#                                           b=bvalues[j],
+#                                           id.biased=poiss[typ],
+#                                           rank.biased=dombias[typ])
+#           
+#           winner <- output$interactions$Winner
+#           loser <- output$interactions$Loser
+#           
+#           
+#           split.res <- estimate_uncertainty_by_splitting_2(winner,
+#                                                            loser, 
+#                                                            identities=c(1:N.inds.values[p]),
+#                                                            init.score=1000,
+#                                                            randomise = TRUE, 
+#                                                            n.rands = 1000)
+#           
+#           db.split<-rbind(db.split,c(N.inds.values[p],N.obs.values[o],
+#                                      poiss[typ],
+#                                      dombias[typ],
+#                                      avalues[j],
+#                                      bvalues[j],
+#                                      split.res[[1]],
+#                                      split.res[[2]],
+#                                      split.res[[3]]))
+#           
+#           write.csv(db.split,
+#                     "databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind_100int_t.csv",row.names=FALSE)
+#           
+#         }
+#       }
+#     }
+#   }
+# }
+# 
+# names(db.split) <- c("Ninds","Nobs",
+#                      "poiss","dombias",
+#                      "alevel","blevel",
+#                      "elo.rand.split",
+#                      "lower","upper")
+# 
+# 
+# proc.time() - ptm
+# 
+# 
+# # write.csv(db.split,
+# #           "databases_package/Fig6_db_split_elorand_100sim_fixed_biases.csv",row.names=FALSE)
+# 
 # write.csv(db.split,
-#           "databases_package/Fig6_db_split_elorand_100sim_fixed_biases.csv",row.names=FALSE)
-
-write.csv(db.split,
-          "databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind_100int.csv",row.names=FALSE)
+#           "databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind_100int.csv",row.names=FALSE)
 
 
 
@@ -215,10 +215,8 @@ db_split.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig6
 db_split100sim0 <- rbind(db_split100sim0,db_split.100)
 
 
-db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
-#db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
-#db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==1,]
-#db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==1,]
+#db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
+db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
 
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
@@ -232,8 +230,8 @@ N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure6_Halve_comparison_poisson_100.tiff",
-     #"plots/supplements/FigureS6_Halve_comparison_uniform.tiff", 
+tiff(#"plots/Figure6_Halve_comparison_poisson_100.tiff",
+     "plots/supplements/FigureS4_Halve_comparison_100int_25ind_uniform.tiff", 
      #"plots/supplements/FigureS13_Halve_comparison_dombias.tiff",
      #"plots/supplements/FigureS20_Halve_comparison_poiss+dombias.tiff",
      #"plots/supplements/FigureS12_Halve_comparison_poisson_10ind.tiff",
