@@ -165,8 +165,8 @@ eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup
                                 header=TRUE,sep=",")
 
 
-#db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,]
-db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
+db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,]
+#db<-eloparameterspace[eloparameterspace$poiss==0 & eloparameterspace$dombias==0,]
 
 
 avalues <- seq(0,30,5)
@@ -180,8 +180,8 @@ N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff(#"plots/Figure3_Elo-rating_and_steepness_poisson_NEW.tiff", 
-     "plots/supplements/FigureS1_Elo-rating_and_steepness_25ind_uniform.tiff", 
+tiff("plots/Figure3_Elo-rating_and_steepness_100int_25ind_Poisson.tiff", 
+     #"plots/supplements/FigureS1_Elo-rating_and_steepness_100int_25ind_uniform.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
