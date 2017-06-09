@@ -158,11 +158,11 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 # eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases.csv",
 #                                 header=TRUE,sep=",")
 
-# eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",
-#                                 header=TRUE,sep=",")
-
-eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_25ind_100int.csv",
+eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_10ind.csv",
                                 header=TRUE,sep=",")
+
+# eloparameterspace <- read.table("databases_package/final_data_for_Figures_backup/Fig3_elo_no_rand_parameter_space_100sim_fixed_biases_25ind_100int.csv",
+#                                 header=TRUE,sep=",")
 
 
 db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,]
@@ -172,16 +172,19 @@ db<-eloparameterspace[eloparameterspace$poiss==1 & eloparameterspace$dombias==0,
 avalues <- seq(0,30,5)
 #bvalues <- c(-5,-5,-5,5,5,5,15,15,15)
 bvalues <- c(-5,-5,-5,0,0,0,5,5,5)
-N.inds.values <- c(25)
-#N.inds.values <- c(10)
-N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
+#N.inds.values <- c(50)
+#N.inds.values <- c(25)
+N.inds.values <- c(10)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)#,100)
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff("plots/Figure3_Elo-rating_and_steepness_100int_25ind_Poisson.tiff", 
-     #"plots/supplements/FigureS1_Elo-rating_and_steepness_100int_25ind_uniform.tiff", 
+tiff(#"plots/Figure3_Elo-rating_and_steepness_100int_25ind_Poisson.tiff", 
+     #"plots/supplements/after_revision/FigureS1_Elo-rating_and_steepness_100int_25ind_uniform.tiff",
+     #"plots/supplements/after_revision/FigureS03_Elo-rating_and_steepness_50int_50ind_Poisson.tiff",
+     "plots/supplements/after_revision/FigureS10_Elo-rating_and_steepness_50int_10ind_Poisson.tiff", 
      height=29.7, width=21,
      units='cm', compression="lzw", res=600)
 
@@ -297,18 +300,19 @@ for (p in 1:length(N.inds.values)){
               border=NA,col=rgb(139/255,69/255,19/255,0.15))
       
       btext <- paste("\nb = ",bvalues[i])
-      # text(48,-0.55,a[i],adj = 0,cex=1.5)
-      # text(30,-0.40,btext,adj = 0,cex=2)
-      text(98,-0.75,a[i],adj = 0,cex=1.5)
-      text(80,-0.60,btext,adj = 0,cex=2)
+      text(48,-0.75,a[i],adj = 0,cex=1.5)
+      text(30,-0.60,btext,adj = 0,cex=2)
+      # text(98,-0.75,a[i],adj = 0,cex=1.5)
+      # text(80,-0.60,btext,adj = 0,cex=2)
       
             
     }else {
       
       if(i %in% c(2,5,8)){
         
-        plot(c(1,25),
-             #c(1,10),
+        plot(#c(1,50),
+             #c(1,25),
+             c(1,10),
              c(0.5,1),type="n",
              ylab="", 
              xlab="",
@@ -317,16 +321,18 @@ for (p in 1:length(N.inds.values)){
              cex=1.5)
         
         axis(1,
-             at=seq(1,25,2),
-             #at=seq(0,10,1),
+             #at=seq(1,50,6),
+             #at=seq(1,25,2),
+             at=seq(0,10,1),
              cex.axis=0.75,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=0.75,las=2,tck=0.015) 
         
         for (j in 1:length(avalues)){
           coline <- colours[j]
-          plot_winner_prob(1:25,a=avalues[j],b=bvalues[i],coline)
-          #plot_winner_prob(1:10,a=avalues[j],b=bvalues[i],coline)
+          #plot_winner_prob(1:50,a=avalues[j],b=bvalues[i],coline)
+          #plot_winner_prob(1:25,a=avalues[j],b=bvalues[i],coline)
+          plot_winner_prob(1:10,a=avalues[j],b=bvalues[i],coline)
           
         }
         
