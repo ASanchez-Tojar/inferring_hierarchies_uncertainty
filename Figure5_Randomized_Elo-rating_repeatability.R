@@ -155,31 +155,35 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 # Plotting repeatability and adding 95% CI intervals 
 ###############################################################################
 
-#db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom.csv",header=TRUE,sep=",")
+db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom.csv",header=TRUE,sep=",")
 #db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_10ind.csv",header=TRUE,sep=",")
-db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_25ind.csv",header=TRUE,sep=",")
+#db_rep <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_25ind.csv",header=TRUE,sep=",")
 
-db_rep.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_25ind_100int.csv",header=TRUE,sep=",")
+#db_rep.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_25ind_100int.csv",header=TRUE,sep=",")
+#db_rep.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_10ind_100int.csv",header=TRUE,sep=",")
+db_rep.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig5_db_repeatability_100_simulations_fixed_biases_newaniDom_50ind_100int.csv",header=TRUE,sep=",")
 
 db_rep <- rbind(db_rep,db_rep.100)
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
 bvalues <- c(5,5,5,5,5,5,5,5,5)
-#N.inds.values <- c(50)
+N.inds.values <- c(50)
 #N.inds.values <- c(10)
-N.inds.values <- c(25)
+#N.inds.values <- c(25)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
 
-#db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
-db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
+db<-db_rep[db_rep$poiss==1 & db_rep$dombias==0,]
+#db<-db_rep[db_rep$poiss==0 & db_rep$dombias==0,]
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff(#"plots/Figure5_randomized_Elo-rating_repeatability_poisson_100.tiff",
-     "plots/supplements/FigureS3_Elo-rating_repeatability_100int_25ind_uniform.tiff", 
+tiff(#"plots/Figure5_randomized_Elo-rating_repeatability_100int_25ind_Poisson.tiff",
+     #"plots/supplements/after_revision/FigureS3_Elo-rating_repeatability_100int_25ind_uniform.tiff", 
+     #"plots/supplements/after_revision/FigureS05_Elo-rating_repeatability_100int_10ind_Poisson.tiff", 
+     "plots/supplements/after_revision/FigureS12_Elo-rating_repeatability_100int_50ind_Poisson.tiff", 
      #"plots/supplements/FigureS11_randomized_Elo-rating_repeatability_dombias.tiff",
      #"plots/supplements/FigureS18_randomized_Elo-rating_repeatability_poiss+dombias.tiff",
      #"plots/supplements/FigureS8_randomized_Elo-rating_repeatability_poisson_10ind.tiff",
@@ -268,9 +272,9 @@ for (p in 1:length(N.inds.values)){
       
       if(i %in% c(2,5,8)){
         
-        plot(#c(1,50),
+        plot(c(1,50),
              #c(1,10),
-             c(1,25),
+             #c(1,25),
              c(0.5,1),type="n",
              ylab="", 
              xlab="",
@@ -279,16 +283,16 @@ for (p in 1:length(N.inds.values)){
              cex=1.5)
         
         axis(1,
-             #at=seq(0,50,10),
-             #at=seq(0,10,1),
-             at=seq(1,25,4),
+             at=seq(1,50,6),
+             #at=seq(1,10,1),
+             #at=seq(1,25,4),
              cex.axis=0.75,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=0.75,las=2,tck=0.015) 
         
-        #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
         #plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
-        plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
         
         mtext("   P (dominant wins)",
               side=2, adj=0, line=3, cex=0.95) 
