@@ -199,39 +199,43 @@ estimate_uncertainty_by_splitting_2 <-
 # 95% CI intervals 
 ###############################################################################
 
-# db_split100sim0 <- 
-#   read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_full.csv",header=TRUE,sep=",")
+db_split100sim0 <-
+  read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_full.csv",header=TRUE,sep=",")
 
-# db_split100sim0 <- 
+# db_split100sim0 <-
 #   read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind.csv",header=TRUE,sep=",")
 
-db_split100sim0 <- 
-  read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_25ind.csv",header=TRUE,sep=",")
+# db_split100sim0 <- 
+#   read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_25ind.csv",header=TRUE,sep=",")
 
 
+#db_split.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_25ind_100int.csv",header=TRUE,sep=",")
+#db_split.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_10ind_100int.csv",header=TRUE,sep=",")
+db_split.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_50ind_100int.csv",header=TRUE,sep=",")
 
-db_split.100 <- read.table("databases_package/final_data_for_Figures_backup/Fig6_db_split_elorand_100sim_fixed_biases_25ind_100int.csv",header=TRUE,sep=",")
 
 db_split100sim0 <- rbind(db_split100sim0,db_split.100)
 
 
-#db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
-db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
+db<-db_split100sim0[db_split100sim0$poiss==1 & db_split100sim0$dombias==0,]
+#db<-db_split100sim0[db_split100sim0$poiss==0 & db_split100sim0$dombias==0,]
 
 
 avalues <- c(15,15,15,10,10,10,5,5,5)
 bvalues <- c(5,5,5,5,5,5,5,5,5)
-#N.inds.values <- c(50)
+N.inds.values <- c(50)
 #N.inds.values <- c(10)
-N.inds.values <- c(25)
+#N.inds.values <- c(25)
 N.obs.values <- c(1,4,7,10,15,20,30,40,50,100)
 
 
 a <- c("(a)","x","x","(b)","x","x","(c)","x","x")
 
 
-tiff(#"plots/Figure6_Halve_comparison_poisson_100.tiff",
-     "plots/supplements/FigureS4_Halve_comparison_100int_25ind_uniform.tiff", 
+tiff(#"plots/Figure6_Halve_comparison_100int_25ind_Poisson.tiff",
+     #"plots/supplements/after_revision/FigureS4_Halve_comparison_100int_25ind_uniform.tiff", 
+     #"plots/supplements/after_revision/FigureS06_Halve_comparison_100int_10ind_uniform.tiff", 
+     "plots/supplements/after_revision/FigureS13_Halve_comparison_100int_50ind_uniform.tiff", 
      #"plots/supplements/FigureS13_Halve_comparison_dombias.tiff",
      #"plots/supplements/FigureS20_Halve_comparison_poiss+dombias.tiff",
      #"plots/supplements/FigureS12_Halve_comparison_poisson_10ind.tiff",
@@ -299,8 +303,8 @@ for (p in 1:length(N.inds.values)){
       }
       
       axis(2,
-           at=seq(-0.4,1,0.2),
            #at=round(seq(-0.6,1,0.2),1),
+           at=seq(-0.4,1,0.2),
            cex.axis=0.9,las=2)
       
       
@@ -320,9 +324,9 @@ for (p in 1:length(N.inds.values)){
       
       if(i %in% c(2,5,8)){
         
-        plot(#c(1,50),
+        plot(c(1,50),
              #c(1,10),
-             c(1,25),
+             #c(1,25),
              c(0.5,1),type="n",
              ylab="", 
              xlab="",
@@ -331,16 +335,16 @@ for (p in 1:length(N.inds.values)){
              cex=1.5)
         
         axis(1,
-             #at=seq(0,50,10),
-             #at=seq(0,10,1),
-             at=seq(1,25,4),
+             at=seq(1,50,6),
+             #at=seq(1,10,1),
+             #at=seq(1,25,4),
              cex.axis=0.75,tck=0.015)
         
         axis(2,at=seq(0.5,1,0.1),cex.axis=0.75,las=2,tck=0.015) 
         
-        #plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
+        plot_winner_prob(1:50,a=avalues[i],b=bvalues[i],"black")
         #plot_winner_prob(1:10,a=avalues[i],b=bvalues[i],"black")
-        plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
+        #plot_winner_prob(1:25,a=avalues[i],b=bvalues[i],"black")
         
         mtext("   P (dominant wins)",
               side=2, adj=0, line=3, cex=0.95) 
