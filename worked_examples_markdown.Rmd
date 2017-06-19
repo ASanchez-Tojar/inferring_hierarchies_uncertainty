@@ -689,7 +689,7 @@ Overall, we conclude that this group of wintering white-tailed eagles shows a ve
 
 ### References
 
-Farine, D.R. & S?nchez-T?jar, A. (2017) aniDom: Inferring Dominance Hierarchies and Estimating Uncertainty. URL: https://cran.r-project.org/package=aniDom 
+Farine, D.R. & Sanchez-Tojar, A. (2017) aniDom: Inferring Dominance Hierarchies and Estimating Uncertainty. URL: https://cran.r-project.org/package=aniDom 
 
 Isbell, L.A. & Pruetz, J.D. (1998) Differences Between Vervets (*Cercopithecus aethiops*) and Patas Monkeys (*Erythrocebus patas*) in Agonistic Interactions Between Adult Females. *International Journal of Primatology*, 19, 837-855.
 
