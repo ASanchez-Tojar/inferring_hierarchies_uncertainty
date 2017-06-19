@@ -16,7 +16,7 @@
 # guide for inferring reliable dominance hierarchies and estimating their 
 # uncertainty
 
-# more info at the Open Science Framework: https://osf.io/9gyek/
+# more info at the Open Science Framework: http://doi.org/10.17605/OSF.IO/9GYEK
 
 
 ###############################################################################
@@ -32,7 +32,7 @@ library(igraph)
 library(EloRating)
 
 
-# Clear memory and get to know where you are
+# Clear memory
 rm(list=ls())
 
 
