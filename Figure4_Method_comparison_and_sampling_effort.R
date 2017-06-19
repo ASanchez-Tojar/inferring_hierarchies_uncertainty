@@ -9,13 +9,13 @@
 ###############################################################################
 
 # This script aims to generate a figure that shows how different dominance
-# methods perform inferring the latent hierachy, Figure 3 for:
+# methods perform inferring the latent hierachy, Figure 5 for:
 
 # Sanchez-Tojar, A., Schroeder, J., Farine, D.R. (In preparation) A practical 
 # guide for inferring reliable dominance hierarchies and estimating their 
 # uncertainty
 
-# more info at the Open Science Framework: https://osf.io/9gyek/
+# more info at the Open Science Framework: http://doi.org/10.17605/OSF.IO/9GYEK
 
 
 ###############################################################################
@@ -30,7 +30,7 @@ library(RColorBrewer)
 library(EloRating)
 
 
-# Clear memory and get to know where you are
+# Clear memory
 rm(list=ls())
 
 
