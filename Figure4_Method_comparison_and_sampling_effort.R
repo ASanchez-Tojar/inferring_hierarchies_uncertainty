@@ -51,163 +51,163 @@ plot_winner_prob <- function(diff.rank, a, b,coline) {
 # # Simulating: COMPARING all METHODS
 # ###############################################################################
 # 
-# ptm <- proc.time()
-# 
-# 
-# db <- data.frame(Ninds=integer(),
-#                  Nobs=integer(),
-#                  alevel=integer(),
-#                  blevel=integer(),
-#                  Ndavid=numeric(),
-#                  elo.original=numeric(),
-#                  elo.no.rand=numeric(),
-#                  elo.rand=numeric(),
-#                  stringsAsFactors=FALSE)
-# 
-# 
-# avalues <- c(10,15,30,15,10,5,0)
-# bvalues <- c(-5,0,5,5,5,5,5)
-# #N.inds.values <- c(50)
-# N.inds.values <- c(10)
-# N.obs.values <- c(1,4,7,10,15,20,30,40,50)
-# poiss <- c(FALSE,FALSE,TRUE,TRUE)
-# dombias <- c(FALSE,TRUE,FALSE,TRUE)
-# 
-# 
-# for (typ in 1:length(poiss)){
-#   
-#   for (j in 1:length(avalues)){
-#     
-#     for (p in 1:length(N.inds.values)){
-#       
-#       for (o in 1:length(N.obs.values)){
-#         
-#         for (sim in 1:100){
-#           
-#           output <- generate_interactions(N.inds.values[p],
-#                                           N.inds.values[p]*N.obs.values[o],
-#                                           a=avalues[j],
-#                                           b=bvalues[j],
-#                                           id.biased=poiss[typ],
-#                                           rank.biased=dombias[typ])
-#           
-#           
-#           filename <- paste(paste(paste(ifelse(poiss[typ]==TRUE,1,0),
-#                                         ifelse(dombias[typ]==TRUE,1,0),
-#                                         sep=""),
-#                                   paste0(bvalues[j],a=avalues[j]),
-#                                   sep="_"),
-#                             N.obs.values[o],
-#                             sep="_")
-#           
-#           #saving hierarchies
-#           # write.csv(output$hierarchy,
-#           #           paste0("databases_package/matrices_for_ADAGIO",
-#           #                  typ,"/hierarchies/hierarchy_",filename,"_sim",sim,".csv"),
-#           #           row.names=FALSE)
-#           
-#           winner <- output$interactions$Winner
-#           loser <- output$interactions$Loser
-#           date <- c("2010-01-25",rep("2010-01-26",length(loser)-1)) #fake date needed for elo.seq()
-#           
-#           # generating elo.rating according to elo.seq from library(EloRating)
-#           x<-elo.seq(winner=as.factor(winner),
-#                      loser=as.factor(loser), 
-#                      Date=date,
-#                      k=200,
-#                      progressbar=FALSE)
-#           
-#           w<-extract.elo(x,standardize = FALSE)
-#           
-#           z <- data.frame(w,attributes(w),
-#                           row.names = as.character(seq(1,length(w),
-#                                                        1)))
-#           
-#           z$rank <- as.numeric(as.character(z$names))
-#           
-#           z$Elo.ranked <- rank(-z$w,na.last="keep")
-#           
-#           spearman.original<-cor(z$rank,z$Elo.ranked,
-#                                  use="complete.obs",method="spearman")
-#           
-#           # generating David's score
-#           domatrix<-creatematrix(x, drawmethod="0.5")
-#           
-#           # saving matrices for running ADAGIO
-#           write.csv(as.data.frame(domatrix),
-#                     paste0("databases_package/matrices_10ind",
-#                            typ,"/matrices/matrix_",filename,"_sim",sim,".csv"),
-#                     row.names=TRUE,
-#                     quote = FALSE)
-#           
-#           dav<-DS(domatrix)
-#           
-#           dav$ID <- as.numeric(as.character(dav$ID))
-#           
-#           dav$normDSrank <- rank(-dav$normDS,na.last="keep")
-#           
-#           Ndavid <- cor(dav$ID,dav$normDSrank,
-#                         use="complete.obs",method="spearman")
-#           
-#           # generating elo-rating according to elo_scores() from aniDom
-#           result.no.rand <- elo_scores(winner,
-#                                        loser,
-#                                        identities=c(1:N.inds.values[p]),
-#                                        init.score=1000,
-#                                        randomise=FALSE,
-#                                        return.as.ranks=TRUE)
-#           
-#           #ranks.no.rand <- rank(-result.no.rand,na.last="keep")
-#           
-#           spearman.cor.no.rand<-cor(output$hierarchy$Rank,
-#                                     #ranks.no.rand,
-#                                     result.no.rand,
-#                                     use="complete.obs",method="spearman")
-#           
-#           # generating elo-rating according to elo_scores() from aniDom and
-#           # randomizing the order of the interactions 1000 times
-#           result <- elo_scores(winner,
-#                                loser,
-#                                identities=c(1:N.inds.values[p]),
-#                                init.score=1000,
-#                                randomise=TRUE,
-#                                return.as.ranks=TRUE)
-#           
-#           mean.scores <- rowMeans(result)
-#           #ranks <- apply(-result,2,function(x) rank(x, na.last="keep"))
-#           #mean.ranks <- rowMeans(ranks)
-#           
-#           spearman.cor.rand<-cor(output$hierarchy$Rank,
-#                                  mean.scores,
-#                                  use="complete.obs",method="spearman")
-#           
-#           db<-rbind(db,c(N.inds.values[p],
-#                          N.obs.values[o],
-#                          poiss[typ],
-#                          dombias[typ],
-#                          avalues[j],
-#                          bvalues[j],
-#                          Ndavid,
-#                          spearman.original,
-#                          spearman.cor.no.rand,
-#                          spearman.cor.rand))
-#           
-#         }
-#       }
-#     }
-#   }
-#   
-# }
-# 
-# names(db) <- c("Ninds","Nobs",
-#                "poiss","dombias",
-#                "alevel","blevel",
-#                "Ndavid",
-#                "elo.original",
-#                "elo.no.rand",
-#                "elo.rand")
-# 
-# proc.time() - ptm
+ptm <- proc.time()
+
+
+db <- data.frame(Ninds=integer(),
+                 Nobs=integer(),
+                 alevel=integer(),
+                 blevel=integer(),
+                 Ndavid=numeric(),
+                 elo.original=numeric(),
+                 elo.no.rand=numeric(),
+                 elo.rand=numeric(),
+                 stringsAsFactors=FALSE)
+
+
+avalues <- c(10,15,30,15,10,5,0)
+bvalues <- c(-5,0,5,5,5,5,5)
+#N.inds.values <- c(50)
+N.inds.values <- c(10)
+N.obs.values <- c(1,4,7,10,15,20,30,40,50)
+poiss <- c(FALSE,FALSE,TRUE,TRUE)
+dombias <- c(FALSE,TRUE,FALSE,TRUE)
+
+
+for (typ in 1:length(poiss)){
+
+  for (j in 1:length(avalues)){
+
+    for (p in 1:length(N.inds.values)){
+
+      for (o in 1:length(N.obs.values)){
+
+        for (sim in 1:100){
+
+          output <- generate_interactions(N.inds.values[p],
+                                          N.inds.values[p]*N.obs.values[o],
+                                          a=avalues[j],
+                                          b=bvalues[j],
+                                          id.biased=poiss[typ],
+                                          rank.biased=dombias[typ])
+
+
+          filename <- paste(paste(paste(ifelse(poiss[typ]==TRUE,1,0),
+                                        ifelse(dombias[typ]==TRUE,1,0),
+                                        sep=""),
+                                  paste0(bvalues[j],a=avalues[j]),
+                                  sep="_"),
+                            N.obs.values[o],
+                            sep="_")
+
+          #saving hierarchies
+          # write.csv(output$hierarchy,
+          #           paste0("databases_package/matrices_for_ADAGIO",
+          #                  typ,"/hierarchies/hierarchy_",filename,"_sim",sim,".csv"),
+          #           row.names=FALSE)
+
+          winner <- output$interactions$Winner
+          loser <- output$interactions$Loser
+          date <- c("2010-01-25",rep("2010-01-26",length(loser)-1)) #fake date needed for elo.seq()
+
+          # generating elo.rating according to elo.seq from library(EloRating)
+          x<-elo.seq(winner=as.factor(winner),
+                     loser=as.factor(loser),
+                     Date=date,
+                     k=200,
+                     progressbar=FALSE)
+
+          w<-extract.elo(x,standardize = FALSE)
+
+          z <- data.frame(w,attributes(w),
+                          row.names = as.character(seq(1,length(w),
+                                                       1)))
+
+          z$rank <- as.numeric(as.character(z$names))
+
+          z$Elo.ranked <- rank(-z$w,na.last="keep")
+
+          spearman.original<-cor(z$rank,z$Elo.ranked,
+                                 use="complete.obs",method="spearman")
+
+          # generating David's score
+          domatrix<-creatematrix(x, drawmethod="0.5")
+
+          # saving matrices for running ADAGIO
+          write.csv(as.data.frame(domatrix),
+                    paste0("databases_package/matrices_10ind",
+                           typ,"/matrices/matrix_",filename,"_sim",sim,".csv"),
+                    row.names=TRUE,
+                    quote = FALSE)
+
+          dav<-DS(domatrix)
+
+          dav$ID <- as.numeric(as.character(dav$ID))
+
+          dav$normDSrank <- rank(-dav$normDS,na.last="keep")
+
+          Ndavid <- cor(dav$ID,dav$normDSrank,
+                        use="complete.obs",method="spearman")
+
+          # generating elo-rating according to elo_scores() from aniDom
+          result.no.rand <- elo_scores(winner,
+                                       loser,
+                                       identities=c(1:N.inds.values[p]),
+                                       init.score=1000,
+                                       randomise=FALSE,
+                                       return.as.ranks=TRUE)
+
+          #ranks.no.rand <- rank(-result.no.rand,na.last="keep")
+
+          spearman.cor.no.rand<-cor(output$hierarchy$Rank,
+                                    #ranks.no.rand,
+                                    result.no.rand,
+                                    use="complete.obs",method="spearman")
+
+          # generating elo-rating according to elo_scores() from aniDom and
+          # randomizing the order of the interactions 1000 times
+          result <- elo_scores(winner,
+                               loser,
+                               identities=c(1:N.inds.values[p]),
+                               init.score=1000,
+                               randomise=TRUE,
+                               return.as.ranks=TRUE)
+
+          mean.scores <- rowMeans(result)
+          #ranks <- apply(-result,2,function(x) rank(x, na.last="keep"))
+          #mean.ranks <- rowMeans(ranks)
+
+          spearman.cor.rand<-cor(output$hierarchy$Rank,
+                                 mean.scores,
+                                 use="complete.obs",method="spearman")
+
+          db<-rbind(db,c(N.inds.values[p],
+                         N.obs.values[o],
+                         poiss[typ],
+                         dombias[typ],
+                         avalues[j],
+                         bvalues[j],
+                         Ndavid,
+                         spearman.original,
+                         spearman.cor.no.rand,
+                         spearman.cor.rand))
+
+        }
+      }
+    }
+  }
+
+}
+
+names(db) <- c("Ninds","Nobs",
+               "poiss","dombias",
+               "alevel","blevel",
+               "Ndavid",
+               "elo.original",
+               "elo.no.rand",
+               "elo.rand")
+
+proc.time() - ptm
 # 
 # 
 # # write.csv(db,
