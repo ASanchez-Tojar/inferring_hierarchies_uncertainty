@@ -7,7 +7,7 @@ output:
 
 ### Worked examples
 
-The following three worked examples are intended to provide an easy step-by-step guide on how to infer dominance hierarchies, and their uncertainty, steepness and transitivity from dyadic interactions. These analyses can, however, be expanded depending on the researchers' interests. We imported the three interaction datasets used here from a compilation of published studies carried out by Shizuka and McDonald (2015a,b). The three worked examples accompany the following study:
+The following three worked examples are intended to provide an easy step-by-step guide on how to infer dominance hierarchies, and their uncertainty, steepness and transitivity from dyadic interactions. We imported the three interaction datasets used here from a compilation of published studies carried out by Shizuka and McDonald (2015a,b). The three worked examples accompany the following study:
 
 Sanchez-Tojar, A., Schroeder, J., Farine, D.R. A practical guide for inferring reliable dominance hierarchies and estimating their uncertainty
 
@@ -19,15 +19,15 @@ More information can be found at the Open Science Framework page of this project
 
 We used data from Wells and von Goldschmidt-Rothschild (1979). This dataset contains dominance interactions observed in a herd of horses (*Equus caballus*). 
 
-First, we need to load the necessary libraries for the analyses and clear up the memory.
+First, we need to clear up the memory and load the necessary libraries for the analyses.
 
 ```{r}
+# clear memory
+rm(list=ls())
+
 # packages needed for this analysis
 library(aniDom)
 library(compete)
-
-# Clear memory
-rm(list=ls())
 ```
 
 Then, we can upload the interaction matrix and visualize part of it to make sure it was imported in the desired format.
@@ -36,14 +36,14 @@ Then, we can upload the interaction matrix and visualize part of it to make sure
 # dataset
 horse <- read.csv("worked_examples/ShizukaMcDonald_Data/Wells1979-3.csv",header=TRUE, row.names=1)
 
-# visualize part of it
+# visualize the top right 3 by 3 part of the matrix
 horse[c(1:3),c(1:3)]
 ```
 
 Next step, we need to make sure that the same individuals are represented in both sides of the matrix.
 
 ```{r}
-# same individuals?
+# Test whether the row names match the column names. Whether the same individuals are represented.
 table(names(horse)==row.names(horse))
 ```
 
@@ -66,9 +66,9 @@ sum(horse)
 round(sum(horse)/(table(rowSums(horse)+colSums(horse)!=0)),1)
 ```
 
-This ratio of interactions to individuals (`r round(sum(horse)/(table(rowSums(horse)+colSums(horse)!=0)),1)`) shows an extraordinary sampling effort that is far beyond both the 10-20 recommendation and what is normally reported in the literature (reviewed by McDonald & Shizuka 2013).
+This ratio of interactions to individuals (`r round(sum(horse)/(table(rowSums(horse)+colSums(horse)!=0)),1)`) shows an extraordinary sampling effort that is far beyond our 10-20 recommendation and also more than the average sampling effort reported in the literature (reviewed by McDonald & Shizuka 2013).
 
-Next step is to estimate how sparse the database is. For that, we will estimate the proportion of known dyads (i.e. the proportion of dyads that interacted out of the total number of possible dyads) and compare it to the proportion that we would expect for an equal group size when the probability of interacting follows a Poisson process, which is the process commonly observed in nature (more details in the main text).
+The next step is to estimate how sparse the database is. For that, we will estimate the proportion of known dyads (i.e. the proportion of dyads that interacted out of the total number of possible dyads) and compare it to the proportion that we would expect for an equal group size when the probability of interacting follows a Poisson process, which is the process commonly observed in nature (more details in the main text).
 
 ```{r warning=FALSE}
 # simulating the values. a and b are randomly set to 30 and 5, respectively. Notice that the choice does not affect the results as we are only interested in exploring how the proportion of known dyads changes with the ratio of interactions to individuals.
@@ -132,9 +132,9 @@ round(quantile(db.sim$knowndyads,probs=c(0.025,0.975)),2)
 1-round(sparseness(horse),2)
 ```
 
-The observed proportion of known dyads (`r 1-round(sparseness(horse),2)`) is very high and larger than what we would expect under a Poisson process (mean = `r round(mean(db.sim$knowndyads),2)`, 2.5 % and 97.5 % quantiles = (`r round(quantile(db.sim$knowndyads,probs=c(0.025,0.975)),2)`)). This indicates an extraordinary sampling effort, which is uncommon in wild datasets (review by McDonald & Shizuka 2013). This value can give us clues about the nature of the group of animals studied. For example, since the proportion of known dyads tend to be higher in studies of close (captive) groups (McDonald & Shizuka 2013), a high observed proportion of known dyads may indicate that the group of individuals studied, although identified as free-living, is a close group that may therefore resemble more closely a captive than a wild population.
+The observed proportion of known dyads (`r 1-round(sparseness(horse),2)`) is very high and larger than what we would expect under a Poisson process (mean = `r round(mean(db.sim$knowndyads),2)`, 2.5 % and 97.5 % quantiles = (`r round(quantile(db.sim$knowndyads,probs=c(0.025,0.975)),2)`)). This indicates an extraordinary sampling effort, which is uncommon in wild datasets (review by McDonald & Shizuka 2013). This value can give us clues about the nature of the group of animals studied. For example, since the proportion of known dyads tends to be higher in studies of captive, insular or otherwise constrained groups (McDonald & Shizuka 2013), a high observed proportion of known dyads may indicate that the group of individuals studied, although identified as free-living, is a close group that may therefore resemble more closely a captive than a wild population.
 
-We can now proceed to estimate the hierarchy as well as its uncertainty. First, let's estimate the hierarchy using the randomized Elo-rating method, for which we first need to convert the input data from a matrix type to a sequence of interactions type.
+We now estimate the hierarchy as well as its uncertainty. First, let's estimate the hierarchy using the randomized Elo-rating method, for which we first need to convert the input data from a matrix type to a sequence of interactions type.
 
 ```{r}
 # First, transforming matrix into random sequence of interactions
@@ -158,7 +158,7 @@ for (i in 1:nrow(horse.1)) {
 }
 ```
 
-Using the randomized Elo-rating the hierarchy looks like:
+Using the randomized Elo-rating the hierarchy looks like this:
 
 ```{r}
 # hierarchy based on randomized Elo-rating
@@ -175,7 +175,7 @@ rank <- rank[order(rank)]
 rank
 ```
 
-The hierarchy shows, for example, that a9 is the most dominant individual, whereas j2 is the most subordinate. We can now plot the shape of the hierarchy using the function plot_hierarchy_shape() from the package "aniDom" (Farine & Sanchez-Tojar 2017). This will show us whether rank determines the probability of winning an interaction, i.e. whether a dominance hierarchy exists at all.
+The hierarchy shows, for example, that a9 is the most dominant individual, whereas j2 is the most subordinate. We can now plot the shape of the hierarchy using the function ```plot_hierarchy_shape()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017). This will show us how well rank predicts the probability of winning an interaction, i.e. whether a dominance hierarchy exists.
 
 ```{r}
 ids <- names(rank)
@@ -193,7 +193,7 @@ text(5,0.55,"Study:\nWells & von Goldschmidt-Rothschild 1979",adj = 0,cex=0.75)
 
 The shape indicates that the hierarchy is steep, i.e. rank largely predicts the probability of winning an interaction. For example, if the difference in rank between two contestants is 8 or larger, the probability that the higher ranked individual wins is pretty much 1, however, if that difference is only 1, the overall probability is smaller than 0.9. 
 
-We can now quantify the uncertainty of the hierarchy, which also provides information about the steepness of the hierarchy. For that, we can use the function estimate_uncertainty_by_repeatability() from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with a measure of steepness/uncertainty that is independent of both group size and the ratio of interactions to individuals, and therefore, that it is a standardized index that can be used to compare different hierarchies (see main text and Supplementary information 5).
+We will now quantify the uncertainty of the hierarchy, which also provides information about the steepness of the hierarchy. For that, we can use the function ```estimate_uncertainty_by_repeatability()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with a measure of steepness/uncertainty that is independent of both group size and the ratio of interactions to individuals, and therefore, that it is a standardized index that can be used to compare different hierarchies (see main text and Supplementary information 5).
 
 ```{r}
 # Uncertainty/steepness based on Elo-rating repeatability
@@ -206,7 +206,7 @@ rept <- estimate_uncertainty_by_repeatability(dom.data$winner,
 round(rept,3)
 ```
 
-The value obtained is `r round(rept,3)`, which corroborates what we observed in the previous plot, that is, that the hierarchy of this group of horses is very steep, and therefore, our estimates of hierarchy highly certain. Additionally, we can further estimate the uncertainty of the hierarchy by splitting the database into two, and estimating whether the hierarchy estimated from one half closely resembles the hierarchy estimated from the other half. We can do this using the function estimate_uncertainty_by_splitting() from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with an index that, although is independent of group size, it changes logarithmically with the ratio of interactions to individuals, and thus, it contains information about sampling effort.
+The value obtained is `r round(rept,3)`, which corroborates what we observed in the previous plot, that is, that the hierarchy of this group of horses is very steep, and therefore, our estimates of hierarchy highly certain. Additionally, we can further estimate the uncertainty of the hierarchy by splitting the database into two, and estimating whether the hierarchy estimated from one half closely resembles the hierarchy estimated from the other half. We can do this using the function ```estimate_uncertainty_by_splitting()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with an index that, although is independent of group size, it changes logarithmically with the ratio of interactions to individuals, and thus, it contains information about sampling effort.
 
 ```{r}
 # Uncertainty/steepness based on half comparison
@@ -222,7 +222,7 @@ round(halve,2)
 
 Again, since this value is very high (mean = `r round(halve[[1]],2)`, 2.5 % and 97.5 % quantiles = (`r round(halve[[2]],2)`,`r round(halve[[3]],2)`)), the results corroborate that our estimated hierarchy is highly certain, and sampling effort high.
 
-Lastly, we can explore the transitivity of the interactions observed using Triangle transitivity (Ttri; Shizuka & McDonald 2012). Ttri has been shown to perform better than the widely used linearity index h' proposed by de Vries (1995), and it provides an overall estimate of orderliness for the estimated hierarchy.
+Lastly, we can explore the transitivity of the interactions observed using the Triangle transitivity, Ttri (Shizuka & McDonald 2012). Ttri has been shown to perform better than the widely used linearity index h' proposed by de Vries (1995), and it provides an overall estimate of orderliness for the hierarchy (Shizuka & McDonald 2012).
 
 ```{r}
 # Triangle transitivity
@@ -243,15 +243,15 @@ Overall, we conclude that this herd of horses shows a very steep and transitive 
 
 We used data from Isbell and Pruetz (1998). This dataset contains agonistic interactions observed in a wild group of female patas monkeys (*Erythrocebus patas*) over a 46-month period.
 
-First, we need to load the necessary libraries for the analyses and clear up the memory.
+First, we need to clear up the memory and load the necessary libraries for the analyses.
 
 ```{r}
+# clear memory
+rm(list=ls())
+
 # packages needed for this analysis
 library(aniDom)
 library(compete)
-
-# Clear memory
-rm(list=ls())
 ```
 
 Then, we can upload the interaction matrix and visualize part of it to make sure it was imported in the desired format.
@@ -260,14 +260,14 @@ Then, we can upload the interaction matrix and visualize part of it to make sure
 # dataset
 monkey <- read.csv("worked_examples/ShizukaMcDonald_Data/Isbell1998-B.csv",header=TRUE, row.names=1)
 
-# visualize part of it
+# visualize the top right 3 by 3 part of the matrix
 monkey[c(1:3),c(1:3)]
 ```
 
 Next step, we need to make sure that the same individuals are represented in both sides of the matrix.
 
 ```{r}
-# same individuals?
+# Test whether the row names match the column names. Whether the same individuals are represented.
 table(names(monkey)==row.names(monkey))
 ```
 
@@ -292,7 +292,7 @@ round(sum(monkey)/(table(rowSums(monkey)+colSums(monkey)!=0)),1)
 
 This ratio of interactions to individuals (`r round(sum(monkey)/(table(rowSums(monkey)+colSums(monkey)!=0)),1)`) is within the recommended range of values (i.e. 10-20, see main text), which would insure that the estimated hierarchy is close to the real hierarchy (if hierarchy existed).
 
-Next step is to estimate how sparse the database is. For that, we will estimate the proportion of known dyads (i.e. the number of dyads that interacted out of the total number of possible dyads) and compare it to the proportion we would expect for an equal group size when the probability of interacting follows a Poisson process, which is commonly observed in nature (more details in the main text).
+The next step is to estimate how sparse the database is. For that, we will estimate the proportion of known dyads (i.e. the number of dyads that interacted out of the total number of possible dyads) and compare it to the proportion we would expect for an equal group size when the probability of interacting follows a Poisson process, which is commonly observed in nature (more details in the main text).
 
 ```{r warning=FALSE}
 # simulating the values. a and b are randomly set to 30 and 5, respectively. Notice that the choice does not affect the results as we are only interested in exploring how the proportion of known dyads changes with the ratio of interactions to individuals.
@@ -357,7 +357,7 @@ round(quantile(db.sim$knowndyads,probs=c(0.025,0.975)),2)
 
 The observed proportion of known dyads (`r 1-round(sparseness(monkey),2)`) is within the range that we would expect under a Poisson process  (mean = `r round(mean(db.sim$knowndyads),2)`, 2.5 % and 97.5 % quantiles = (`r round(quantile(db.sim$knowndyads,probs=c(0.025,0.975)),2)`)). This indicates that data collection was not extremely biased towards some dyads, and therefore, that sampling effort was adequate. If the observed value were below the range of values expected, this could indicate a biased sampling that we should further investigate as it could strongly affect the performance of the methods.
 
-We can now proceed to estimate the hierarchy as well as its uncertainty. First, let's estimate the hierarchy using the randomized Elo-rating method, for which we first need to convert the input data from a matrix type to a sequence of interactions type.
+We now estimate the hierarchy as well as its uncertainty. First, let's estimate the hierarchy using the randomized Elo-rating method, for which we first need to convert the input data from a matrix type to a sequence of interactions type.
 
 ```{r}
 # First, transforming matrix into random sequence of interactions
@@ -381,7 +381,7 @@ for (i in 1:nrow(monkey.1)) {
 }
 ```
 
-Using the randomized Elo-rating the hierarchy looks like:
+Using the randomized Elo-rating the hierarchy looks like this:
 
 ```{r}
 # hierarchy based on randomized Elo-rating
@@ -398,7 +398,7 @@ rank <- rank[order(rank)]
 rank
 ```
 
-The hierarchy shows, for example, that SCO is the most dominant individual, whereas DAL is the most subordinate. We can now plot the shape of the hierarchy using the function plot_hierarchy_shape() from the package "aniDom" (Farine & Sanchez-Tojar 2017). This will tell us whether rank determines the probability of winning an interaction, i.e. whether a dominance hierarchy exists at all.
+The hierarchy shows, for example, that SCO is the most dominant individual, whereas DAL is the most subordinate. We can now plot the shape of the hierarchy using the function ```plot_hierarchy_shape()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017). This will show us how well rank predicts the probability of winning an interaction, i.e. whether a dominance hierarchy exists.
 
 ```{r}
 ids <- names(rank)
@@ -414,9 +414,9 @@ shape <- plot_hierarchy_shape(fitted=TRUE,
 text(8,0.53,"Study:\nIsbell & Pruetz 1998",adj = 0,cex=0.75)
 ```
 
-The shape observed indicates that the steepness of the hierarchy is intermediate, i.e. rank predicts the probability of winning an interaction but higher ranked individuals are not much more likely to win an interaction unless the difference in rank between both contestants is large. For example, if the difference in rank is only 1, the probability that the higher ranked individual wins is, on average, 0.5. Furthermore, the size of the error bars in this plot (i.e. 2.5 % and 97.5 % quantiles) indicates that this dataset may benefit from an increased sampling effort.
+The shape observed indicates that the steepness of the hierarchy is intermediate, i.e. rank predicts the probability of winning an interaction but higher ranked individuals are not a lot more likely to win an interaction unless the difference in rank between both contestants is large. For example, if the difference in rank is only 1, the probability that the higher ranked individual wins is, on average, 0.5. Furthermore, the size of the error bars in this plot (i.e. 2.5 % and 97.5 % quantiles) indicates that this dataset may benefit from an increased sampling effort.
 
-We can now quantify the uncertainty of the hierarchy, which also provides information about the steepness of the hierarchy. For that, we can use the function estimate_uncertainty_by_repeatability() from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with a measure of steepness/uncertainty that is independent of both group size and the ratio of interactions to individuals, and therefore, that it is a standardized index that can be used to compare different hierarchies (see main text and Supplementary information 5).
+We will now quantify the uncertainty of the hierarchy, which also provides information about the steepness of the hierarchy. For that, we can use the function ```estimate_uncertainty_by_repeatability()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with a measure of steepness/uncertainty that is independent of both group size and the ratio of interactions to individuals, and therefore, that it is a standardized index that can be used to compare different hierarchies (see main text and Supplementary information 5).
 
 ```{r}
 # Uncertainty/steepness based on Elo-rating repeatability
@@ -429,7 +429,7 @@ rept <- estimate_uncertainty_by_repeatability(dom.data$winner,
 round(rept,3)
 ```
 
-The value obtained is `r round(rept,3)`, which corroborates what we observed in the previous plot, that is, that the hierarchy of this group of female patas monkeys is intermediate, yet informative. It also shows that our estimates of hierarchy are reasonably certain. Additionally, we can further estimate the uncertainty of the hierarchy by splitting the database into two, and estimating whether the hierarchy estimated from one half closely resembles the hierarchy estimated from the other half. We can do this using the function estimate_uncertainty_by_splitting() from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with an index that, although is independent of group size, it changes logarithmically with the ratio of interactions to individuals, and thus, it contains information about sampling effort.
+The value obtained is `r round(rept,3)`, which corroborates what we observed in the previous plot, that is, that the hierarchy of this group of female patas monkeys is intermediate, yet informative. It also shows that our estimates of hierarchy are reasonably certain. Additionally, we can further estimate the uncertainty of the hierarchy by splitting the database into two, and estimating whether the hierarchy estimated from one half closely resembles the hierarchy estimated from the other half. We can do this using the function ```estimate_uncertainty_by_splitting()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with an index that, although is independent of group size, it changes logarithmically with the ratio of interactions to individuals, and thus, it contains information about sampling effort.
 
 ```{r}
 # Uncertainty/steepness based on half comparison
@@ -445,7 +445,7 @@ round(halve,2)
 
 This value also shows that the hierarchy is not very steep, and our estimates not extremly certain, yet very informative.
 
-Lastly, we can explore the transitivity of the interactions observed using the Triangle transitivity (Ttri; Shizuka & McDonald 2012). Ttri has been shown to perform better than the widely used linearity index h' proposed by de Vries (1995), and it provides an overall estimate of orderliness for the hierarchy.
+Lastly, we can explore the transitivity of the interactions observed using the Triangle transitivity, Ttri (Shizuka & McDonald 2012). Ttri has been shown to perform better than the widely used linearity index h' proposed by de Vries (1995), and it provides an overall estimate of orderliness for the hierarchy (Shizuka & McDonald 2012).
 
 
 ```{r}
@@ -467,15 +467,15 @@ Overall, we conclude that this group of female patas monkeys shows a hierarchy o
 
 We used data from Kolodziejczyk, Kloskowski & Krogulec 2005. This dataset contains dominance interactions observed in wintering white-tailed eagles (*Haliaeetus albicilla*) over 1-month period while feeding on fish carcasses. 
 
-First, we need to load the necessary libraries for the analyses and clear up the memory.
+First, we need to clear up the memory and load the necessary libraries for the analyses.
 
 ```{r}
+# clear memory
+rm(list=ls())
+
 # packages needed for this analysis
 library(aniDom)
 library(compete)
-
-# Clear memory
-rm(list=ls())
 ```
 
 Then, we can upload the interaction matrix and visualize part of it to make sure it was imported in the desired format.
@@ -484,14 +484,14 @@ Then, we can upload the interaction matrix and visualize part of it to make sure
 # dataset
 eagle <- read.csv("worked_examples/ShizukaMcDonald_Data/Kolodziejczyk2005-1.csv",header=TRUE, row.names=1)
 
-# visualize part of it
+# visualize the top right 3 by 3 part of the matrix
 eagle[c(1:3),c(1:3)]
 ```
 
 Next step, we need to make sure that the same individuals are represented in both sides of the matrix.
 
 ```{r}
-# same individuals?
+# Test whether the row names match the column names. Whether the same individuals are represented.
 table(names(eagle)==row.names(eagle))
 ```
 
@@ -516,7 +516,7 @@ round(sum(eagle)/(table(rowSums(eagle)+colSums(eagle)!=0)),1)
 
 This ratio of interactions to individuals (i.e. `r round(sum(eagle)/(table(rowSums(eagle)+colSums(eagle)!=0)),1)`) is within the recommended range of values (i.e. 10-20, see main text). This would insure that the estimated hierarchy is close to the real hierarchy (if hierarchy existed).
 
-Next step is to estimate how sparse the database is. For that, we will estimate the proportion of known dyads (i.e. the number of dyads that interacted out of the total number of possible dyads) and compare it to the proportion we would expect for an equal group size when the probability of interacting follows a Poisson process, which is commonly observed in nature (more details in the main text).
+The next step is to estimate how sparse the database is. For that, we will estimate the proportion of known dyads (i.e. the number of dyads that interacted out of the total number of possible dyads) and compare it to the proportion we would expect for an equal group size when the probability of interacting follows a Poisson process, which is commonly observed in nature (more details in the main text).
 
 ```{r warning=FALSE}
 # simulating the values. a and b are randomly set to 30 and 5, respectively. Notice that the choice does not affect the results as we are only interested in exploring how the proportion of known dyads changes with the ratio of interactions to individuals.
@@ -581,7 +581,7 @@ round(quantile(db.sim$knowndyads,probs=c(0.025,0.975)),2)
 
 The proportion of known dyads observed (`r 1-round(sparseness(eagle),2)`) is within the range that we would expect under a Poisson process (mean = `r round(mean(db.sim$knowndyads),2)`, 2.5 % and 97.5 % quantiles = (`r round(quantile(db.sim$knowndyads,probs=c(0.025,0.975)),2)`)). This indicates that data collection was not extremely biased towards some dyads, and therefore, that sampling effort was adequate.
 
-We can now proceed to estimate the hierarchy as well as its uncertainty. First, let's estimate the hierarchy using the randomized Elo-rating method, for which we first need to convert the input data from a matrix type to a sequence of interactions type.
+We now estimate the hierarchy as well as its uncertainty. First, let's estimate the hierarchy using the randomized Elo-rating method, for which we first need to convert the input data from a matrix type to a sequence of interactions type.
 
 ```{r}
 # First, transforming matrix into random sequence of interactions
@@ -605,7 +605,7 @@ for (i in 1:nrow(eagle.1)) {
 }
 ```
 
-Using the randomized Elo-rating the hierarchy looks like:
+Using the randomized Elo-rating the hierarchy looks like this:
 
 ```{r}
 # rank based on randomized Elo-rating
@@ -622,7 +622,7 @@ rank <- rank[order(rank)]
 rank
 ```
 
-The hierarchy shows, for example, that a1 is the most dominant individual, whereas h2 is the most subordinate. We can now plot the shape of the hierarchy using the function plot_hierarchy_shape() from the package "aniDom" (Farine & Sanchez-Tojar 2017). This will tell us whether rank determines the probability of winning an interaction, i.e. whether a dominance hierarchy exists at all.
+The hierarchy shows, for example, that a1 is the most dominant individual, whereas h2 is the most subordinate. We can now plot the shape of the hierarchy using the function ```plot_hierarchy_shape()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017). This will show us how well rank predicts the probability of winning an interaction, i.e. whether a dominance hierarchy exists.
 
 ```{r}
 ids <- names(rank)
@@ -638,9 +638,9 @@ shape <- plot_hierarchy_shape(fitted=TRUE,
 text(4,0.97,"Study:\nKolodziejczyk et al. 2005",adj = 0,cex=0.75)
 ```
 
-The shape observed indicates that this is a very flat (possibly non-existent) hierarchy, i.e. rank does not predict very well the probability of winning an interaction.
+The shape observed indicates that this is a very flat hierarchy, i.e. rank does not predict very well the probability of winning an interaction.
 
-We can now quantify the uncertainty of the hierarchy, which also provides us with information about the steepness of the hierarchy. For that, we can use the function estimate_uncertainty_by_repeatability() from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with a measure of steepness/uncertainty that is independent of both group size and the ratio of interactions to individuals, and therefore, that it is a standardized index that can be used to compare different hierarchies (see main text and Supplementary information 5).
+We will now quantify the uncertainty of the hierarchy, which also provides us with information about the steepness of the hierarchy. For that, we can use the function ```estimate_uncertainty_by_repeatability()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with a measure of steepness/uncertainty that is independent of both group size and the ratio of interactions to individuals, and therefore, that it is a standardized index that can be used to compare different hierarchies (see main text and Supplementary information 5).
 
 ```{r}
 # Uncertainty/steepness based on Elo-rating repeatability
@@ -653,7 +653,7 @@ rept <- estimate_uncertainty_by_repeatability(dom.data$winner,
 round(rept,3)
 ```
 
-The value obtained is `r round(rept,3)`, which corroborates what we observed in the previous plot, that is, that the hierarchy of this group of white-tailed eagles is very flat, and indeed, little informative. Thus, our estimates of hierarchy are very uncertain. Additionally, we can further estimate the uncertainty of the hierarchy by splitting the database into two, and estimating whether the hierarchy estimated from one half closely resembles the hierarchy estimated from the other half. We can do this using the function estimate_uncertainty_by_splitting() from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with an index that, although is independent of group size, it changes logarithmically with the ratio of interactions to individuals, and thus, it contains information about sampling effort.
+The value obtained is `r round(rept,3)`, which corroborates what we observed in the previous plot, that is, that the hierarchy of this group of white-tailed eagles is very flat, and indeed, little informative. Thus, our estimates of hierarchy are very uncertain. Additionally, we can further estimate the uncertainty of the hierarchy by splitting the database into two, and estimating whether the hierarchy estimated from one half closely resembles the hierarchy estimated from the other half. We can do this using the function ```estimate_uncertainty_by_splitting()``` from the package "aniDom" (Farine & Sanchez-Tojar 2017), which provides us with an index that, although is independent of group size, it changes logarithmically with the ratio of interactions to individuals, and thus, it contains information about sampling effort.
 
 ```{r}
 # Uncertainty/steepness based on half comparison
@@ -669,7 +669,7 @@ round(halve,2)
 
 This value also shows that the hierarchy is very flat, and our estimates extremely uncertain.
 
-Lastly, we can explore the transitivity of the interactions observed using the Triangle transitivity (Ttri; Shizuka & McDonald 2012). Ttri has been shown to perform better than the widely used linearity index h' proposed by de Vries (1995), and it provides an overall estimate of orderliness for the hierarchy.
+Lastly, we can explore the transitivity of the interactions observed using the Triangle transitivity, Ttri (Shizuka & McDonald 2012). Ttri has been shown to perform better than the widely used linearity index h' proposed by de Vries (1995), and it provides an overall estimate of orderliness for the hierarchy (Shizuka & McDonald 2012).
 
 
 ```{r}
