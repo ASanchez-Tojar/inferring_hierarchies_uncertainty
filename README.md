@@ -4,8 +4,7 @@ This repository contains the R scripts use in the following study:
 
 [Alfredo Sánchez-Tójar, Julia Schroeder, Damien R. Farine. 2018. *A practical guide for inferring reliable dominance hierarchies and estimating their uncertainty*. Journal of Animal Ecology, 87(3):594-608. DOI: 10.1111/1365-2656.12776](https://doi.org/10.1111/1365-2656.12776).
 
-**R package 'aniDom'**: freely available from: https://cran.r-project.org/web/packages/aniDom/index.html
-Check the manual in here: https://cran.r-project.org/web/packages/aniDom/aniDom.pdf
+**R package 'aniDom'**: package freely available from the [CRAN](https://cran.r-project.org/web/packages/aniDom/index.html). Manual available [here](https://cran.r-project.org/web/packages/aniDom/aniDom.pdf).
 
 More information and materials (e.g. data) available at the [OSF project](http://doi.org/10.17605/OSF.IO/9GYEK). For any further information, please contact: [Alfredo Sánchez-Tójar](https://scholar.google.co.uk/citations?hl=en&user=Sh-Rjq8AAAAJ&view_op=list_works&sortby=pubdate), email: alfredo.tojar@gmail.com
 
