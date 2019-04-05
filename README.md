@@ -31,4 +31,6 @@ More information and materials (e.g. data) available at the [OSF project](http:/
 
 Notice that some of the figure numbers referred to in the name of the scripts do not match the figures numbers of the final publication.
 
-11th March 2018: a new version of the R package '[aniDom](https://cran.r-project.org/web/packages/aniDom/index.html)' (v.0.1.3) has been uploaded to the CRAN.
+11th March 2018: a new version of the R package '[aniDom](https://cran.r-project.org/web/packages/aniDom/index.html)' (v.0.1.3) has been uploaded to the CRAN. This version contains an updated algorithm that improves the performance of the randomized Elo-rating method.
+
+3rd April 2019: a new version of the R package '[aniDom](https://CRAN.R-project.org/package=aniDom)' (v.0.1.4) has been uploaded to the CRAN. This version allows extracting dated (or generally 'grouped') individual Elo-rating trajectories.
